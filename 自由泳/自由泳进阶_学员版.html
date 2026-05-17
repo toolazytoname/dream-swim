@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📗 自由泳进阶学员版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,#00B4D8 0%,#0077B6 50%,#023E8A 100%); color: white; border-radius: 24px; padding: 40px 36px; text-align: center; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .hero::before { content:'🏊'; position: absolute; top:15px; right:20px; font-size:80px; opacity:0.1; }
+  .hero::after { content:'🌊'; position: absolute; bottom:10px; left:20px; font-size:60px; opacity:0.1; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 50px; padding: 5px 16px; font-size: 12px; margin-bottom: 12px; }
+  .hero h1 { font-size: 34px; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; }
+  .hero p { font-size: 14px; opacity: 0.9; margin-bottom: 20px; }
+  .hero-name { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 24px; display: inline-flex; gap: 24px; font-size: 13px; flex-wrap: wrap; justify-content: center; }
+  .hero-name span { display: flex; align-items: center; gap: 6px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 24px 28px; margin-bottom: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+  .card-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card-title .icon { font-size: 24px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+  .info-item { background: #F8F9FA; border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .info-item .label { color: var(--gray); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .info-item .value { font-weight: 700; font-size: 15px; }
+  .progress-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; text-align: center; margin-bottom: 16px; }
+  .progress-item { border-radius: 12px; padding: 14px 8px; color: white; font-size: 12px; }
+  .progress-item.g1 { background: linear-gradient(135deg,var(--green),#40916C); }
+  .progress-item.g2 { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .progress-item.g3 { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .progress-item.g4 { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .progress-item .p-icon { font-size: 28px; margin-bottom: 4px; }
+  .progress-item .p-name { font-weight: 800; font-size: 13px; }
+  .progress-item .p-lessons { opacity: 0.8; font-size: 10px; margin-top: 2px; }
+  .achievement-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+  .achievement-item { border-radius: 14px; padding: 18px 14px; text-align: center; border: 2px dashed #DEE2E6; background: #FAFAFA; transition: all 0.3s; }
+  .achievement-item.unlocked { border: 2px solid var(--green); background: var(--green-light); }
+  .achievement-item .a-icon { font-size: 40px; margin-bottom: 6px; }
+  .achievement-item .a-name { font-weight: 800; font-size: 14px; }
+  .achievement-item .a-desc { font-size: 11px; color: var(--gray); margin-top: 4px; }
+  .achievement-item .a-date { font-size: 10px; color: var(--green); margin-top: 6px; font-weight: 600; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 20px 24px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); page-break-inside: avoid; }
+  .lesson.g1 { border-left-color: var(--green); }
+  .lesson.g2 { border-left-color: var(--primary); }
+  .lesson.g3 { border-left-color: var(--purple); }
+  .lesson.g4 { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .lesson-title { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 10px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-g1 { background: var(--green-light); color: var(--green); }
+  .badge-g2 { background: #E3F2FD; color: var(--primary); }
+  .badge-g3 { background: #F3E5F5; color: var(--purple); }
+  .badge-g4 { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; }
+  .form-field { background: #F8F9FA; border-radius: 10px; padding: 10px 14px; }
+  .form-field .label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .form-field .input-line { border: none; background: transparent; font-size: 13px; width: 100%; outline: none; border-bottom: 1px dashed #CCC; padding-bottom: 2px; font-family: inherit; }
+  .form-field textarea { width: 100%; border: none; background: transparent; font-size: 13px; resize: none; outline: none; font-family: inherit; min-height: 60px; }
+  .form-checklist { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; margin-top: 8px; }
+  .check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 10px; border-radius: 8px; background: #F8F9FA; }
+  .check-box { width: 20px; height: 20px; border: 2px solid #CCC; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .check-item.done .check-box { background: var(--green); border-color: var(--green); color: white; }
+  .exam-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  .exam-table th { background: var(--yellow); color: #5D4037; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .exam-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; }
+  .exam-table tr:nth-child(even) { background: #FAFAFA; }
+  .certificate { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 2px solid #FFE069; border-radius: 14px; padding: 16px 20px; text-align: center; margin: 8px 0; }
+  .certificate .cert-icon { font-size: 36px; margin-bottom: 6px; }
+  .certificate .cert-title { font-size: 18px; font-weight: 900; color: #856404; }
+  .certificate .cert-desc { font-size: 12px; color: #856404; opacity: 0.8; margin-top: 4px; }
+  .certificate .cert-date { font-size: 11px; color: var(--gray); margin-top: 8px; }
+  .memory-card { background: #FFF9E6; border-radius: 10px; padding: 10px 14px; font-size: 12px; margin: 8px 0; display: flex; gap: 8px; }
+  .memory-card .icon { font-size: 18px; flex-shrink: 0; }
+  .memory-card.red { background: #FFF5F5; }
+  .memory-card.blue { background: #E3F2FD; }
+  .memory-card.green { background: var(--green-light); }
+  .stage-header { border-radius: 16px; padding: 16px 20px; margin-bottom: 14px; margin-top: 8px; color: white; display: flex; align-items: center; gap: 14px; }
+  .stage-header.g1 { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.g2 { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.g3 { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.g4 { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 32px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 18px; font-weight: 800; }
+  .stage-info p { font-size: 12px; opacity: 0.85; }
+  .section-divider { text-align: center; padding: 24px 0 12px; color: var(--gray); font-size: 13px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .growth-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  .growth-table th { background: var(--primary); color: white; padding: 8px 12px; font-weight: 700; }
+  .growth-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; text-align: center; }
+  .growth-table tr:nth-child(even) { background: #FAFAFA; }
+  .footer { text-align: center; padding: 24px; color: var(--gray); font-size: 12px; }
+  .slogan-box { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 14px; padding: 20px; text-align: center; margin: 12px 0; }
+  .slogan-box h3 { font-size: 15px; margin-bottom: 10px; }
+  .slogan-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .slogan-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 600; }
+  .hw-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 10px; margin-top: 10px; }
+  .hw-item { background: #F8F9FA; border-radius: 10px; padding: 10px 14px; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+  .hw-item .week { font-weight: 800; color: var(--primary); width: 40px; flex-shrink: 0; }
+  @media (max-width: 600px) {
+    .hero { padding: 28px 20px; } .hero h1 { font-size: 26px; }
+    .card { padding: 18px 16px; } .lesson { padding: 16px 16px; }
+    .progress-grid { grid-template-columns: repeat(2,1fr); } .hero-name { gap: 12px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">📘 学员专用</div>
+  <h1>🏊 自由泳进阶 · 学员版</h1>
+  <p>29课闯关地图 · 成就徽章系统 · 进度追踪</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">29</div><div class="label">闯关课时</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">成就徽章</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">训练阶段</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">📋</span>课程总览</div>
+  <div class="milestone-bar">
+    <div class="milestone-item"><div class="m-icon">🌊</div><div class="m-name">水性</div><div class="m-desc">入门</div></div>
+    <div class="milestone-connector"></div>
+    <div class="milestone-item"><div class="m-icon">🦵</div><div class="m-name">腿部</div><div class="m-desc">基础</div></div>
+    <div class="milestone-connector"></div>
+    <div class="milestone-item"><div class="m-icon">🖐️</div><div class="m-name">配合</div><div class="m-desc">进阶</div></div>
+    <div class="milestone-connector"></div>
+    <div class="milestone-item"><div class="m-icon">🏆</div><div class="m-name">结业</div><div class="m-desc">达标</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 🎯 学习目标</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 1️⃣ 高肘入水与抓水</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了自由泳划水的完整周期（入水→抓水→抱水→推水→出水→移臂）</div><div class="checkpoint"><span class="icon">⬜</span>我学会了高肘入水的正确姿势</div><div class="checkpoint"><span class="icon">⬜</span>我培养了"手指先入水"的入水感觉</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 2️⃣ 高肘抱水强化</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了"抱水"阶段的正确动作</div><div class="checkpoint"><span class="icon">⬜</span>我形成了稳定的高肘姿态</div><div class="checkpoint"><span class="icon">⬜</span>我感受到了水中"支撑感"</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 3️⃣ 推水与发力</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了推水的正确发力顺序（肩膀→大臂→小臂→手掌）</div><div class="checkpoint"><span class="icon">⬜</span>我理解了"推水"是划水的主要推进阶段</div><div class="checkpoint"><span class="icon">⬜</span>我能在水中感受推进力</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 4️⃣ 出水与移臂</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了手臂出水的技术</div><div class="checkpoint"><span class="icon">⬜</span>我理解了"放松移臂"的重要性</div><div class="checkpoint"><span class="icon">⬜</span>我能做到出水后手臂放松前移</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 5️⃣ 单臂划水综合练习</div></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 6️⃣ 划水节奏与效率</div></div><div class="checkpoint"><span class="icon">⬜</span>我建立了稳定的划水节奏</div><div class="checkpoint"><span class="icon">⬜</span>我理解了"划水效率"的概念</div><div class="checkpoint"><span class="icon">⬜</span>我能在游进中保持连贯的划水</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 7️⃣ 高肘划水综合考核 ⭐ 阶段徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>我能完整展示高肘划水技术</div><div class="checkpoint"><span class="icon">⬜</span>我能连续完成50米不间断划水</div><div class="checkpoint"><span class="icon">⬜</span><strong>💪 划水达人徽章已获得！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📖 第二阶段：呼吸进阶（P08-P13）
+
+> 🫁 呼吸是自由泳的生命！双侧呼吸让你游得更稳、更远！</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 8️⃣ 单侧呼吸强化</div></div><div class="checkpoint"><span class="icon">⬜</span>我强化了单侧呼吸（右侧或左侧）的动作</div><div class="checkpoint"><span class="icon">⬜</span>我掌握了转头吸气的正确时机</div><div class="checkpoint"><span class="icon">⬜</span>我能做到转头时身体不歪斜</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 9️⃣ 双侧呼吸入门</div></div><div class="checkpoint"><span class="icon">⬜</span>我开始了双侧呼吸的练习</div><div class="checkpoint"><span class="icon">⬜</span>我理解了双侧呼吸的重要性</div><div class="checkpoint"><span class="icon">⬜</span>我能做到每3次划臂换一次气</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 10️⃣ 双侧呼吸巩固</div></div><div class="checkpoint"><span class="icon">⬜</span>我熟练掌握了双侧呼吸</div><div class="checkpoint"><span class="icon">⬜</span>我能连续完成50米双侧呼吸游进</div><div class="checkpoint"><span class="icon">⬜</span>两边划水对称，身体不歪斜</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 11️⃣ 呼吸与划水配合强化</div></div><div class="checkpoint"><span class="icon">⬜</span>我实现了呼吸与划水的完美配合</div><div class="checkpoint"><span class="icon">⬜</span>吸气时身体不歪斜、不下沉</div><div class="checkpoint"><span class="icon">⬜</span>我能做到边划边吸边打腿</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 12️⃣ 转头时机与角度</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了最佳的转头吸气时机</div><div class="checkpoint"><span class="icon">⬜</span>我理解了转头角度的控制</div><div class="checkpoint"><span class="icon">⬜</span>我能在正确的时机完成吸气</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 13️⃣ 呼吸综合考核 ⭐ 阶段徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>我能完成100米双侧呼吸测试</div><div class="checkpoint"><span class="icon">⬜</span>我掌握了正确的转头吸气时机</div><div class="checkpoint"><span class="icon">⬜</span>呼吸时身体保持稳定，不歪斜</div><div class="checkpoint"><span class="icon">⬜</span><strong>🫁 呼吸达人徽章已获得！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📖 第三阶段：完整配合提升（P14-P19）
+
+> ⚡ 打腿+划水+呼吸，三者合一，才是真正的自由泳！</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 14️⃣ 打腿与划水配合</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了6拍打腿节奏与划水的配合</div><div class="checkpoint"><span class="icon">⬜</span>我理解了"手腿协调"的概念</div><div class="checkpoint"><span class="icon">⬜</span>游进时身体保持水平</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 15️⃣ 呼吸与划水完美配合</div></div><div class="checkpoint"><span class="icon">⬜</span>我实现了呼吸不打断划水节奏</div><div class="checkpoint"><span class="icon">⬜</span>吸气时身体不歪斜、不下沉</div><div class="checkpoint"><span class="icon">⬜</span>我能做到"边划边吸"</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 16️⃣ 身体滚动与髋部发力</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了"身体滚动"的概念</div><div class="checkpoint"><span class="icon">⬜</span>我掌握了髋部发力带动划水的技巧</div><div class="checkpoint"><span class="icon">⬜</span>我减少了无效动作，提升了效率</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 17️⃣ 全身配合强化</div></div><div class="checkpoint"><span class="icon">⬜</span>打腿、划水、呼吸、滚动四大要素协调</div><div class="checkpoint"><span class="icon">⬜</span>我能做到流畅的完整配合循环</div><div class="checkpoint"><span class="icon">⬜</span>我能连续游进100米以上</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 18️⃣ 50米连续游练习</div></div><div class="checkpoint"><span class="icon">⬜</span>我能连续游进50米</div><div class="checkpoint"><span class="icon">⬜</span>我保持动作连贯，不间断</div><div class="checkpoint"><span class="icon">⬜</span>我建立了游进的信心 🚀</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 19️⃣ 100米达标测试 ⭐ 阶段徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>我能连续游进100米</div><div class="checkpoint"><span class="icon">⬜</span>我的技术动作综合评分达标</div><div class="checkpoint"><span class="icon">⬜</span><strong>⚡ 进阶达人徽章已获得！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📖 第四阶段：转身技术（P20-P25）
+
+> 🔄 转身是速度的关键！好的转身让你游得更远、更快！</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 20️⃣ 翻转蹬壁原理</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了翻转蹬壁的动作原理</div><div class="checkpoint"><span class="icon">⬜</span>我掌握了前滚翻的基本技术</div><div class="checkpoint"><span class="icon">⬜</span>我能在水中完成翻转</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 21️⃣ 翻转技术强化</div></div><div class="checkpoint"><span class="icon">⬜</span>我熟练掌握了翻转动作</div><div class="checkpoint"><span class="icon">⬜</span>我能做到翻转后身体舒展</div><div class="checkpoint"><span class="icon">⬜</span>我为蹬壁滑行做好了准备</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 22️⃣ 水下滑行技术</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了蹬壁后的水下滑行</div><div class="checkpoint"><span class="icon">⬜</span>我理解了海豚腿在游进中的作用</div><div class="checkpoint"><span class="icon">⬜</span>我能在水下有效游进</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 23️⃣ 出发与转身综合练习</div></div><div class="checkpoint"><span class="icon">⬜</span>我熟练掌握了出发技术</div><div class="checkpoint"><span class="icon">⬜</span>我能做到出发后不慌乱</div><div class="checkpoint"><span class="icon">⬜</span>转身与出发衔接流畅</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 24️⃣ 转身技术考核 ⭐ 阶段徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>转身技术综合评分达标</div><div class="checkpoint"><span class="icon">⬜</span>我能做到连续转身不间断</div><div class="checkpoint"><span class="icon">⬜</span><strong>🔄 转身达人徽章已获得！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 25️⃣ 转身与耐力综合</div></div><div class="checkpoint"><span class="icon">⬜</span>转身技术与耐力结合</div><div class="checkpoint"><span class="icon">⬜</span>我能完成多次转身的连续游进</div><div class="checkpoint"><span class="icon">⬜</span>我为100米以上距离做好了准备</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📖 第五阶段：速度突破与结业（P26-P29）
+
+> 🏆 最后冲刺！细节决定成败，坚持就是胜利！</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 26️⃣ 划频与划幅平衡</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了划频与划幅的概念</div><div class="checkpoint"><span class="icon">⬜</span>我找到了适合自己的划频</div><div class="checkpoint"><span class="icon">⬜</span>我实现了速度与耐力的平衡</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 27️⃣ 速度突破训练</div></div><div class="checkpoint"><span class="icon">⬜</span>我通过间歇训练提升了速度</div><div class="checkpoint"><span class="icon">⬜</span>我能在短时间内达到最快速度</div><div class="checkpoint"><span class="icon">⬜</span>我为结业测试做好了准备</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 28️⃣ 结业技术考核</div></div><div class="checkpoint"><span class="icon">⬜</span>我的综合技术评分达标</div><div class="checkpoint"><span class="icon">⬜</span>我完成了转身技术考核</div><div class="checkpoint"><span class="icon">⬜</span>我的动作细节纠错完成</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 29️⃣ 结业考核与证书颁发 ⭐ 最终徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>我能连续游完200米（中途可转身，不停下）</div><div class="checkpoint"><span class="icon">⬜</span>我的技术动作综合评分达标</div><div class="checkpoint"><span class="icon">⬜</span><strong>🏆 自由泳健将徽章已获得！</strong></div><div class="checkpoint"><span class="icon">⬜</span><strong>🎓 自由泳进阶课程毕业！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📈 成长对比
+
+> 用数据记录你的蜕变！</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 🆚 课程前后对比</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 📅 我的学习历程</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 💭 教练的话</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 🌟 我最骄傲的进步</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 📚 我学到的最重要知识</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 🎯 接下来的目标</div></div></div>
+</div>
+</body>
+</html>
