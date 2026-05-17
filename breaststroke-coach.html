@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐸 蛙泳入门教练版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --red-light: #FFE5E5; --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,var(--secondary) 0%,var(--primary) 60%,var(--accent) 100%); color: white; border-radius: 24px; padding: 48px 40px; text-align: center; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content:''; position: absolute; top:-50px; right:-50px; width:200px; height:200px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+  .hero::after { content:''; position: absolute; bottom:-30px; left:-30px; width:150px; height:150px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 6px 20px; font-size: 13px; margin-bottom: 16px; }
+  .hero h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
+  .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 16px 28px; min-width: 100px; }
+  .hero-stat .num { font-size: 28px; font-weight: 900; }
+  .hero-stat .label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .card-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-title .icon { font-size: 28px; }
+  .philosophy-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; }
+  .philosophy-item { background: linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius: 14px; padding: 18px; text-align: center; }
+  .philosophy-item .p-icon { font-size: 36px; margin-bottom: 8px; }
+  .philosophy-item .p-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--secondary); }
+  .philosophy-item .p-desc { font-size: 12px; color: var(--gray); }
+  .stage-header { border-radius: 16px; padding: 20px 24px; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 16px; }
+  .stage-header.green { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.blue { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.purple { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.red { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 40px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 22px; font-weight: 800; }
+  .stage-info p { font-size: 13px; opacity: 0.85; }
+  .stage-info .stage-lessons { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 22px 26px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); transition: box-shadow 0.2s; }
+  .lesson:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lesson.green { border-left-color: var(--green); }
+  .lesson.blue { border-left-color: var(--primary); }
+  .lesson.purple { border-left-color: var(--purple); }
+  .lesson.red { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .lesson-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: #E3F2FD; color: var(--primary); }
+  .badge-purple { background: #F3E5F5; color: var(--purple); }
+  .badge-red { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .lesson-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .lesson-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .lesson-table th:first-child { border-radius: 8px 0 0 0; }
+  .lesson-table th:last-child { border-radius: 0 8px 0 0; }
+  .lesson-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; vertical-align: top; }
+  .lesson-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .lesson-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .lesson-table tr:nth-child(even) { background: #FAFAFA; }
+  .lesson-table tr:hover { background: #F0F7FF; }
+  .checkpoint { display: flex; align-items: center; gap: 10px; background: var(--green-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 600; }
+  .checkpoint .icon { font-size: 20px; }
+  .tip-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; margin-top: 12px; }
+  .tip-item { background: var(--yellow-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; display: flex; gap: 8px; }
+  .tip-item .icon { font-size: 18px; flex-shrink: 0; }
+  .tip-item.blue { background: #E3F2FD; color: var(--primary); }
+  .tip-item.red { background: var(--red-light); color: var(--red); }
+  .error-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin-top: 12px; }
+  .error-item { background: var(--red-light); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .error-item .error-title { font-weight: 700; color: var(--red); margin-bottom: 4px; display: flex; gap: 6px; }
+  .error-item .error-fix { color: #333; }
+  .milestone-bar { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .milestone-item { flex: 1; min-width: 120px; text-align: center; padding: 16px 8px; position: relative; }
+  .milestone-item .m-icon { font-size: 36px; margin-bottom: 6px; }
+  .milestone-item .m-name { font-weight: 800; font-size: 14px; }
+  .milestone-item .m-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .milestone-connector { width: 40px; height: 3px; background: linear-gradient(90deg,var(--green),var(--primary),var(--purple),var(--secondary)); flex-shrink: 0; }
+  .flow-diagram { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 16px; background: #F8F9FA; border-radius: 12px; margin-top: 12px; font-size: 13px; }
+  .flow-step { background: var(--primary); color: white; padding: 6px 14px; border-radius: 50px; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--gray); font-size: 16px; }
+  .toc { background: #F8F9FA; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; }
+  .toc h3 { margin-bottom: 12px; font-size: 16px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; }
+  .toc-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 13px; transition: background 0.2s; }
+  .toc-item:hover { background: #E9ECEF; }
+  .toc-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .toc-item.green .toc-num { background: var(--green); }
+  .toc-item.blue .toc-num { background: var(--primary); }
+  .toc-item.purple .toc-num { background: var(--purple); }
+  .toc-item.red .toc-num { background: var(--secondary); }
+  .section-divider { text-align: center; padding: 32px 0 16px; color: var(--gray); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .footer { text-align: center; padding: 32px; color: var(--gray); font-size: 12px; }
+  .highlight-box { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 1px solid #FFE69C; border-radius: 12px; padding: 14px 18px; margin-top: 14px; font-size: 13px; }
+  .highlight-box .title { font-weight: 700; color: #856404; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .three-columns { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 12px; }
+  .three-columns .col { background: #F8F9FA; border-radius: 10px; padding: 12px; text-align: center; font-size: 12px; }
+  .three-columns .col .emoji { font-size: 28px; margin-bottom: 4px; display: block; }
+  .three-columns .col .label { font-weight: 700; color: var(--secondary); }
+  .three-columns .col .sub { color: var(--gray); font-size: 11px; margin-top: 2px; }
+  .coach-slogan { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 16px; padding: 28px; text-align: center; margin: 24px 0; }
+  .coach-slogan h3 { font-size: 18px; margin-bottom: 12px; }
+  .coach-slogan .slogans { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .coach-slogan .slogan-item { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px; } .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 16px; } .card { padding: 20px 18px; }
+    .lesson { padding: 16px 18px; } .lesson-table { font-size: 12px; }
+    .three-columns { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">🏊 新手教练必备工具</div>
+  <h1>🐸 蛙泳入门教练版</h1>
+  <p>26课时完整体系 · 教练版 · 图文详解</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">26</div><div class="label">标准课时</div></div>
+    <div class="hero-stat"><div class="num">3</div><div class="label">训练阶段</div></div>
+    <div class="hero-stat"><div class="num">26</div><div class="label">核心技能点</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">🎯</span>教学核心理念</div>
+  <div class="philosophy-grid">
+    <div class="philosophy-item"><div class="p-icon">💧</div><div class="p-title">水性优先</div><div class="p-desc">不着急教动作，先让学员"不怕水、享受水"</div></div>
+    <div class="philosophy-item"><div class="p-icon">👁️</div><div class="p-title">感觉驱动</div><div class="p-desc">强调"找感觉"，而不是机械模仿动作</div></div>
+    <div class="philosophy-item"><div class="p-icon">🔍</div><div class="p-title">分解细化</div><div class="p-desc">每个动作拆到不能再拆，循序渐进</div></div>
+    <div class="philosophy-item"><div class="p-icon">⚠️</div><div class="p-title">纠错前置</div><div class="p-desc">提前告诉学员"会犯什么错"，预判问题比纠正错误更重要</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第1课：关于蛙泳对游泳初学者的作用</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解蛙泳的特点和适用场景</div><div>建立正确的学习预期和心理准备</div><div>了解蛙泳"节奏可控、抬头呼吸、不容易呛水"的优势</div></div></div><h3>1.1 蛙泳的特点（10分钟）</h3>
+<p>### 1.1 蛙泳的特点（10分钟）</p>
+<ul><li>蛙泳是<strong>唯一以腿部动作为主要推进</strong>的泳姿（其他三种都以手臂为主）</li><li>蛙泳的节奏：<strong>划手换气 → 收腿 → 蹬腿 → 漂一会儿</strong></li><li>每个周期有明确的"停歇点"——漂的时候可以休息</li></ul>
+<h3>1.2 为什么初学者从蛙泳开始？（15分钟）</h3>
+<p>### 1.2 为什么初学者从蛙泳开始？（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>抬头呼吸</strong></td><td>永远朝前看，不容易呛水</td></tr><tr><td><strong>节奏可控</strong></td><td>想停就停，想走就走</td></tr><tr><td><strong>节省体力</strong></td><td>不需要一直踢腿打水</td></tr><tr><td><strong>用途广泛</strong></td><td>实用性强——会蛙泳可以救人、自救、游长距离</td></tr></tbody></table>
+<h3>1.3 学习预期建立（10分钟）</h3>
+<p>### 1.3 学习预期建立（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>蛙泳入门预计需要<strong>8-12课时</strong>（因人而异）</td></tr><tr><td>强调</td><td>每个人的进度不一样，不要和别人比</td></tr><tr><td>心理建设</td><td><strong>学会游泳需要时间，但每节课都会有进步</strong></td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>蛙泳特点讲解</td><td>10分钟</td></tr><tr><td>为什么从蛙泳开始</td><td>15分钟</td></tr><tr><td>学习预期建立</td><td>10分钟</td></tr><tr><td>问答互动</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>回家练习：在洗脸盆里憋气，鼻子慢慢吐泡泡</div><div class="tip-item"><span class="icon">🏠</span>心理建设：想象自己在水中漂浮的美好感觉</div><div class="tip-item"><span class="icon">🏠</span>这一课看似"没教东西"，但心理建设非常重要</div><div class="tip-item"><span class="icon">🏠</span>让学员知道游泳不难，但需要时间；让他们期待而不是畏惧</div><div class="tip-item"><span class="icon">🏠</span>如果是成人学员，可以讲讲蛙泳的历史和有趣知识</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课看似"没教东西"，但心理建设非常重要</div><div class="tip-item blue"><span class="icon">💡</span>让学员知道游泳不难，但需要时间；让他们期待而不是畏惧</div><div class="tip-item blue"><span class="icon">💡</span>如果是成人学员，可以讲讲蛙泳的历史和有趣知识</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第2课：超级怕水怎么办？</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>消除或缓解对水的恐惧</div><div>建立在水中的安全感</div><div>找到"不怕水"的开关</div></div></div><h3>2.1 水中行走（15分钟）</h3>
+<p>### 2.1 水中行走（15分钟）</p>
+<ul><li>水深到胸口，慢慢走</li><li>向前走→向后走→侧向走→转圈圈</li><li>💡 <strong>感觉</strong>：感受水的阻力，脚步要踏实</li><li>⚠️ <strong>重点</strong>：不要急，一步一步来，水会托着你</li></ul>
+<h3>2.2 憋气练习（20分钟）</h3>
+<p>### 2.2 憋气练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>盆水憋气——用冷水，效果更好</td></tr><tr><td><strong>第二步</strong></td><td>水龙头下憋气——感受水流刺激</td></tr><tr><td><strong>第三步</strong></td><td>水中憋气——捏住鼻子，嘴巴张开发"啊"声</td></tr><tr><td>💡 <strong>感觉</strong></td><td>水不会伤害你，放松，放松</td></tr></tbody></table>
+<h3>2.3 心理建设（10分钟）</h3>
+<p>### 2.3 心理建设（10分钟）</p>
+<ul><li>"水不会伤害你"——这是核心理念</li><li>"放松身体，水会托着你"——信任水的浮力</li><li>教练或同伴在旁边：<strong>"有人会保护你"</strong>——安全感建立</li><li>告诉学员：<strong>如果不舒服，随时可以站起来</strong></li></ul>
+<h3>2.4 小朋友特别建议（5分钟）</h3>
+<p>### 2.4 小朋友特别建议（5分钟）</p>
+<ul><li>用游戏的方式：吹泡泡、吐口水、水枪战</li><li>不要强迫，尊重节奏</li><li>每次进步一点点，不要急于求成</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>水中行走</td><td>15分钟</td></tr><tr><td>憋气练习</td><td>20分钟</td></tr><tr><td>心理建设</td><td>10分钟</td></tr><tr><td>小朋友特别建议</td><td>5分钟（如果有小朋友）</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：洗脸盆憋气练习，每天3次，每次5组（憋气10秒+休息5秒）</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能在水中憋气15秒以上</div><div class="tip-item"><span class="icon">🏠</span>这一课可能需要1-2次课才能完成，不要赶进度</div><div class="tip-item"><span class="icon">🏠</span>学员怕的不是水，是"不知道会发生什么"——所以要提前告知每个步骤</div><div class="tip-item"><span class="icon">🏠</span>多用"我们试试"，少用"你必须"</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课可能需要1-2次课才能完成，不要赶进度</div><div class="tip-item blue"><span class="icon">💡</span>学员怕的不是水，是"不知道会发生什么"——所以要提前告知每个步骤</div><div class="tip-item blue"><span class="icon">💡</span>多用"我们试试"，少用"你必须"</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第3课：换气——基本练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>建立正确的呼吸节奏：吸→憋→呼</div><div>掌握"嘴巴吸气、鼻子呼气"的基本模式</div><div>为后续水中换气打下基础</div></div></div><h3>3.1 呼吸节奏建立（陆上练习，15分钟）</h3>
+<p>### 3.1 呼吸节奏建立（陆上练习，15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>节奏练习</strong></td><td>吸3秒→憋5秒→呼5秒</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像闻花香一样吸气，像吹蜡烛一样呼气</td></tr><tr><td>教练喊口令</td><td>"吸——憋——呼——"</td></tr></tbody></table>
+<h3>3.2 嘴巴吸气、鼻子呼气（10分钟）</h3>
+<p>### 3.2 嘴巴吸气、鼻子呼气（10分钟）</p>
+<ul><li>⚠️ <strong>绝对不能用鼻子吸气</strong>，否则必呛水</li><li>练习：嘴巴张开吸气 → 捏住鼻子 → 鼻子慢慢吐气</li><li>💡 <strong>感觉</strong>：吐气的时候像"喝汤"，气体从鼻子后面出来</li></ul>
+<h3>3.3 水中憋气进阶（20分钟）</h3>
+<p>### 3.3 水中憋气进阶（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>捏住鼻子，嘴巴张开发"啊"——感受气体从嘴里冒出来</td></tr><tr><td><strong>第二步</strong></td><td>不捏鼻子，嘴巴张开，头浸入水中，鼻子慢慢吐气</td></tr><tr><td><strong>第三步</strong></td><td>逐渐增加浸水深度，从下巴到嘴巴到鼻子</td></tr><tr><td>💡 <strong>感觉</strong></td><td>气泡从鼻子出来，像小鱼在吐泡泡</td></tr></tbody></table>
+<h3>3.4 "水不会伤害你"再次强化（5分钟）</h3>
+<p>### 3.4 "水不会伤害你"再次强化（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>水中的感觉是正常的，不要怕</td></tr><tr><td>鼓励</td><td>做得很好，继续</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>呼吸节奏建立</td><td>15分钟</td></tr><tr><td>嘴巴吸气鼻子呼气</td><td>10分钟</td></tr><tr><td>水中憋气进阶</td><td>20分钟</td></tr><tr><td>心理建设</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着镜子练"嘴巴吸气、鼻子呼气"</div><div class="tip-item"><span class="icon">🏠</span>目标：能自然做到"口吸鼻呼"，不混淆</div><div class="tip-item"><span class="icon">🏠</span>换气是一切的基础，这一课再怎么强调都不为过</div><div class="tip-item"><span class="icon">🏠</span>很多学员学游泳多年还在呛水，根源就是这一课没学好</div><div class="tip-item"><span class="icon">🏠</span>要让学员建立"呼吸通道"的正确概念：上面是嘴，下面是鼻子，不能串</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>换气是一切的基础，这一课再怎么强调都不为过</div><div class="tip-item blue"><span class="icon">💡</span>很多学员学游泳多年还在呛水，根源就是这一课没学好</div><div class="tip-item blue"><span class="icon">💡</span>要让学员建立"呼吸通道"的正确概念：上面是嘴，下面是鼻子，不能串</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第4课：换气——浅水区扶池边练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>在浅水区实际体验水中换气</div><div>掌握"抬头张嘴吸气、低头鼻子呼气"的节奏</div><div>建立水中换气的信心</div></div></div><h3>4.1 浅水区行走 + 适应（10分钟）</h3>
+<p>### 4.1 浅水区行走 + 适应（10分钟）</p>
+<ul><li>继续第一课的水中行走练习</li><li>双手扶池边，水深到胸口，慢慢走</li><li>感受浮力：身体变轻了</li></ul>
+<h3>4.2 扶池边换气练习（20分钟）</h3>
+<p>### 4.2 扶池边换气练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>预备姿势</strong></td><td>双手扶池边，身体浸入水中，下巴在水面下</td></tr><tr><td><strong>练习一</strong></td><td>抬头张嘴吸气 → 低头鼻子呼气</td></tr><tr><td><strong>练习二</strong></td><td>连续练习：吸一口气→低头吐泡泡→抬头吸气→低头吐泡泡</td></tr><tr><td><strong>练习三</strong></td><td>每组10次，休息10秒，重复3组</td></tr><tr><td>💡 <strong>感觉</strong></td><td>抬头的时候嘴巴像"张开的鱼"，低头的时候鼻子像"洒水壶"</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>吸气必须抬头，不能在水下用嘴吸气</td></tr></tbody></table>
+<h3>4.3 计时憋气换气（15分钟）</h3>
+<p>### 4.3 计时憋气换气（15分钟）</p>
+<ul><li>吸一口气，憋住，低头入水，鼻子慢慢吐气</li><li>计时：15秒→20秒→25秒</li><li>💡 <strong>感觉</strong>：时间够了再抬头，不要着急</li></ul>
+<h3>4.4 安全确认（5分钟）</h3>
+<p>### 4.4 安全确认（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>再次强调</td><td>不舒服就立刻抬头</td></tr><tr><td>告诉学员</td><td><strong>池边永远在你手边</strong>，随时可以扶</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>浅水区适应</td><td>10分钟</td></tr><tr><td>扶池边换气</td><td>20分钟</td></tr><tr><td>计时憋气</td><td>15分钟</td></tr><tr><td>安全确认</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练"抬头吸气、低头呼气"30次</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续完成10次完整的换气循环</div><div class="tip-item"><span class="icon">🏠</span>这是从"不怕水"到"会呼吸"的关键一步</div><div class="tip-item"><span class="icon">🏠</span>教练要一直在旁边，让学员知道"有人看着我，很安全"</div><div class="tip-item"><span class="icon">🏠</span>可以让学员互相看着练习，形成轻松的氛围</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这是从"不怕水"到"会呼吸"的关键一步</div><div class="tip-item blue"><span class="icon">💡</span>教练要一直在旁边，让学员知道"有人看着我，很安全"</div><div class="tip-item blue"><span class="icon">💡</span>可以让学员互相看着练习，形成轻松的氛围</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第5课：连续换气练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握连续换气的节奏</div><div>能连续做"抬头吸气、低头呼气"至少10次以上</div><div>为后续"踩水"和"漂浮"打下呼吸基础</div></div></div><h3>5.1 连续换气节奏练习（浅水区，20分钟）</h3>
+<p>### 5.1 连续换气节奏练习（浅水区，20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>吸一口气→低头吐泡泡（数3秒）→抬头吸气（嘴巴张开）→低头吐泡泡</td></tr><tr><td><strong>练习二</strong></td><td>连续10次，组间休息10秒，做3组</td></tr><tr><td><strong>练习三</strong></td><td>逐渐加快节奏，但保持质量</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像"小鸭子在水面"，一上一下，自然流畅</td></tr><tr><td>⚠️ <strong>关键</strong></td><td>每个动作都要完整——吸气要吸饱，呼气要呼尽</td></tr></tbody></table>
+<h3>5.2 换气与行走结合（15分钟）</h3>
+<p>### 5.2 换气与行走结合（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>扶池边练习</td><td>行走的同时做换气</td></tr><tr><td>向前走</td><td>低头时走一步，抬头时走一步</td></tr><tr><td>侧向走</td><td>体验不同方向的换气</td></tr><tr><td>💡 <strong>感觉</strong></td><td>换气时身体不要前倾，保持直立</td></tr></tbody></table>
+<h3>5.3 脱离池边的连续换气（15分钟）</h3>
+<p>### 5.3 脱离池边的连续换气（15分钟）</p>
+<ul><li>手离开池边，在浅水区站立</li><li>做连续换气，同时轻轻原地踏步</li><li>💡 <strong>感觉</strong>：脚踩池底，身体直立，嘴巴一直在水面上</li></ul>
+<h3>5.4 建立信心（5分钟）</h3>
+<p>### 5.4 建立信心（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>"你已经掌握了水中呼吸的基础"</td></tr><tr><td>鼓励</td><td>"接下来我们要学漂浮，这是游泳最重要的技能"</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>连续换气节奏</td><td>20分钟</td></tr><tr><td>换气与行走</td><td>15分钟</td></tr><tr><td>脱离池边练习</td><td>15分钟</td></tr><tr><td>信心建立</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆连续做20次换气，体会节奏</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续换气15次以上不停顿</div><div class="tip-item"><span class="icon">🏠</span>这一课要把换气练到"不用想就会"的程度</div><div class="tip-item"><span class="icon">🏠</span>呼吸是游泳的根基，呼吸不顺畅，后续所有动作都会乱</div><div class="tip-item"><span class="icon">🏠</span>达到"连续换气15次"才算合格，才能进入下一课</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课要把换气练到"不用想就会"的程度</div><div class="tip-item blue"><span class="icon">💡</span>呼吸是游泳的根基，呼吸不顺畅，后续所有动作都会乱</div><div class="tip-item blue"><span class="icon">💡</span>达到"连续换气15次"才算合格，才能进入下一课</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第6课：漂浮和漂浮站立</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握抱膝漂浮（团身漂浮）的动作</div><div>能在水中漂浮10秒以上</div><div>掌握从漂浮到站立的正确顺序</div></div></div><h3>6.1 抱膝漂浮讲解（5分钟）</h3>
+<p>### 6.1 抱膝漂浮讲解（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>目的</td><td>让身体像"气球"一样飘起来</td></tr><tr><td>口诀</td><td><strong>低头、抱膝、团成一团、像球一样</strong></td></tr><tr><td>关键点</td><td>头往下扎，屁股往上翘，整个人蜷起来</td></tr></tbody></table>
+<h3>6.2 陆上模仿练习（10分钟）</h3>
+<p>### 6.2 陆上模仿练习（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>岸上趴着练</td><td>像青蛙一样蜷缩</td></tr><tr><td>练习</td><td>低头看膝盖，膝盖往胸口收</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像虾一样弓着背</td></tr></tbody></table>
+<h3>6.3 水中抱膝漂浮练习（20分钟）</h3>
+<p>### 6.3 水中抱膝漂浮练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>扶池边，低头入水，感受浮力</td></tr><tr><td><strong>练习二</strong></td><td>手松开，慢慢蜷起来，感受"漂"的感觉</td></tr><tr><td><strong>练习三</strong></td><td>自己尝试漂，教练在旁边保护</td></tr><tr><td>💡 <strong>感觉</strong></td><td>水从身体两侧流过，身体很轻，像气球飘在空中</td></tr><tr><td>⚠️ <strong>常见错误</strong></td><td>身体不团、头不低、屁股不翘</td></tr></tbody></table>
+<h3>6.4 漂浮站立（15分钟）</h3>
+<p>### 6.4 漂浮站立（15分钟）</p>
+<ul><li>⚠️ <strong>这是本课最关键的技能</strong></li><li>口诀：<strong>先收手——再收腿——脚踩地——站起来</strong></li><li><strong>错误示范</strong>：先收腿，容易乱，容易呛水</li><li>分解动作：</li></ul>
+<p>1. 漂浮状态</p>
+<p>2. 双手从两侧收回来，抱住膝盖（手先动）</p>
+<p>3. 膝盖往胸口收，身体变短（腿后动）</p>
+<p>4. 脚踩池底（或者往下踩）</p>
+<p>5. 站稳，站起来</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>💡 <strong>感觉</strong></td><td>像蜗牛缩进壳里，再伸出来</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>抱膝漂浮讲解</td><td>5分钟</td></tr><tr><td>陆上模仿</td><td>10分钟</td></tr><tr><td>水中漂浮练习</td><td>20分钟</td></tr><tr><td>漂浮站立</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习"蜷缩——展开"的循环</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能独立完成漂浮+站立，不靠池边</div><div class="tip-item"><span class="icon">🏠</span>漂浮是游泳的"灵魂技能"，学会了漂浮就等于学会了50%的游泳</div><div class="tip-item"><span class="icon">🏠</span>这一课要让学员体验"被水托着"的感觉，建立对水的信任</div><div class="tip-item"><span class="icon">🏠</span>漂浮站立比漂浮更难，要多练"手先动"的口令</div><div class="tip-item"><span class="icon">🏠</span>安全第一：教练要站在学员旁边，随时准备扶</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>漂浮是游泳的"灵魂技能"，学会了漂浮就等于学会了50%的游泳</div><div class="tip-item blue"><span class="icon">💡</span>这一课要让学员体验"被水托着"的感觉，建立对水的信任</div><div class="tip-item blue"><span class="icon">💡</span>漂浮站立比漂浮更难，要多练"手先动"的口令</div><div class="tip-item blue"><span class="icon">💡</span>安全第一：教练要站在学员旁边，随时准备扶</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第7课：抬头换气</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"抬头换气"的方法</div><div>能做到"低头呼气、抬头吸气"</div><div>为蛙泳腿+呼吸配合做准备</div></div></div><h3>7.1 抬头换气原理（5分钟）</h3>
+<p>### 7.1 抬头换气原理（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>目的</td><td>在蛙泳中，腿打水时身体在水下，需要抬头吸气</td></tr><tr><td>关键</td><td><strong>嘴巴在水面上，鼻子在水下</strong></td></tr></tbody></table>
+<h3>7.2 水中站立抬头换气（15分钟）</h3>
+<p>### 7.2 水中站立抬头换气（15分钟）</p>
+<ul><li>站在浅水区，水到胸口</li><li><strong>练习一</strong>：深吸一口气，低头，鼻子慢慢吐泡泡 → 抬头，嘴巴张开吸气</li><li><strong>练习二</strong>：连续10次，节奏：吸3秒→憋1秒→呼3秒→抬头吸</li><li><strong>练习三</strong>：每组15次，休息10秒，做3组</li><li>💡 <strong>感觉</strong>：抬头的时候嘴巴像"张开的碗"，等着接空气</li></ul>
+<h3>7.3 扶池边抬头换气（15分钟）</h3>
+<p>### 7.3 扶池边抬头换气（15分钟）</p>
+<ul><li>双手扶池边，身体浸入水中</li><li>低头吐泡泡 → 抬头张嘴吸气 → 低头吐泡泡</li><li>⚠️ <strong>关键</strong>：抬头的时候不要呼气，要吸气；低头的时候才呼气</li></ul>
+<h3>7.4 蹬边滑行+抬头换气（10分钟）</h3>
+<p>### 7.4 蹬边滑行+抬头换气（10分钟）</p>
+<ul><li>蹬边滑行出去，滑到一半时：</li><li>抬头张嘴吸气 → 低头继续滑行</li><li>练习5-8次</li><li>💡 <strong>感觉</strong>：滑行的时候身体很流线，抬头的时候像"露出水面的小恐龙"</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>抬头换气原理</td><td>5分钟</td></tr><tr><td>水中站立练习</td><td>15分钟</td></tr><tr><td>扶池边练习</td><td>15分钟</td></tr><tr><td>蹬边+抬头</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练抬头换气，每组20次，每天3组</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：蹬边滑行+抬头换气能完成5次以上</div><div class="tip-item"><span class="icon">🏠</span>抬头换气是蛙泳的必备技能，因为蛙泳需要低头打水</div><div class="tip-item"><span class="icon">🏠</span>这一课要为下一课的"漂浮蹬腿+换气"做铺垫</div><div class="tip-item"><span class="icon">🏠</span>告诉学员：抬头换气是"不得已"的技能，能不抬头就不抬头（抬头会增加阻力）</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>抬头换气是蛙泳的必备技能，因为蛙泳需要低头打水</div><div class="tip-item blue"><span class="icon">💡</span>这一课要为下一课的"漂浮蹬腿+换气"做铺垫</div><div class="tip-item blue"><span class="icon">💡</span>告诉学员：抬头换气是"不得已"的技能，能不抬头就不抬头（抬头会增加阻力）</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第8课：如何在漂浮中控制身体重心</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解"身体重心"的概念</div><div>能在漂浮中控制身体保持水平</div><div>解决"脚往下沉"的问题</div></div></div><h3>8.1 重心概念讲解（5分钟）</h3>
+<p>### 8.1 重心概念讲解（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>陆上讲解</td><td>人的重心在肚脐附近</td></tr><tr><td>在水中</td><td>如果重心在水面以上，脚就会沉下去</td></tr><tr><td>目标</td><td><strong>让重心保持在水面以下，身体才能水平</strong></td></tr></tbody></table>
+<h3>8.2 脚往下沉的原理（10分钟）</h3>
+<p>### 8.2 脚往下沉的原理（10分钟）</p>
+<ul><li>为什么脚会沉？因为肺部有气，重心在上半身</li><li>💡 <strong>感觉</strong>：像秤一样，重的一头会沉下去</li><li>解决方案：<strong>吐气——把肺部的气吐掉一部分</strong></li></ul>
+<h3>8.3 吐气让身体水平（15分钟）</h3>
+<p>### 8.3 吐气让身体水平（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>深吸一口气漂浮 → 慢慢把气吐出来 → 观察身体变化</td></tr><tr><td><strong>练习二</strong></td><td>漂浮后，鼻子缓缓吐气 → 脚会慢慢浮上来</td></tr><tr><td><strong>练习三</strong></td><td>每次漂浮前先吐一口气，保持"气往下走"的感觉</td></tr><tr><td>💡 <strong>感觉</strong></td><td>气从肚子里往下走，像水流到脚那边</td></tr></tbody></table>
+<h3>8.4 重心调整练习（15分钟）</h3>
+<p>### 8.4 重心调整练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>双手往下压水——借力让脚浮起来</td></tr><tr><td><strong>练习二</strong></td><td>头往上抬——脚会往下沉（反向验证）</td></tr><tr><td><strong>练习三</strong></td><td>身体成一字形时，双手轻轻往下压水，控制平衡</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像天平一样，一边压下去，另一边就浮上来</td></tr></tbody></table>
+<h3>8.5 连续漂浮+重心控制（10分钟）</h3>
+<p>### 8.5 连续漂浮+重心控制（10分钟）</p>
+<ul><li>蹬边滑行出去 → 漂浮 → 控制身体水平 → 站立</li><li>目标：能滑出5米以上，身体保持水平</li><li>⚠️ <strong>常见错误</strong>：憋太多气、身体蜷缩、头抬太高</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>重心概念</td><td>5分钟</td></tr><tr><td>脚沉原理</td><td>10分钟</td></tr><tr><td>吐气练习</td><td>15分钟</td></tr><tr><td>重心调整</td><td>15分钟</td></tr><tr><td>连续练习</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>思考：为什么梦觉说要"吐气让身体水平"？</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：蹬边漂浮能滑出5米以上，身体接近水平</div><div class="tip-item"><span class="icon">🏠</span>这是"水性"好坏的重要标志——能控制身体在水中的位置</div><div class="tip-item"><span class="icon">🏠</span>水感好的学员会自己找到感觉，水感差的需要多引导</div><div class="tip-item"><span class="icon">🏠</span>这一课要反复强调"吐气"的重要性，憋气是漂浮最大的敌人</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这是"水性"好坏的重要标志——能控制身体在水中的位置</div><div class="tip-item blue"><span class="icon">💡</span>水感好的学员会自己找到感觉，水感差的需要多引导</div><div class="tip-item blue"><span class="icon">💡</span>这一课要反复强调"吐气"的重要性，憋气是漂浮最大的敌人</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第9课：蹬边漂浮</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握蹬边滑行的正确姿势</div><div>能在蹬边后保持流线型身体，滑行5米以上</div><div>为蛙泳腿练习打下基础（蹬边后打腿）</div></div></div><h3>9.1 蹬边姿势讲解（5分钟）</h3>
+<p>### 9.1 蹬边姿势讲解（5分钟）</p>
+<ul><li>面对池壁，站在池边</li><li>准备姿势：膝盖弯曲，手扶池边</li><li>⚠️ <strong>常见错误</strong>：站太直、离墙太远、手离开池边太早</li></ul>
+<h3>9.2 蹬边滑行动作分解（15分钟）</h3>
+<p>### 9.2 蹬边滑行动作分解（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>深吸一口气，低头</td></tr><tr><td><strong>第二步</strong></td><td>双手抓住池边，膝盖弯曲，像青蛙一样蹲着</td></tr><tr><td><strong>第三步</strong></td><td>脚后跟往池壁靠，膝盖在肩膀前方</td></tr><tr><td><strong>第四步</strong></td><td>手往前伸，身体趴平，手臂夹耳</td></tr><tr><td><strong>第五步</strong></td><td>脚用力蹬出去，身体像"箭"一样射出去</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像弹簧一样弹出去，身体要"直成一条线"</td></tr></tbody></table>
+<h3>9.3 蹬边滑行练习（20分钟）</h3>
+<p>### 9.3 蹬边滑行练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>正常蹬边滑行，滑到自然停下</td></tr><tr><td><strong>练习二</strong></td><td>蹬边后身体成一字形，双手往前伸</td></tr><tr><td><strong>练习三</strong></td><td>蹬边后手指轻轻拨水，感受水流从身体流过</td></tr><tr><td>⚠️ <strong>重点</strong></td><td></td></tr></tbody></table>
+<h3>9.4 蹬边漂浮站立（10分钟）</h3>
+<p>### 9.4 蹬边漂浮站立（10分钟）</p>
+<ul><li>蹬边滑行出去 → 滑行3-5米 → 漂浮站立</li><li>口诀：滑到一半 → 双手抱膝 → 脚踩地 → 站起来</li><li>💡 <strong>感觉</strong>：滑到最远的时候，身体开始往下沉，这时候准备站</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>蹬边姿势讲解</td><td>5分钟</td></tr><tr><td>动作分解</td><td>15分钟</td></tr><tr><td>蹬边滑行练习</td><td>20分钟</td></tr><tr><td>蹬边漂浮站立</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：想象蹬边漂浮的动作，练习"身体成一字形"</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：蹬边漂浮能滑出5米以上，身体接近水平</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第10课：蛙泳腿的基础动作练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握蛙泳腿"收→翻→蹬→夹→飘"五步口诀</div><div>能在岸上正确模仿蛙泳腿动作</div><div>理解翻脚是蛙泳腿最关键的技术</div></div></div><h3>10.1 蛙泳腿五步口诀（10分钟）</h3>
+<p>### 10.1 蛙泳腿五步口诀（10分钟）</p>
+<ul><li>口诀：<strong>收 → 翻 → 蹬 → 夹 → 飘</strong></li><li>每一步讲解清楚，让学员建立动作框架</li><li>💡 <strong>感觉记忆</strong>：</li><li>收：像青蛙收腿</li><li>翻：像脚踩书页翻起来</li><li>蹬：像踹一面看不见的墙</li><li>夹：像憋尿一样的力量</li><li>飘：像在水里飘一会儿</li></ul>
+<h3>10.2 陆上模仿练习（池边，25分钟）</h3>
+<p>### 10.2 陆上模仿练习（池边，25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>趴在池边，手臂伸直，抬头看前方</td></tr><tr><td><strong>练习二</strong></td><td>腿在水中慢慢做"收"的动作</td></tr><tr><td><strong>练习三</strong></td><td>做"翻"的动作——脚尖外翻，脚心朝后</td></tr><tr><td><strong>练习四</strong></td><td>做"蹬"的动作——脚往后蹬</td></tr><tr><td><strong>练习五</strong></td><td>做"夹"的动作——脚并拢</td></tr><tr><td><strong>练习六</strong></td><td>做"飘"的动作——腿伸直，漂一会儿</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>翻脚是技术核心，翻不好，蹬腿就不走水</td></tr></tbody></table>
+<h3>10.3 教练辅助（10分钟）</h3>
+<p>### 10.3 教练辅助（10分钟）</p>
+<ul><li>教练用手轻压学员脚踝，感受翻脚的方向</li><li>学员做动作，教练感受力量是否正确</li><li>💡 <strong>感觉</strong>：脚踝要放松，像"扇子"一样翻开</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>口诀讲解</td><td>10分钟</td></tr><tr><td>陆上模仿</td><td>25分钟</td></tr><tr><td>教练辅助</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：趴在床边练习蛙泳腿，体会"翻脚"的感觉</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能在水中做出完整的"收→翻→蹬→夹"动作</div><div class="tip-item"><span class="icon">🏠</span>蛙泳腿是蛙泳最重要的技术，腿学不好，手和呼吸都白搭</div><div class="tip-item"><span class="icon">🏠</span>这一课至少要花1-2次课来巩固，不要急着往下走</div><div class="tip-item"><span class="icon">🏠</span>翻脚是难点，翻好了就成功了一半</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>蛙泳腿是蛙泳最重要的技术，腿学不好，手和呼吸都白搭</div><div class="tip-item blue"><span class="icon">💡</span>这一课至少要花1-2次课来巩固，不要急着往下走</div><div class="tip-item blue"><span class="icon">💡</span>翻脚是难点，翻好了就成功了一半</div></div></div>
+<div class="stage-header green">
+  <div class="stage-num">1</div>
+  <div class="stage-info">
+    <h2>第11课</h2>
+    <p>漂浮蹬腿</p>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第12课：蛙泳腿和换气的配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握蛙泳腿+抬头换气的配合节奏</div><div>能做到"蹬腿的时候头在水下，抬头的时候腿停"</div><div>为完整的蛙泳配合打下基础</div></div></div><h3>12.1 配合原理讲解（5分钟）</h3>
+<p>### 12.1 配合原理讲解（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>口诀</td><td><strong>低头打水，抬头吸气</strong></td></tr><tr><td>⚠️ <strong>不能同时做</strong></td><td>抬头的时候腿停，蹬腿的时候头低</td></tr><tr><td>节奏</td><td><strong>蹬→漂→抬头吸→低头→收→翻→蹬</strong></td></tr></tbody></table>
+<h3>12.2 分解配合练习（20分钟）</h3>
+<p>### 12.2 分解配合练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>漂浮，头浸入水中，做一次蛙泳腿，漂一会儿</td></tr><tr><td><strong>练习二</strong></td><td>在蹬腿后的"漂"阶段，抬头张嘴吸气</td></tr><tr><td><strong>练习三</strong></td><td>低头，鼻子吐气，同时做下一次蛙泳腿</td></tr><tr><td>💡 <strong>感觉</strong></td><td>抬头吸气的时候身体往下一点（正常），低头吐气的时候身体往上一点</td></tr></tbody></table>
+<h3>12.3 连续配合练习（20分钟）</h3>
+<p>### 12.3 连续配合练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>蹬2次腿+抬头换气1次</td></tr><tr><td><strong>练习二</strong></td><td>蹬3次腿+抬头换气1次</td></tr><tr><td><strong>练习三</strong></td><td>连续配合：蹬腿→漂→抬头→低头→蹬腿→漂→抬头……</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>抬头吸气只吸一次，然后继续打腿</td></tr></tbody></table>
+<h3>12.4 扶板换气练习（10分钟）</h3>
+<p>### 12.4 扶板换气练习（10分钟）</p>
+<ul><li>双手扶浮板，打蛙泳腿</li><li>每打2-3次腿，抬头换气一次</li><li>💡 <strong>感觉</strong>：换气的时候身体像"跷跷板"，一头上来一头下去</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>配合原理</td><td>5分钟</td></tr><tr><td>分解练习</td><td>20分钟</td></tr><tr><td>连续配合</td><td>20分钟</td></tr><tr><td>扶板换气</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：对着水盆练习"蹬腿→漂→抬头→低头"的节奏</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：扶板打腿+换气能连续游15米以上</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第13课：如何控制前进方向？</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解"不走水"的原因</div><div>掌握让身体往前走的技术要点</div><div>能做到"游直线"而不是"画圈圈"</div></div></div><h3>13.1 "不走水"的原因分析（10分钟）</h3>
+<p>### 13.1 "不走水"的原因分析（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>原因一</strong></td><td>翻脚不到位——脚没有铲到水</td></tr><tr><td><strong>原因二</strong></td><td>蹬夹不连贯——蹬和夹之间有停顿</td></tr><tr><td><strong>原因三</strong></td><td>夹水没夹紧——蹬完没有并拢</td></tr><tr><td><strong>原因四</strong></td><td>身体不流线——手臂或头位置不对</td></tr></tbody></table>
+<h3>13.2 翻脚强化练习（15分钟）</h3>
+<p>### 13.2 翻脚强化练习（15分钟）</p>
+<ul><li>站在浅水区，双手扶池壁</li><li>单腿做翻脚练习：收腿→翻脚→蹬→夹</li><li>教练检查脚踝是否放松、角度是否正确</li><li>💡 <strong>感觉</strong>：脚踝像"门轴"一样灵活，翻的时候脚心像"勺子"铲水</li></ul>
+<h3>13.3 蹬夹连贯练习（15分钟）</h3>
+<p>### 13.3 蹬夹连贯练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>陆上练习</td><td>趴在池边，感受"蹬——夹"是连续动作</td></tr><tr><td>水中练习</td><td>慢动作做蛙泳腿，重点是"夹"的力量</td></tr><tr><td>💡 <strong>感觉</strong></td><td>蹬完立刻夹，中间不能有停顿，像"剪刀合上"一样</td></tr></tbody></table>
+<h3>13.4 身体流线型练习（10分钟）</h3>
+<p>### 13.4 身体流线型练习（10分钟）</p>
+<ul><li>蹬边漂浮，检查身体是否"直成一条线"</li><li>手臂夹耳，头放低，肩膀放松</li><li>身体不应该有"塌腰"或者"翘屁股"的现象</li></ul>
+<h3>13.5 方向感知练习（5分钟）</h3>
+<p>### 13.5 方向感知练习（5分钟）</p>
+<ul><li>在泳池里游10米，用泳池线作为参照</li><li>观察自己是游直的还是歪的</li><li>歪的话，检查哪边肩膀更高</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原因分析</td><td>10分钟</td></tr><tr><td>翻脚强化</td><td>15分钟</td></tr><tr><td>蹬夹练习</td><td>15分钟</td></tr><tr><td>流线型</td><td>10分钟</td></tr><tr><td>方向感知</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>思考：自己的问题主要是哪个环节？翻脚？蹬夹？身体流线？</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能游出相对直的线路</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第14课：如何预防蛙泳腿的伤痛？</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>了解蛙泳腿可能造成的伤痛</div><div>掌握正确的热身和放松方法</div><div>学会科学的练习节奏</div></div></div><h3>14.1 蛙泳腿可能造成的伤痛（5分钟）</h3>
+<p>### 14.1 蛙泳腿可能造成的伤痛（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>膝盖伤痛</strong></td><td>最常见，膝盖内侧压力过大</td></tr><tr><td><strong>脚踝伤痛</strong></td><td>翻脚角度太大或者脚踝僵硬</td></tr><tr><td><strong>腰部伤痛</strong></td><td>塌腰导致腰部压力过大</td></tr></tbody></table>
+<h3>14.2 伤痛原因分析（10分钟）</h3>
+<p>### 14.2 伤痛原因分析（10分钟）</p>
+<ul><li><strong>膝盖痛的原因</strong>：</li><li>膝盖外翻太大</li><li>蹬腿的时候膝盖先动</li><li>练习强度太大</li><li><strong>脚踝痛的原因</strong>：</li><li>翻脚角度过大（超过45度）</li><li>脚踝没有充分活动</li><li><strong>腰痛的原因</strong>：</li><li>塌腰，骨盆翻转</li><li>头部抬太高</li></ul>
+<h3>14.3 热身动作（10分钟）</h3>
+<p>### 14.3 热身动作（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>陆上热身</td><td>踝关节环绕、膝关节环绕、髋关节旋转</td></tr><tr><td>水中热身</td><td>慢慢走，踢踢腿，泡泡水</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>下水前一定要热身，不要直接开始打腿</td></tr></tbody></table>
+<h3>14.4 正确练习节奏（10分钟）</h3>
+<p>### 14.4 正确练习节奏（10分钟）</p>
+<ul><li>练习强度：每组不超过25米，中间休息30秒</li><li>不要"一口气打到底"，要"打几下，飘一会儿"</li><li>💡 <strong>感觉</strong>：累了就休息，不要硬撑</li></ul>
+<h3>14.5 放松拉伸（5分钟）</h3>
+<p>### 14.5 放松拉伸（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>上岸后</td><td>拉伸小腿、拉伸大腿后侧、拉伸髋关节</td></tr><tr><td>水中放松</td><td>仰漂1-2分钟，让身体完全放松</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>伤痛类型</td><td>5分钟</td></tr><tr><td>原因分析</td><td>10分钟</td></tr><tr><td>热身</td><td>10分钟</td></tr><tr><td>练习节奏</td><td>10分钟</td></tr><tr><td>放松拉伸</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课很重要，好的教练要保护学员的身体</div><div class="tip-item blue"><span class="icon">💡</span>游泳本应该是健康的运动，不要因为错误练习导致伤痛</div><div class="tip-item blue"><span class="icon">💡</span>发现学员有不适，立刻停止练习，让他休息</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第15课：仰头换气</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"仰头换气"的方法</div><div>理解仰漂的感觉</div><div>为"抬头蛙"打下基础</div></div></div><h3>15.1 仰漂练习（15分钟）</h3>
+<p>### 15.1 仰漂练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>慢慢往后躺，双手往两侧打开，掌心朝上</td></tr><tr><td><strong>练习二</strong></td><td>仰漂的时候耳朵在水面下，嘴巴在水面上</td></tr><tr><td><strong>练习三</strong></td><td>深吸一口气，保持身体放松，体会"漂"的感觉</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像躺在水床上，身体很放松，水托着后背</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>不要憋气，要呼气（从鼻子或者嘴）</td></tr></tbody></table>
+<h3>15.2 仰头换气练习（15分钟）</h3>
+<p>### 15.2 仰头换气练习（15分钟）</p>
+<ul><li>仰漂状态下：</li><li>嘴巴张开吸气 → 鼻子吐气</li><li>或者：鼻子吐气 → 嘴巴吸气</li><li>💡 <strong>感觉</strong>：嘴巴像"碗"一样张开，等着接空气</li></ul>
+<h3>15.3 仰漂站立（10分钟）</h3>
+<p>### 15.3 仰漂站立（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>仰漂 → 屈膝 → 收腿 → 脚踩地 → 站起来</td></tr><tr><td><strong>练习二</strong></td><td>仰漂 → 双手往下压水 → 收腿 → 站起来</td></tr><tr><td>⚠️ <strong>关键</strong></td><td>先搞清楚站立的方向（脚往哪边放）</td></tr></tbody></table>
+<h3>15.4 仰头换气与蛙泳（5分钟）</h3>
+<p>### 15.4 仰头换气与蛙泳（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>讲解</td><td>在蛙泳中，如果想游得更轻松，可以偶尔仰头换气</td></tr><tr><td>用途</td><td>休息、调整节奏、观察前方</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>仰漂练习</td><td>15分钟</td></tr><tr><td>仰头换气</td><td>15分钟</td></tr><tr><td>仰漂站立</td><td>10分钟</td></tr><tr><td>用途讲解</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第16课：仰漂站立和转圈圈</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>熟练掌握仰漂站立</div><div>能在仰漂状态下转圈</div><div>增强水中身体控制能力</div></div></div><h3>16.1 仰漂站立强化（15分钟）</h3>
+<p>### 16.1 仰漂站立强化（15分钟）</p>
+<ul><li>仰漂 → 双手往头顶方向压水 → 屈膝收腿 → 脚踩地 → 站起来</li><li>练习10次以上，形成肌肉记忆</li><li>💡 <strong>感觉</strong>：转圈的时候要慢，身体要放松</li></ul>
+<h3>16.2 仰漂转圈（15分钟）</h3>
+<p>### 16.2 仰漂转圈（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>仰漂，双手往一侧压水，身体原地转圈</td></tr><tr><td><strong>练习二</strong></td><td>仰漂转一圈（360度）</td></tr><tr><td><strong>练习三</strong></td><td>仰漂转半圈，然后站起来</td></tr><tr><td>⚠️ <strong>关键</strong></td><td>手压水的时候身体才会转，手不压水身体不会转</td></tr></tbody></table>
+<h3>16.3 仰漂放松（10分钟）</h3>
+<p>### 16.3 仰漂放松（10分钟）</p>
+<ul><li>仰漂1-2分钟，完全放松</li><li>💡 <strong>感觉</strong>：像躺在床上，看天空，很放松</li><li>告诉学员：这是水中最舒服的姿势，学会它</li></ul>
+<h3>16.4 综合练习（10分钟）</h3>
+<p>### 16.4 综合练习（10分钟）</p>
+<ul><li>仰漂 → 转圈 → 站立 → 再仰漂</li><li>连续练习5次</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>仰漂站立强化</td><td>15分钟</td></tr><tr><td>仰漂转圈</td><td>15分钟</td></tr><tr><td>放松练习</td><td>10分钟</td></tr><tr><td>综合练习</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>仰漂站立是"保命技能"，一定要让每个学员都会</div><div class="tip-item blue"><span class="icon">💡</span>仰漂是最舒服的水中姿势，可以帮助学员建立对水的信任</div><div class="tip-item blue"><span class="icon">💡</span>这一课可以作为"趣味课"，让学员在玩水中学技能</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第17课：初级踩水</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解踩水的概念和用途</div><div>掌握"简单的踩水"动作</div><div>为后续学习"抬头蛙"打下基础</div></div></div><h3>17.1 踩水概念（5分钟）</h3>
+<p>### 17.1 踩水概念（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>什么是踩水</td><td>身体直立，头在水面上，脚在水下踩踏</td></tr><tr><td>用途</td><td>休息、观察、调整呼吸、在水中保持位置</td></tr></tbody></table>
+<h3>17.2 简单踩水动作（20分钟）</h3>
+<p>### 17.2 简单踩水动作（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>姿势</strong></td><td>身体直立，肩膀在水面下</td></tr><tr><td><strong>手</strong></td><td>双手在胸前往下压水</td></tr><tr><td><strong>脚</strong></td><td>像走路一样，脚往下踩，膝盖稍微弯曲</td></tr><tr><td>💡 <strong>感觉</strong></td><td>脚像"踩自行车"，但踩的是水，不是踏板</td></tr><tr><td>口诀</td><td><strong>手下压，脚下踩，身体直立头在上</strong></td></tr></tbody></table>
+<h3>17.3 踩水练习（20分钟）</h3>
+<p>### 17.3 踩水练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>双手扶池壁，脚踩水</td></tr><tr><td><strong>练习二</strong></td><td>离开池壁，手扶浮板，脚踩水</td></tr><tr><td><strong>练习三</strong></td><td>手离开浮板，独立踩水30秒</td></tr><tr><td><strong>练习四</strong></td><td>踩水10秒，休息5秒，重复5组</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>头要一直在水面上，不能沉下去</td></tr></tbody></table>
+<h3>17.4 踩水与呼吸（5分钟）</h3>
+<p>### 17.4 踩水与呼吸（5分钟）</p>
+<ul><li>踩水的时候：用嘴吸气，用鼻子或者嘴吐气</li><li>保持呼吸节奏，不要憋气</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>踩水概念</td><td>5分钟</td></tr><tr><td>动作讲解</td><td>20分钟</td></tr><tr><td>踩水练习</td><td>20分钟</td></tr><tr><td>呼吸节奏</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第18课：简单的滚翻和倒立</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"前滚翻"的基本动作</div><div>体验"倒立"的感觉</div><div>增强水中的空间感和身体控制能力</div></div></div><h3>18.1 前滚翻概念（5分钟）</h3>
+<p>### 18.1 前滚翻概念（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>什么是前滚翻</td><td>在水中向前翻转180度</td></tr><tr><td>用途</td><td>转身、调头、放松</td></tr></tbody></table>
+<h3>18.2 前滚翻分解动作（20分钟）</h3>
+<p>### 18.2 前滚翻分解动作（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>深吸一口气，身体往前倒</td></tr><tr><td><strong>第二步</strong></td><td>头往下埋，双手往前伸</td></tr><tr><td><strong>第三步</strong></td><td>身体向前翻转，双脚从头顶方向翻过来</td></tr><tr><td><strong>第四步</strong></td><td>双脚落池底，站起来</td></tr><tr><td>⚠️ <strong>注意</strong></td><td>闭眼！滚翻的时候一定要闭眼，不然会晕</td></tr></tbody></table>
+<h3>18.3 倒立练习（15分钟）</h3>
+<p>### 18.3 倒立练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>在浅水区，双手撑池底，头往下，脚在水面上</td></tr><tr><td><strong>练习二</strong></td><td>在教练保护下，倒立10秒</td></tr><tr><td><strong>练习三</strong></td><td>倒立状态下，用脚轻轻踩水</td></tr><tr><td>💡 <strong>感觉</strong></td><td>头朝下看世界，身体很轻，像在太空漂浮</td></tr></tbody></table>
+<h3>18.4 综合练习（10分钟）</h3>
+<p>### 18.4 综合练习（10分钟）</p>
+<ul><li>漂浮 → 前滚翻 → 站起来 → 倒立 → 站起来</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>概念讲解</td><td>5分钟</td></tr><tr><td>前滚翻</td><td>20分钟</td></tr><tr><td>倒立练习</td><td>15分钟</td></tr><tr><td>综合练习</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课是"趣味课"，让学员体验更多水中技能</div><div class="tip-item blue"><span class="icon">💡</span>前滚翻是游泳转身的基础，但不是必修技能</div><div class="tip-item blue"><span class="icon">💡</span>倒立要注意安全，最好在浅水区，有教练保护</div></div></div>
+<div class="stage-header blue">
+  <div class="stage-num">2</div>
+  <div class="stage-info">
+    <h2>第19课</h2>
+    <p>蛙泳划手和换气的配合</p>
+  </div>
+</div>
+<div class="stage-header purple">
+  <div class="stage-num">3</div>
+  <div class="stage-info">
+    <h2>第20课</h2>
+    <p>蛙泳划手和换气的配合</p>
+  </div>
+</div>
+<div class="lesson purple"><div class="lesson-header">
+  <div class="lesson-title">第21课：蛙泳全身配合</div>
+  <span class="lesson-badge badge-purple">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握完整的蛙泳配合</div><div>能把"划手+换气+蛙泳腿"串联起来</div><div>能连续游10米以上</div></div></div><h3>21.1 配合节奏强化（15分钟）</h3>
+<p>### 21.1 配合节奏强化（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>慢动作分解（每个动作单独做）</td><td></td></tr></tbody></table>
+<p>1. <strong>飘着</strong>：身体伸直，往前滑行</p>
+<p>2. <strong>划手</strong>：双手往外划，手掌感受水的压力</p>
+<p>3. <strong>抬头</strong>：划到"抱"的位置，抬头张嘴吸气</p>
+<p>4. <strong>伸手</strong>：手臂往前伸，低头</p>
+<p>5. <strong>收腿</strong>：双手夹耳，头低下，膝盖往胸口收</p>
+<p>6. <strong>翻脚</strong>：脚尖外翻，脚心朝后</p>
+<p>7. <strong>蹬夹</strong>：脚往后蹬，蹬完立刻夹并</p>
+<p>8. <strong>漂</strong>：身体伸直往前滑行</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>💡 <strong>核心理念</strong></td><td>慢！慢！慢！动作越快越容易乱，慢下来才能找感觉</td></tr></tbody></table>
+<h3>21.2 完整配合练习（25分钟）</h3>
+<p>### 21.2 完整配合练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>慢动作完整配合，每个动作做3秒以上</td></tr><tr><td><strong>练习二</strong></td><td>正常速度配合，但允许"飘"的时间长一点</td></tr><tr><td><strong>练习三</strong></td><td>连续配合3次，休息10秒</td></tr><tr><td><strong>练习四</strong></td><td>连续配合10次，争取游出10米</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>每组配合之间要"漂"，不能连续做动作不停</td></tr></tbody></table>
+<h3>21.3 常见错误纠正（10分钟）</h3>
+<p>### 21.3 常见错误纠正（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>❌ <strong>身体下沉</strong></td><td>蹬腿没用力，或者抬头太高</td></tr><tr><td>❌ <strong>游得很累</strong></td><td>手脚同时动，或者蹬腿时机不对</td></tr><tr><td>❌ <strong>不走水</strong></td><td>翻脚不到位，蹬腿没夹水</td></tr><tr><td>❌ <strong>呛水</strong></td><td>抬头换气太急，嘴巴没张到位</td></tr></tbody></table>
+<h3>21.4 信心建立（5分钟）</h3>
+<p>### 21.4 信心建立（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>"你已经能游蛙泳了！虽然游得不好，但动作是完整的。"</td></tr><tr><td>鼓励</td><td>"继续练习，慢慢就会越来越顺。"</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>节奏强化</td><td>15分钟</td></tr><tr><td>完整配合</td><td>25分钟</td></tr><tr><td>错误纠正</td><td>10分钟</td></tr><tr><td>信心建立</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson purple"><div class="lesson-header">
+  <div class="lesson-title">第22课：初级踩水在游泳中的应用</div>
+  <span class="lesson-badge badge-purple">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握初级踩水的正确动作</div><div>理解踩水在蛙泳中的实际应用</div><div>能在游蛙泳时用踩水调整呼吸</div></div></div><h3>22.1 踩水动作强化（15分钟）</h3>
+<p>### 22.1 踩水动作强化（15分钟）</p>
+<ul><li>身体直立，肩膀在水面下</li><li>双手在胸前往下压水，手掌朝下</li><li>脚在水中像"踩自行车"一样往下踩</li><li>⚠️ <strong>重点</strong>：头一直在水面上，嘴巴呼吸</li></ul>
+<h3>22.2 踩水与蛙泳的结合（15分钟）</h3>
+<p>### 22.2 踩水与蛙泳的结合（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游蛙泳，游累了就站起来踩水休息</td></tr><tr><td><strong>练习二</strong></td><td>游蛙泳时偶尔站起来踩水，调整呼吸，再继续游</td></tr><tr><td><strong>练习三</strong></td><td>尝试"踩水换气"——踩水的时候抬头张嘴吸气</td></tr></tbody></table>
+<h3>22.3 踩水中的换气（10分钟）</h3>
+<p>### 22.3 踩水中的换气（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>踩水的时候</td><td>用嘴吸气，用鼻子和嘴吐气</td></tr><tr><td>节奏</td><td>吸1-2秒 → 踩水3-4秒 → 吸1-2秒</td></tr><tr><td>💡 <strong>感觉</strong></td><td>踩水的时候身体像"水上的气球"，有浮力托着</td></tr></tbody></table>
+<h3>22.4 踩水耐力练习（10分钟）</h3>
+<p>### 22.4 踩水耐力练习（10分钟）</p>
+<ul><li>连续踩水30秒，休息10秒，重复5组</li><li>逐渐增加踩水时间到1分钟</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>动作强化</td><td>15分钟</td></tr><tr><td>蛙泳结合</td><td>15分钟</td></tr><tr><td>换气练习</td><td>10分钟</td></tr><tr><td>耐力练习</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson purple"><div class="lesson-header">
+  <div class="lesson-title">第23课：中级踩水及其在游泳中的应用</div>
+  <span class="lesson-badge badge-purple">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握更流畅的中级踩水</div><div>能用踩水维持身体位置</div><div>能在踩水中完成完整的换气</div></div></div><h3>23.1 中级踩水动作（15分钟）</h3>
+<p>### 23.1 中级踩水动作（15分钟）</p>
+<ul><li>与初级踩水的区别：</li><li>手压水的幅度更大、更连贯</li><li>脚的踩踏更流畅，像"走路"而不是"踩踏板"</li><li>身体更稳定，不前后晃</li></ul>
+<h3>23.2 中级踩水练习（15分钟）</h3>
+<p>### 23.2 中级踩水练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>手做"划→抱→伸"的动作来压水（像蛙泳手的简化版）</td></tr><tr><td><strong>练习二</strong></td><td>脚的踩踏和手的压水配合，形成节奏</td></tr><tr><td><strong>练习三</strong></td><td>连续踩水1分钟，身体保持稳定</td></tr></tbody></table>
+<h3>23.3 踩水在深水区的应用（10分钟）</h3>
+<p>### 23.3 踩水在深水区的应用（10分钟）</p>
+<ul><li>在深水区无法站立时，用踩水维持身体</li><li>踩水的同时可以观察四周</li><li>踩水时可以用嘴吸气，用鼻子和嘴吐气</li></ul>
+<h3>23.4 综合练习（10分钟）</h3>
+<p>### 23.4 综合练习（10分钟）</p>
+<ul><li>游蛙泳 → 踩水调整 → 继续游 → 踩水调整 → 继续游</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>中级踩水动作</td><td>15分钟</td></tr><tr><td>练习</td><td>15分钟</td></tr><tr><td>深水区应用</td><td>10分钟</td></tr><tr><td>综合练习</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson purple"><div class="lesson-header">
+  <div class="lesson-title">第24课：抬头蛙</div>
+  <span class="lesson-badge badge-purple">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"抬头蛙"的动作</div><div>理解"抬头蛙"与"正常蛙泳"的区别</div><div>能在抬头蛙中保持前进</div></div></div><h3>24.1 抬头蛙的原理（5分钟）</h3>
+<p>### 24.1 抬头蛙的原理（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>正常蛙泳</td><td>低头滑行，抬头换气</td></tr><tr><td>抬头蛙</td><td>头一直抬着，嘴巴一直在水面上</td></tr><tr><td>适用场景</td><td>初学者、水浑浊需要观察、踩水不熟练</td></tr></tbody></table>
+<h3>24.2 抬头蛙动作（20分钟）</h3>
+<p>### 24.2 抬头蛙动作（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>姿势</strong></td><td>头抬着，眼睛往前看，身体大约45度倾斜</td></tr><tr><td><strong>手</strong></td><td>像正常蛙泳一样划手，但幅度可以小一点</td></tr><tr><td><strong>腿</strong></td><td>像正常蛙泳一样蹬腿</td></tr><tr><td><strong>换气</strong></td><td>一直用嘴吸气（因为嘴一直露出水面）</td></tr><tr><td>⚠️ <strong>注意</strong></td><td>抬头蛙比正常蛙泳累，因为阻力大、无法借滑行的力</td></tr></tbody></table>
+<h3>24.3 抬头蛙练习（20分钟）</h3>
+<p>### 24.3 抬头蛙练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>扶浮板，抬头蛙打腿</td></tr><tr><td><strong>练习二</strong></td><td>不扶浮板，抬头蛙打腿</td></tr><tr><td><strong>练习三</strong></td><td>抬头蛙完整配合</td></tr><tr><td>💡 <strong>感觉</strong></td><td>头抬起来看世界，像小青蛙在水面上游</td></tr></tbody></table>
+<h3>24.4 何时用抬头蛙（5分钟）</h3>
+<p>### 24.4 何时用抬头蛙（5分钟）</p>
+<ul><li>水太浑浊看不清的时候</li><li>需要观察前方的时候</li><li>踩水还不熟练的时候</li><li>正常蛙泳游累了想换换节奏的时候</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>5分钟</td></tr><tr><td>动作练习</td><td>20分钟</td></tr><tr><td>抬头蛙练习</td><td>20分钟</td></tr><tr><td>何时使用</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson purple"><div class="lesson-header">
+  <div class="lesson-title">第25课：游蛙泳总沉下去怎么办？</div>
+  <span class="lesson-badge badge-purple">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>诊断"沉下去"的根本原因</div><div>掌握针对性的解决方法</div><div>能让自己的蛙泳游得更稳</div></div></div><h3>25.1 "沉下去"的原因分析（10分钟）</h3>
+<p>### 25.1 "沉下去"的原因分析（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>原因一</strong></td><td>蹬腿没力——蹬完腿没有走水，身体下沉</td></tr><tr><td><strong>原因二</strong></td><td>滑行时间太短——做完动作就急着做下一个</td></tr><tr><td><strong>原因三</strong></td><td>抬头太高——头抬起来的时候身体就会往下沉</td></tr><tr><td><strong>原因四</strong></td><td>肺部气太多——憋气太多，身体太重</td></tr></tbody></table>
+<h3>25.2 解决方案（20分钟）</h3>
+<p>### 25.2 解决方案（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>方案一</strong></td><td>强化蹬腿力量</td></tr><tr><td>翻脚到位</td><td>脚尖外翻，脚心朝后</td></tr><tr><td>蹬夹连贯</td><td>蹬完立刻夹，像剪刀合上</td></tr><tr><td>蹬完漂</td><td>每蹬一次腿，漂2-3秒</td></tr></tbody></table>
+<ul><li><strong>方案二</strong>：延长滑行时间</li><li>每个周期之间要有"飘"的时间</li><li>动作慢一点，不要急</li></ul>
+<ul><li><strong>方案三</strong>：降低换气高度</li><li>嘴巴刚露出水面就吸，不要抬太高</li><li>下巴往前伸，不是头往后仰</li></ul>
+<ul><li><strong>方案四</strong>：吐气充分</li><li>每一次低头都要把气吐完</li><li>肺部气少，身体才不会太重</li></ul>
+<h3>25.3 分步练习（15分钟）</h3>
+<p>### 25.3 分步练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>深吸气 → 低头 → 慢慢吐完 → 抬头吸 → 低头</td></tr><tr><td><strong>练习二</strong></td><td>蹬一次腿 → 漂3秒 → 再蹬一次腿</td></tr><tr><td><strong>练习三</strong></td><td>完整配合，每个动作慢做3秒</td></tr></tbody></table>
+<h3>25.4 自我诊断（5分钟）</h3>
+<p>### 25.4 自我诊断（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>找出自己"沉"的原因，对症练习</td></tr><tr><td>记录</td><td>每次游泳时注意自己的问题在哪里</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原因分析</td><td>10分钟</td></tr><tr><td>解决方案</td><td>20分钟</td></tr><tr><td>分步练习</td><td>15分钟</td></tr><tr><td>自我诊断</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson purple"><div class="lesson-header">
+  <div class="lesson-title">第26课：如何游直线？</div>
+  <span class="lesson-badge badge-purple">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解"游直线"的重要性</div><div>掌握让蛙泳游直的方法</div><div>完成整个蛙泳入门课程</div></div></div><h3>26.1 游直线的重要性（5分钟）</h3>
+<p>### 26.1 游直线的重要性（5分钟）</p>
+<ul><li>游直线 = 效率最高 = 最省力 = 游得最快</li><li>不走直线的常见表现：游到一半撞到泳池壁、S形前进</li></ul>
+<h3>26.2 不走直线的原因（10分钟）</h3>
+<p>### 26.2 不走直线的原因（10分钟）</p>
+<ul><li><strong>原因一</strong>：两边力量不均匀</li><li>左手比右手划得多</li><li>左腿比右腿蹬得多</li><li><strong>原因二</strong>：换气时身体歪</li><li>总是往一边转头</li><li>导致身体向另一边歪</li><li><strong>原因三</strong>：头部位置不正</li><li>头偏向一边</li><li>导致身体向另一边偏移</li></ul>
+<h3>26.3 游直线的练习方法（20分钟）</h3>
+<p>### 26.3 游直线的练习方法（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>方法一</strong></td><td>看泳池底的线，让自己的身体和线平行</td></tr><tr><td><strong>方法二</strong></td><td>每划一次手，用手指指向正前方，确保方向不变</td></tr><tr><td><strong>方法三</strong></td><td>换气时两边都要换，不要只换一边</td></tr><tr><td><strong>方法四</strong></td><td>闭上眼睛游，感受自己的身体是否歪</td></tr></tbody></table>
+<h3>26.4 直线达标测试（15分钟）</h3>
+<p>### 26.4 直线达标测试（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>测试</td><td>从泳池一端游到另一端，不碰边</td></tr><tr><td>标准</td><td>身体不歪，能游出相对直的线路</td></tr><tr><td>记录</td><td>游了多少米，用了多少时间（如果能记录的话）</td></tr></tbody></table>
+<h3>26.5 课程总结（5分钟）</h3>
+<p>### 26.5 课程总结（5分钟）</p>
+<ul><li>回顾26课学到的内容</li><li>告诉学员：蛙泳入门完成，接下来可以：</li><li>🎯 继续提高距离（100米、200米）</li><li>🎯 学习其他泳姿（自由泳、仰泳、蝶泳）</li><li>🎯 学习踩水和踩水技能</li><li>🎯 学习出发和转身</li></ul></div>
+</div>
+</body>
+</html>
