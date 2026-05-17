@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📙 仰泳入门学员版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,#00B4D8 0%,#0077B6 50%,#023E8A 100%); color: white; border-radius: 24px; padding: 40px 36px; text-align: center; margin-bottom: 28px; position: relative; overflow: hidden; }
+  .hero::before { content:'🏊'; position: absolute; top:15px; right:20px; font-size:80px; opacity:0.1; }
+  .hero::after { content:'🌊'; position: absolute; bottom:10px; left:20px; font-size:60px; opacity:0.1; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); border-radius: 50px; padding: 5px 16px; font-size: 12px; margin-bottom: 12px; }
+  .hero h1 { font-size: 34px; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; }
+  .hero p { font-size: 14px; opacity: 0.9; margin-bottom: 20px; }
+  .hero-name { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 24px; display: inline-flex; gap: 24px; font-size: 13px; flex-wrap: wrap; justify-content: center; }
+  .hero-name span { display: flex; align-items: center; gap: 6px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 24px 28px; margin-bottom: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+  .card-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card-title .icon { font-size: 24px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+  .info-item { background: #F8F9FA; border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .info-item .label { color: var(--gray); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .info-item .value { font-weight: 700; font-size: 15px; }
+  .progress-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; text-align: center; margin-bottom: 16px; }
+  .progress-item { border-radius: 12px; padding: 14px 8px; color: white; font-size: 12px; }
+  .progress-item.g1 { background: linear-gradient(135deg,var(--green),#40916C); }
+  .progress-item.g2 { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .progress-item.g3 { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .progress-item.g4 { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .progress-item .p-icon { font-size: 28px; margin-bottom: 4px; }
+  .progress-item .p-name { font-weight: 800; font-size: 13px; }
+  .progress-item .p-lessons { opacity: 0.8; font-size: 10px; margin-top: 2px; }
+  .achievement-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 12px; }
+  .achievement-item { border-radius: 14px; padding: 18px 14px; text-align: center; border: 2px dashed #DEE2E6; background: #FAFAFA; transition: all 0.3s; }
+  .achievement-item.unlocked { border: 2px solid var(--green); background: var(--green-light); }
+  .achievement-item .a-icon { font-size: 40px; margin-bottom: 6px; }
+  .achievement-item .a-name { font-weight: 800; font-size: 14px; }
+  .achievement-item .a-desc { font-size: 11px; color: var(--gray); margin-top: 4px; }
+  .achievement-item .a-date { font-size: 10px; color: var(--green); margin-top: 6px; font-weight: 600; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 20px 24px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); page-break-inside: avoid; }
+  .lesson.g1 { border-left-color: var(--green); }
+  .lesson.g2 { border-left-color: var(--primary); }
+  .lesson.g3 { border-left-color: var(--purple); }
+  .lesson.g4 { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 6px; }
+  .lesson-title { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 10px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-g1 { background: var(--green-light); color: var(--green); }
+  .badge-g2 { background: #E3F2FD; color: var(--primary); }
+  .badge-g3 { background: #F3E5F5; color: var(--purple); }
+  .badge-g4 { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; }
+  .form-field { background: #F8F9FA; border-radius: 10px; padding: 10px 14px; }
+  .form-field .label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .form-field .input-line { border: none; background: transparent; font-size: 13px; width: 100%; outline: none; border-bottom: 1px dashed #CCC; padding-bottom: 2px; font-family: inherit; }
+  .form-field textarea { width: 100%; border: none; background: transparent; font-size: 13px; resize: none; outline: none; font-family: inherit; min-height: 60px; }
+  .form-checklist { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; margin-top: 8px; }
+  .check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; padding: 6px 10px; border-radius: 8px; background: #F8F9FA; }
+  .check-box { width: 20px; height: 20px; border: 2px solid #CCC; border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .check-item.done .check-box { background: var(--green); border-color: var(--green); color: white; }
+  .exam-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  .exam-table th { background: var(--yellow); color: #5D4037; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .exam-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; }
+  .exam-table tr:nth-child(even) { background: #FAFAFA; }
+  .certificate { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 2px solid #FFE069; border-radius: 14px; padding: 16px 20px; text-align: center; margin: 8px 0; }
+  .certificate .cert-icon { font-size: 36px; margin-bottom: 6px; }
+  .certificate .cert-title { font-size: 18px; font-weight: 900; color: #856404; }
+  .certificate .cert-desc { font-size: 12px; color: #856404; opacity: 0.8; margin-top: 4px; }
+  .certificate .cert-date { font-size: 11px; color: var(--gray); margin-top: 8px; }
+  .memory-card { background: #FFF9E6; border-radius: 10px; padding: 10px 14px; font-size: 12px; margin: 8px 0; display: flex; gap: 8px; }
+  .memory-card .icon { font-size: 18px; flex-shrink: 0; }
+  .memory-card.red { background: #FFF5F5; }
+  .memory-card.blue { background: #E3F2FD; }
+  .memory-card.green { background: var(--green-light); }
+  .stage-header { border-radius: 16px; padding: 16px 20px; margin-bottom: 14px; margin-top: 8px; color: white; display: flex; align-items: center; gap: 14px; }
+  .stage-header.g1 { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.g2 { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.g3 { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.g4 { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 32px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 18px; font-weight: 800; }
+  .stage-info p { font-size: 12px; opacity: 0.85; }
+  .section-divider { text-align: center; padding: 24px 0 12px; color: var(--gray); font-size: 13px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .growth-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+  .growth-table th { background: var(--primary); color: white; padding: 8px 12px; font-weight: 700; }
+  .growth-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; text-align: center; }
+  .growth-table tr:nth-child(even) { background: #FAFAFA; }
+  .footer { text-align: center; padding: 24px; color: var(--gray); font-size: 12px; }
+  .slogan-box { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 14px; padding: 20px; text-align: center; margin: 12px 0; }
+  .slogan-box h3 { font-size: 15px; margin-bottom: 10px; }
+  .slogan-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .slogan-item { background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 600; }
+  .hw-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 10px; margin-top: 10px; }
+  .hw-item { background: #F8F9FA; border-radius: 10px; padding: 10px 14px; font-size: 12px; display: flex; align-items: center; gap: 8px; }
+  .hw-item .week { font-weight: 800; color: var(--primary); width: 40px; flex-shrink: 0; }
+  @media (max-width: 600px) {
+    .hero { padding: 28px 20px; } .hero h1 { font-size: 26px; }
+    .card { padding: 18px 16px; } .lesson { padding: 16px 16px; }
+    .progress-grid { grid-template-columns: repeat(2,1fr); } .hero-name { gap: 12px; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">📘 学员专用</div>
+  <h1>🏊 仰泳入门 · 学员版</h1>
+  <p>9课闯关地图 · 成就徽章系统 · 进度追踪</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">9</div><div class="label">闯关课时</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">成就徽章</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">训练阶段</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">📋</span>课程总览</div>
+  <div class="milestone-bar">
+    <div class="milestone-item"><div class="m-icon">🌊</div><div class="m-name">水性</div><div class="m-desc">入门</div></div>
+    <div class="milestone-connector"></div>
+    <div class="milestone-item"><div class="m-icon">🦵</div><div class="m-name">腿部</div><div class="m-desc">基础</div></div>
+    <div class="milestone-connector"></div>
+    <div class="milestone-item"><div class="m-icon">🖐️</div><div class="m-name">配合</div><div class="m-desc">进阶</div></div>
+    <div class="milestone-connector"></div>
+    <div class="milestone-item"><div class="m-icon">🏆</div><div class="m-name">结业</div><div class="m-desc">达标</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson 🎯 学习目标</div></div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 1️⃣ 仰泳的门槛</div></div><div class="checkpoint"><span class="icon">⬜</span>我了解了仰泳的特点——唯一脸朝上的泳姿</div><div class="checkpoint"><span class="icon">⬜</span>我知道了仰泳最大的难点在哪里</div><div class="checkpoint"><span class="icon">⬜</span>我敢于在浅水区尝试仰漂</div><div class="checkpoint"><span class="icon">⬜</span>我理解了"能漂才能游"的道理</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 2️⃣ 仰泳的基本换气练习</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了仰泳换气的节奏：吸气 → 憋1-2秒 → 呼气</div><div class="checkpoint"><span class="icon">⬜</span>我学会了嘴吸鼻呼的方法</div><div class="checkpoint"><span class="icon">⬜</span>我敢在仰卧状态下稳定换气</div><div class="checkpoint"><span class="icon">⬜</span>我理解了"换气不怕水"的核心——气往下走</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 3️⃣ 仰泳的腿部动作</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了仰泳打腿"鞭状打水"的核心要领</div><div class="checkpoint"><span class="icon">⬜</span>我记住了"上踢直，下打弯"的要点</div><div class="checkpoint"><span class="icon">⬜</span>我能在扶池边时稳定打腿</div><div class="checkpoint"><span class="icon">⬜</span>我体验了仰漂打腿的感觉</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 4️⃣ 仰泳腿和换气的配合练习 ⭐ 阶段徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了仰泳打腿和换气的节奏配合</div><div class="checkpoint"><span class="icon">⬜</span>我能在仰漂打腿中稳定换气</div><div class="checkpoint"><span class="icon">⬜</span>我建立了"打腿时吸气、憋气时呼气"的节奏</div><div class="checkpoint"><span class="icon">⬜</span><strong>🌊 仰漂达人徽章已获得！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📖 第二阶段：动作配合（P05-P06）
+
+> 🏊 有了仰漂和打腿基础，现在要把动作串起来！
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 5️⃣ 仰泳转体和换气的配合</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了仰泳转体的作用——换气+复位</div><div class="checkpoint"><span class="icon">⬜</span>我记住了"划手转体，头随之动"的口诀</div><div class="checkpoint"><span class="icon">⬜</span>我能在转体时保持身体水平</div><div class="checkpoint"><span class="icon">⬜</span>我能做到"边打腿边转体吸气"</div><div class="checkpoint"><span class="icon">⬜</span>我能连续游动15米以上</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 6️⃣ 仰泳划手 ⭐ 阶段徽章解锁！</div></div><div class="checkpoint"><span class="icon">⬜</span>我掌握了仰泳划手的正确动作：入水→抱水→推水→出水</div><div class="checkpoint"><span class="icon">⬜</span>我理解了划手是仰泳的辅助推进力（主要靠打腿）</div><div class="checkpoint"><span class="icon">⬜</span>我能做到打腿+划手+换气完整配合</div><div class="checkpoint"><span class="icon">⬜</span>我能连续游25米以上</div><div class="checkpoint"><span class="icon">⬜</span><strong>🏊 仰泳入门徽章已获得！</strong></div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 📖 第三阶段：转身与番外技能（P07-P09）
+
+> 🎯 掌握转身技术，学习实用番外技能！
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 7️⃣ 仰泳和自由泳的前滚翻转身</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了前滚翻转身的原理</div><div class="checkpoint"><span class="icon">⬜</span>我掌握了"触壁→收腹→翻过去→蹬壁"的流程</div><div class="checkpoint"><span class="icon">⬜</span>我能在浅水区完成前滚翻转身</div><div class="checkpoint"><span class="icon">⬜</span>我能做到蹬壁滑行进入仰漂</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 8️⃣（番外）反蛙泳</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了反蛙泳的特点（俯卧打水、仰漂换气）</div><div class="checkpoint"><span class="icon">⬜</span>我学会了反蛙泳的腿部动作</div><div class="checkpoint"><span class="icon">⬜</span>我能游动反蛙泳作为自救技能</div><div class="checkpoint"><span class="icon">⬜</span>我知道如果仰泳游不动了可以翻过来游反蛙泳</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---</div></div>
+<div class="lesson green"><div class="lesson-header"><div class="lesson-title">Lesson Lesson 9️⃣（番外）简单版仰泳出发</div></div><div class="checkpoint"><span class="icon">⬜</span>我理解了仰泳出发的安全原则——绝对不能头朝下入水</div><div class="checkpoint"><span class="icon">⬜</span>我学会了"抓台边→翻身→入水"的简化流程</div><div class="checkpoint"><span class="icon">⬜</span>我能在出发台上安全完成仰泳入水</div><div class="checkpoint"><span class="icon">⬜</span>我能做到入水后滑行5米以上继续游动</div><div class="tip-item blue"><span class="icon">📝</span>今日收获：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">⚡</span>今日改进：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _</div><div class="tip-item"><span class="icon">🏠</span>课后练习：_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+---
+
+## 🏆 仰泳入门 · 全部完成！
+
+```
+🎊🎊🎊 恭喜你完成了仰泳入门全部9课！🎊🎊🎊
+
+═══════════════════════════════════════════════════════════════
+
+     🌊 仰漂达人                 🏊 仰泳入门
+    ╭──────────╮               ╭──────────╮
+    │   🏅    │               │   🏅    │
+    │ 仰漂达人 │               │ 仰泳入门 │
+    │  P04   │               │  P06   │
+    ╰──────────╯               ╰──────────╯
+
+         阶段徽章                  阶段徽章
+
+              ╭──────────╮
+              │   🏅    │
+              │ 全面掌握 │
+              │  P09   │
+              ╰──────────╯
+                 终极徽章
+
+═══════════════════════════════════════════════════════════════
+
+✅ 能稳定仰漂10秒以上，身体保持水平
+✅ 能在仰漂打腿中稳定换气
+✅ 能连续游25米以上，动作协调
+✅ 能完成前滚翻转身
+✅ 能安全完成仰泳入水
+✅ 了解反蛙泳作为自救技能
+
+你已经是合格的仰泳入门选手啦！🏊✨
+```
+
+---
+
+## 📊 我的仰泳学习记录</div></div>
+</div>
+</body>
+</html>
