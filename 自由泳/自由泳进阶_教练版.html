@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏊 自由泳进阶教练版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --red-light: #FFE5E5; --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,var(--secondary) 0%,var(--primary) 60%,var(--accent) 100%); color: white; border-radius: 24px; padding: 48px 40px; text-align: center; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content:''; position: absolute; top:-50px; right:-50px; width:200px; height:200px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+  .hero::after { content:''; position: absolute; bottom:-30px; left:-30px; width:150px; height:150px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 6px 20px; font-size: 13px; margin-bottom: 16px; }
+  .hero h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
+  .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 16px 28px; min-width: 100px; }
+  .hero-stat .num { font-size: 28px; font-weight: 900; }
+  .hero-stat .label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .card-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-title .icon { font-size: 28px; }
+  .philosophy-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; }
+  .philosophy-item { background: linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius: 14px; padding: 18px; text-align: center; }
+  .philosophy-item .p-icon { font-size: 36px; margin-bottom: 8px; }
+  .philosophy-item .p-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--secondary); }
+  .philosophy-item .p-desc { font-size: 12px; color: var(--gray); }
+  .stage-header { border-radius: 16px; padding: 20px 24px; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 16px; }
+  .stage-header.green { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.blue { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.purple { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.red { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 40px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 22px; font-weight: 800; }
+  .stage-info p { font-size: 13px; opacity: 0.85; }
+  .stage-info .stage-lessons { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 22px 26px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); transition: box-shadow 0.2s; }
+  .lesson:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lesson.green { border-left-color: var(--green); }
+  .lesson.blue { border-left-color: var(--primary); }
+  .lesson.purple { border-left-color: var(--purple); }
+  .lesson.red { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .lesson-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: #E3F2FD; color: var(--primary); }
+  .badge-purple { background: #F3E5F5; color: var(--purple); }
+  .badge-red { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .lesson-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .lesson-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .lesson-table th:first-child { border-radius: 8px 0 0 0; }
+  .lesson-table th:last-child { border-radius: 0 8px 0 0; }
+  .lesson-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; vertical-align: top; }
+  .lesson-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .lesson-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .lesson-table tr:nth-child(even) { background: #FAFAFA; }
+  .lesson-table tr:hover { background: #F0F7FF; }
+  .checkpoint { display: flex; align-items: center; gap: 10px; background: var(--green-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 600; }
+  .checkpoint .icon { font-size: 20px; }
+  .tip-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; margin-top: 12px; }
+  .tip-item { background: var(--yellow-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; display: flex; gap: 8px; }
+  .tip-item .icon { font-size: 18px; flex-shrink: 0; }
+  .tip-item.blue { background: #E3F2FD; color: var(--primary); }
+  .tip-item.red { background: var(--red-light); color: var(--red); }
+  .error-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin-top: 12px; }
+  .error-item { background: var(--red-light); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .error-item .error-title { font-weight: 700; color: var(--red); margin-bottom: 4px; display: flex; gap: 6px; }
+  .error-item .error-fix { color: #333; }
+  .milestone-bar { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .milestone-item { flex: 1; min-width: 120px; text-align: center; padding: 16px 8px; position: relative; }
+  .milestone-item .m-icon { font-size: 36px; margin-bottom: 6px; }
+  .milestone-item .m-name { font-weight: 800; font-size: 14px; }
+  .milestone-item .m-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .milestone-connector { width: 40px; height: 3px; background: linear-gradient(90deg,var(--green),var(--primary),var(--purple),var(--secondary)); flex-shrink: 0; }
+  .flow-diagram { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 16px; background: #F8F9FA; border-radius: 12px; margin-top: 12px; font-size: 13px; }
+  .flow-step { background: var(--primary); color: white; padding: 6px 14px; border-radius: 50px; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--gray); font-size: 16px; }
+  .toc { background: #F8F9FA; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; }
+  .toc h3 { margin-bottom: 12px; font-size: 16px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; }
+  .toc-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 13px; transition: background 0.2s; }
+  .toc-item:hover { background: #E9ECEF; }
+  .toc-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .toc-item.green .toc-num { background: var(--green); }
+  .toc-item.blue .toc-num { background: var(--primary); }
+  .toc-item.purple .toc-num { background: var(--purple); }
+  .toc-item.red .toc-num { background: var(--secondary); }
+  .section-divider { text-align: center; padding: 32px 0 16px; color: var(--gray); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .footer { text-align: center; padding: 32px; color: var(--gray); font-size: 12px; }
+  .highlight-box { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 1px solid #FFE69C; border-radius: 12px; padding: 14px 18px; margin-top: 14px; font-size: 13px; }
+  .highlight-box .title { font-weight: 700; color: #856404; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .three-columns { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 12px; }
+  .three-columns .col { background: #F8F9FA; border-radius: 10px; padding: 12px; text-align: center; font-size: 12px; }
+  .three-columns .col .emoji { font-size: 28px; margin-bottom: 4px; display: block; }
+  .three-columns .col .label { font-weight: 700; color: var(--secondary); }
+  .three-columns .col .sub { color: var(--gray); font-size: 11px; margin-top: 2px; }
+  .coach-slogan { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 16px; padding: 28px; text-align: center; margin: 24px 0; }
+  .coach-slogan h3 { font-size: 18px; margin-bottom: 12px; }
+  .coach-slogan .slogans { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .coach-slogan .slogan-item { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px; } .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 16px; } .card { padding: 20px 18px; }
+    .lesson { padding: 16px 18px; } .lesson-table { font-size: 12px; }
+    .three-columns { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">🏊 新手教练必备工具</div>
+  <h1>🏊 自由泳进阶教练版</h1>
+  <p>29课时完整体系 · 教练版 · 图文详解</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">29</div><div class="label">标准课时</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">训练阶段</div></div>
+    <div class="hero-stat"><div class="num">26</div><div class="label">核心技能点</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">🎯</span>教学核心理念</div>
+  <div class="philosophy-grid">
+    <div class="philosophy-item"><div class="p-icon">💧</div><div class="p-title">水性优先</div><div class="p-desc">不着急教动作，先让学员"不怕水、享受水"</div></div>
+    <div class="philosophy-item"><div class="p-icon">👁️</div><div class="p-title">感觉驱动</div><div class="p-desc">强调"找感觉"，而不是机械模仿动作</div></div>
+    <div class="philosophy-item"><div class="p-icon">🔍</div><div class="p-title">分解细化</div><div class="p-desc">每个动作拆到不能再拆，循序渐进</div></div>
+    <div class="philosophy-item"><div class="p-icon">⚠️</div><div class="p-title">纠错前置</div><div class="p-desc">提前告诉学员"会犯什么错"，预判问题比纠正错误更重要</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第1课：高肘入水与抓水</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解自由泳划水的完整周期（入水→抓水→抱水→推水→出水→移臂）</div><div>掌握高肘入水的正确姿势</div><div>培养"手指先入水"的入水感觉</div></div></div><h3>1.1 划水周期概念讲解（10分钟）</h3>
+<p>### 1.1 划水周期概念讲解（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>六个阶段</td><td><strong>入水 → 抓水 → 抱水 → 推水 → 出水 → 移臂</strong></td></tr><tr><td>💡 <strong>感觉</strong></td><td>像在"摸"水，而不是"插"水</td></tr><tr><td>强调</td><td>每一阶段都很重要，入水是起点，决定后面一切</td></tr></tbody></table>
+<h3>1.2 高肘入水练习（25分钟）</h3>
+<p>### 1.2 高肘入水练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>陆上模仿——手臂伸直，手指先触碰地面</td></tr><tr><td><strong>第二步</strong></td><td>水中站立——手臂从空中插入水，感受"指尖先入"</td></tr><tr><td><strong>第三步</strong></td><td>漂浮状态下——手臂入水，保持高肘姿态</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像"钻窗帘"——手劈开水面，手肘高于手</td></tr><tr><td>⚠️ <strong>常见错误</strong></td><td>手掌先拍水、手肘低于手、入水太深</td></tr></tbody></table>
+<h3>1.3 抓水感觉培养（15分钟）</h3>
+<p>### 1.3 抓水感觉培养（15分钟）</p>
+<ul><li>入水后不要立刻向后划，先"抓住水"</li><li>手臂微微外旋，手掌感觉被水"吸住"</li><li>💡 <strong>感觉</strong>：像抱一个会动的大气球，水在推你的手</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>划水周期讲解</td><td>10分钟</td></tr><tr><td>高肘入水练习</td><td>25分钟</td></tr><tr><td>抓水感觉培养</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习"手臂入水——抓水——保持"的循环</div><div class="tip-item"><span class="icon">🏠</span>目标：能在水中保持高肘入水姿势3秒以上</div><div class="tip-item"><span class="icon">🏠</span>这一课是整个进阶体系的基础，高肘入水没学好，后面所有动作都会变形</div><div class="tip-item"><span class="icon">🏠</span>多用比喻，少用专业术语；多给感觉描述，少给力学分析</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课是整个进阶体系的基础，高肘入水没学好，后面所有动作都会变形</div><div class="tip-item blue"><span class="icon">💡</span>多用比喻，少用专业术语；多给感觉描述，少给力学分析</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第2课：高肘抱水强化</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"抱水"阶段的正确动作</div><div>形成稳定的高肘姿态</div><div>感受水中"支撑感"</div></div></div><h3>2.1 高肘姿态保持（15分钟）</h3>
+<p>### 2.1 高肘姿态保持（15分钟）</p>
+<ul><li>俯卧在池边，手臂入水后保持高肘</li><li>数"1、2、3"感受手臂在水中的支撑</li><li>💡 <strong>感觉</strong>：手肘像钩子一样勾住水，不让身体往下掉</li></ul>
+<h3>2.2 抱水动作分解（20分钟）</h3>
+<p>### 2.2 抱水动作分解（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>手掌向外展开约45度，感受水的阻力</td></tr><tr><td><strong>第二步</strong></td><td>手肘保持高度，手臂向后移动</td></tr><tr><td><strong>第三步</strong></td><td>逐渐形成"抱水"姿势</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像用锄头挖地，手掌感受水的"黏性"</td></tr></tbody></table>
+<h3>2.3 抱水支撑感练习（15分钟）</h3>
+<p>### 2.3 抱水支撑感练习（15分钟）</p>
+<ul><li>一只手扶浮板，另一只手练习抱水</li><li>感受"手臂把身体拉向前"的感觉</li><li>💡 <strong>感觉</strong>：抱水的时候身体会往前窜</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>高肘姿态保持</td><td>15分钟</td></tr><tr><td>抱水动作分解</td><td>20分钟</td></tr><tr><td>支撑感练习</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着镜子练习高肘姿态，感受手肘高于手腕</div><div class="tip-item"><span class="icon">🏠</span>目标：能在站立状态下保持高肘抱水姿势5秒</div><div class="tip-item"><span class="icon">🏠</span>抱水是整个划水周期中最能产生推进力的阶段</div><div class="tip-item"><span class="icon">🏠</span>这一课要解决"抱水没感觉"的普遍问题</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>抱水是整个划水周期中最能产生推进力的阶段</div><div class="tip-item blue"><span class="icon">💡</span>这一课要解决"抱水没感觉"的普遍问题</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第3课：推水与发力</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握推水的正确发力顺序</div><div>理解"推水"是划水的主要推进阶段</div><div>能在水中感受推进力</div></div></div><h3>3.1 推水发力原理（10分钟）</h3>
+<p>### 3.1 推水发力原理（10分钟）</p>
+<ul><li>发力顺序：<strong>肩膀 → 大臂 → 小臂 → 手掌</strong></li><li>腰腹发力，通过肩膀传递到手臂</li><li>💡 <strong>感觉</strong>：像用鞭子抽水，从身体中心向外传递力量</li></ul>
+<h3>3.2 推水动作练习（25分钟）</h3>
+<p>### 3.2 推水动作练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>俯卧水中，手臂抱水后开始推水</td></tr><tr><td><strong>第二步</strong></td><td>感受手掌从"抱"到"推"的转换</td></tr><tr><td><strong>第三步</strong></td><td>推水结束时手掌在大腿旁边</td></tr><tr><td>⚠️ <strong>关键</strong></td><td>推水要"推到底"，不要半途而废</td></tr></tbody></table>
+<h3>3.3 推进力感受（15分钟）</h3>
+<p>### 3.3 推进力感受（15分钟）</p>
+<ul><li>单臂划水，感受推水阶段的推进</li><li>对比"抱水没力"和"推水有力"的区别</li><li>💡 <strong>感觉</strong>：推水的时候脚会被往前推</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>推水原理</td><td>10分钟</td></tr><tr><td>推水动作练习</td><td>25分钟</td></tr><tr><td>推进力感受</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：练习"从肩膀发力"的推水动作</div><div class="tip-item"><span class="icon">🏠</span>目标：能在水中感受推水产生的推进力</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第4课：出水与移臂</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握手臂出水的技术</div><div>理解"放松移臂"的重要性</div><div>能做到出水后手臂放松前移</div></div></div><h3>4.1 出水技术（15分钟）</h3>
+<p>### 4.1 出水技术（15分钟）</p>
+<ul><li>推水结束后，手臂自然转向前方</li><li>💡 <strong>感觉</strong>：像把锄头从泥里拔出来，不要"抽"出来</li><li>手掌先出水，然后前臂，然后手肘</li></ul>
+<h3>4.2 移臂动作（20分钟）</h3>
+<p>### 4.2 移臂动作（20分钟）</p>
+<ul><li>出水后手臂放松，不要用力</li><li>手臂沿水面或稍低于水面移动</li><li>💡 <strong>感觉</strong>：像把湿毛巾甩到肩上，手臂是"垂"的</li></ul>
+<h3>4.3 完整划水+移臂（15分钟）</h3>
+<p>### 4.3 完整划水+移臂（15分钟）</p>
+<ul><li>从入水到出水，加上移臂</li><li>重点：移臂时手臂要放松，不要紧张</li><li>⚠️ <strong>常见错误</strong>：移臂时手臂僵硬、抬得太高</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>出水技术</td><td>15分钟</td></tr><tr><td>移臂动作</td><td>20分钟</td></tr><tr><td>完整练习</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第5课：单臂划水综合练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能独立完成单臂划水的完整周期</div><div>能在划水过程中保持身体稳定</div><div>为下一课双臂配合打基础</div></div></div><h3>5.1 单臂划水完整练习（30分钟）</h3>
+<p>### 5.1 单臂划水完整练习（30分钟）</p>
+<ul><li>一手扶浮板，另一手完成完整划水</li><li>专注做划水的手臂，不要想打腿</li><li>💡 <strong>感觉</strong>：一次划臂就是一次完整的"入→抓→抱→推→出→移"</li></ul>
+<h3>5.2 身体稳定性练习（15分钟）</h3>
+<p>### 5.2 身体稳定性练习（15分钟）</p>
+<ul><li>单臂划水时，身体不要跟着晃</li><li>用"身体侧转"代替"手臂用力"</li><li>💡 <strong>感觉</strong>：身体像圆木一样滚动手臂，而不是手臂独立划水</li></ul>
+<h3>5.3 划水距离感知（10分钟）</h3>
+<p>### 5.3 划水距离感知（10分钟）</p>
+<ul><li>一臂划到底，感受"长划水"的感觉</li><li>⚠️ <strong>关键</strong>：划水距离越长，推进效率越高</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>单臂划水练习</td><td>30分钟</td></tr><tr><td>身体稳定性</td><td>15分钟</td></tr><tr><td>划水距离</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第6课：划水节奏与效率</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>建立稳定的划水节奏</div><div>理解"划水效率"的概念</div><div>能在游进中保持连贯的划水</div></div></div><h3>6.1 划水频率与效率（10分钟）</h3>
+<p>### 6.1 划水频率与效率（10分钟）</p>
+<ul><li>划水效率 = 推进距离 ÷ 划水次数</li><li>目标：用更少的划水次数游更远的距离</li><li>💡 <strong>感觉</strong>：每一次划水都要有"意义"</li></ul>
+<h3>6.2 划水节奏训练（25分钟）</h3>
+<p>### 6.2 划水节奏训练（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>慢速划水</td><td>每划一次臂数"1、2、3"</td></tr><tr><td>中速划水</td><td>每划一次臂数"1、2"</td></tr><tr><td>目标</td><td>找到适合自己的节奏，不要盲目追求快</td></tr></tbody></table>
+<h3>6.3 划水+呼吸配合（15分钟）</h3>
+<p>### 6.3 划水+呼吸配合（15分钟）</p>
+<ul><li>单臂划水时配合转头呼吸</li><li>保持身体侧卧，只转头</li><li>💡 <strong>感觉</strong>：呼吸不要打断划水的节奏</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>效率概念</td><td>10分钟</td></tr><tr><td>节奏训练</td><td>25分钟</td></tr><tr><td>划水+呼吸</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第7课：高肘划水综合考核</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>完整展示高肘划水技术</div><div>能连续完成50米不间断划水</div><div>颁发【划水技术证书】</div></div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第8课：单侧呼吸强化</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>强化单侧呼吸（右侧或左侧）的动作</div><div>掌握转头吸气的正确时机</div><div>能做到转头时身体不歪斜</div></div></div><h3>8.1 转头呼吸原理（10分钟）</h3>
+<p>### 8.1 转头呼吸原理（10分钟）</p>
+<ul><li>转头时嘴巴露出水面，鼻子在水下</li><li>💡 <strong>感觉</strong>：像"侧躺睡觉"时张嘴呼吸</li><li>⚠️ <strong>重点</strong>：不要抬头，只转头</li></ul>
+<h3>8.2 侧卧呼吸练习（20分钟）</h3>
+<p>### 8.2 侧卧呼吸练习（20分钟）</p>
+<ul><li>扶池边侧卧，头浸入水中慢慢吐气</li><li>转头向上，嘴巴张开吸气</li><li>连续练习10次</li><li>💡 <strong>感觉</strong>：嘴巴像"张开的碗"，等着接空气</li></ul>
+<h3>8.3 扶板单侧呼吸（20分钟）</h3>
+<p>### 8.3 扶板单侧呼吸（20分钟）</p>
+<ul><li>扶浮板打腿，转头呼吸</li><li>每打3-5下腿吸一口气</li><li>💡 <strong>感觉</strong>：转头时身体像"跷跷板"，一头下去一头起来</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>转头原理</td><td>10分钟</td></tr><tr><td>侧卧呼吸</td><td>20分钟</td></tr><tr><td>扶板呼吸</td><td>20分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第9课：双侧呼吸入门</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>开始双侧呼吸的练习</div><div>理解双侧呼吸的重要性</div><div>能做到每3次划臂换一次气</div></div></div><h3>9.1 双侧呼吸的意义（10分钟）</h3>
+<p>### 9.1 双侧呼吸的意义（10分钟）</p>
+<ul><li>单侧呼吸会导致身体左右不对称的用力</li><li>双侧呼吸能让身体保持直线游进</li><li>💡 <strong>感觉</strong>：像汽车需要"四轮定位"，两侧都要平衡</li></ul>
+<h3>9.2 双侧呼吸节奏（25分钟）</h3>
+<p>### 9.2 双侧呼吸节奏（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>划3次臂，左侧吸一口气；划3次臂，右侧吸一口气</td></tr><tr><td><strong>练习二</strong></td><td>连续练习，逐渐找到节奏</td></tr><tr><td><strong>练习三</strong></td><td>每划3次臂换一次气，两侧交替</td></tr></tbody></table>
+<h3>9.3 双侧呼吸与划水配合（15分钟）</h3>
+<p>### 9.3 双侧呼吸与划水配合（15分钟）</p>
+<ul><li>双侧呼吸时保持划水的连贯性</li><li>吸气不要打断划水的节奏</li><li>💡 <strong>感觉</strong>：呼吸只是"顺便"，不是"主角"</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>双侧意义</td><td>10分钟</td></tr><tr><td>节奏练习</td><td>25分钟</td></tr><tr><td>划水配合</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第10课：双侧呼吸巩固</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>熟练掌握双侧呼吸</div><div>能连续完成50米双侧呼吸游进</div><div>两边划水对称，身体不歪斜</div></div></div><h3>10.1 双侧呼吸连续练习（30分钟）</h3>
+<p>### 10.1 双侧呼吸连续练习（30分钟）</p>
+<ul><li>25米双侧呼吸 → 休息10秒 → 25米双侧呼吸</li><li>逐渐增加距离，不急于求成</li><li>💡 <strong>感觉</strong>：左右都一样，哪边吸气都很自然</li></ul>
+<h3>10.2 两边划水对称练习（15分钟）</h3>
+<p>### 10.2 两边划水对称练习（15分钟）</p>
+<ul><li>闭上眼睛游，感受左右划水是否对称</li><li>如果身体歪斜，闭上眼睛会走偏</li><li>💡 <strong>感觉</strong>：像走钢丝，身体要在中间</li></ul>
+<h3>10.3 呼吸节奏稳定（10分钟）</h3>
+<p>### 10.3 呼吸节奏稳定（10分钟）</p>
+<ul><li>不要因为吸气而改变划水节奏</li><li>吸气时划水照常进行</li><li>💡 <strong>感觉</strong>：呼吸是"伴奏"，划水是"主唱"</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>连续练习</td><td>30分钟</td></tr><tr><td>对称练习</td><td>15分钟</td></tr><tr><td>节奏稳定</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第11课：呼吸与划水配合强化</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>实现呼吸与划水的完美配合</div><div>吸气时身体不歪斜、不下沉</div><div>能边划边吸边打腿</div></div></div><h3>11.1 呼吸不打断节奏（20分钟）</h3>
+<p>### 11.1 呼吸不打断节奏（20分钟）</p>
+<ul><li>划水时吸气，不要因为吸气而停顿</li><li>用"边划边吸"代替"停下来吸气"</li><li>💡 <strong>感觉</strong>：像跑步时的呼吸，一边跑一边喘</li></ul>
+<h3>11.2 身体稳定练习（20分钟）</h3>
+<p>### 11.2 身体稳定练习（20分钟）</p>
+<ul><li>吸气时身体不要往吸气方向歪</li><li>保持身体侧卧的姿势</li><li>💡 <strong>感觉</strong>：吸气时身体像"倾斜的柱子"，根基稳定</li></ul>
+<h3>11.3 完整配合练习（15分钟）</h3>
+<p>### 11.3 完整配合练习（15分钟）</p>
+<ul><li>打腿 + 划水 + 呼吸，三者同时进行</li><li>不因为任何一项而牺牲其他两项</li><li>💡 <strong>感觉</strong>：像"三驾马车"，三者合力向前</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>节奏练习</td><td>20分钟</td></tr><tr><td>身体稳定</td><td>20分钟</td></tr><tr><td>完整配合</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第12课：转头时机与角度</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握最佳的转头吸气时机</div><div>理解转头角度的控制</div><div>能在正确的时机完成吸气</div></div></div><h3>12.1 转头时机原理（15分钟）</h3>
+<p>### 12.1 转头时机原理（15分钟）</p>
+<ul><li>最佳时机：手臂推水阶段即将结束</li><li>太早转头会导致身体下沉</li><li>太晚转头会导致吸气不够</li><li>💡 <strong>感觉</strong>：像"接吻"的时机——不要太早，不要太晚</li></ul>
+<h3>12.2 转头角度控制（20分钟）</h3>
+<p>### 12.2 转头角度控制（20分钟）</p>
+<ul><li>转头角度约30-45度</li><li>嘴巴刚露出水面即可</li><li>💡 <strong>感觉</strong>：嘴角刚好在水面，不用"拼命"抬头</li></ul>
+<h3>12.3 时机与角度配合练习（15分钟）</h3>
+<p>### 12.3 时机与角度配合练习（15分钟）</p>
+<ul><li>在正确的时机转头，转到正确的角度</li><li>感受"刚好够到空气"的感觉</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>时机原理</td><td>15分钟</td></tr><tr><td>角度控制</td><td>20分钟</td></tr><tr><td>配合练习</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第13课：呼吸综合考核</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>100米双侧呼吸测试</div><div>呼吸与划水配合评分</div><div>颁发【呼吸技术证书】</div></div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第14课：打腿与划水配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握6拍打腿节奏与划水的配合</div><div>理解"手腿协调"的概念</div><div>游进时身体保持水平</div></div></div><h3>14.1 打腿节奏与划水周期（15分钟）</h3>
+<p>### 14.1 打腿节奏与划水周期（15分钟）</p>
+<ul><li>6拍打腿：1、2、3、4、5、6（左右左右左右）</li><li>每划一次臂对应6次打腿</li><li>💡 <strong>感觉</strong>：划水是"主旋律"，打腿是"伴奏"</li></ul>
+<h3>14.2 配合练习（25分钟）</h3>
+<p>### 14.2 配合练习（25分钟）</p>
+<ul><li>慢慢配合，不着急</li><li>划水的时候打腿不停</li><li>打腿的时候划水不断</li><li>💡 <strong>感觉</strong>：像"双人划船"，两者要合拍</li></ul>
+<h3>14.3 身体位置保持（10分钟）</h3>
+<p>### 14.3 身体位置保持（10分钟）</p>
+<ul><li>游进时身体保持水平，不塌腰</li><li>髋部发力带动打腿</li><li>💡 <strong>感觉</strong>：身体像"木板"，平整地漂在水面上</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>节奏讲解</td><td>15分钟</td></tr><tr><td>配合练习</td><td>25分钟</td></tr><tr><td>身体位置</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第15课：呼吸与划水完美配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>实现呼吸不打断划水节奏</div><div>吸气时身体不歪斜、不下沉</div><div>能做到"边划边吸"</div></div></div><h3>15.1 呼吸与划水时机（20分钟）</h3>
+<p>### 15.1 呼吸与划水时机（20分钟）</p>
+<ul><li>划臂吸一口气，不停顿</li><li>吸气的时候划水继续</li><li>💡 <strong>感觉</strong>：呼吸是"间隙"，不是"停顿"</li></ul>
+<h3>15.2 身体稳定练习（20分钟）</h3>
+<p>### 15.2 身体稳定练习（20分钟）</p>
+<ul><li>吸气时身体保持侧卧姿势</li><li>不要因为吸气而导致身体歪斜</li><li>💡 <strong>感觉</strong>：身体像"歪着的柱子"，但根基稳定</li></ul>
+<h3>15.3 连续配合练习（15分钟）</h3>
+<p>### 15.3 连续配合练习（15分钟）</p>
+<ul><li>打腿 + 划水 + 呼吸，持续进行</li><li>从25米逐渐增加到50米</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>时机练习</td><td>20分钟</td></tr><tr><td>稳定练习</td><td>20分钟</td></tr><tr><td>连续练习</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第16课：身体滚动与髋部发力</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解"身体滚动"的概念</div><div>掌握髋部发力带动划水的技巧</div><div>减少无效动作，提升效率</div></div></div><h3>16.1 身体滚动原理（15分钟）</h3>
+<p>### 16.1 身体滚动原理（15分钟）</p>
+<ul><li>身体绕纵轴左右转动约45度</li><li>转动由髋部发起，不是肩膀</li><li>💡 <strong>感觉</strong>：像"擀面杖"，从中间滚向两边</li></ul>
+<h3>16.2 髋部发力练习（20分钟）</h3>
+<p>### 16.2 髋部发力练习（20分钟）</p>
+<ul><li>俯卧水中，感受髋部带动身体滚动</li><li>划水时身体随滚动而转，手臂是"跟着"身体动</li><li>💡 <strong>感觉</strong>：髋是"发动机"，手臂是"传动轮"</li></ul>
+<h3>16.3 滚动与划水配合（15分钟）</h3>
+<p>### 16.3 滚动与划水配合（15分钟）</p>
+<ul><li>身体滚动 + 手臂划水，两者同步</li><li>不要"死划"——身体要滚动，手臂要跟随</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>滚动原理</td><td>15分钟</td></tr><tr><td>髋部发力</td><td>20分钟</td></tr><tr><td>配合练习</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第17课：全身配合强化</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>打腿、划水、呼吸、滚动四大要素协调</div><div>流畅的完整配合循环</div><div>能连续游进100米以上</div></div></div><h3>17.1 四大要素整合（20分钟）</h3>
+<p>### 17.1 四大要素整合（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>打腿</td><td>髋部发力，小腿带动</td></tr><tr><td>划水</td><td>高肘抱水，推水到底</td></tr><tr><td>呼吸</td><td>转头吸气，双侧呼吸</td></tr><tr><td>滚动</td><td>髋部带动，身体协同</td></tr></tbody></table>
+<h3>17.2 配合练习（20分钟）</h3>
+<p>### 17.2 配合练习（20分钟）</p>
+<ul><li>从25米开始，逐渐增加距离</li><li>不急于求成，保持节奏</li><li>💡 <strong>感觉</strong>：像"交响乐团"，每个乐器各司其职，节奏统一</li></ul>
+<h3>17.3 减少无效动作（10分钟）</h3>
+<p>### 17.3 减少无效动作（10分钟）</p>
+<ul><li>划水时手臂不要"甩"</li><li>打腿时膝盖不要弯太大</li><li>💡 <strong>感觉</strong>：每一次动作都要有"意义"</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>四要素整合</td><td>20分钟</td></tr><tr><td>配合练习</td><td>20分钟</td></tr><tr><td>减少无效动作</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第18课：50米连续游练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游进50米</div><div>保持动作连贯，不间断</div><div>建立游进的信心</div></div></div><h3>18.1 50米目标分解（10分钟）</h3>
+<p>### 18.1 50米目标分解（10分钟）</p>
+<ul><li>50米 = 25米 + 25米</li><li>中间可以转身，不停下</li><li>目标：不停顿、不站起来</li></ul>
+<h3>18.2 连续游进练习（30分钟）</h3>
+<p>### 18.2 连续游进练习（30分钟）</p>
+<ul><li>25米连续 → 休息10秒 → 25米连续</li><li>逐渐延长到50米</li><li>💡 <strong>感觉</strong>：像"跑马拉松"，保持节奏，不要冲刺</li></ul>
+<h3>18.3 心理建设（10分钟）</h3>
+<p>### 18.3 心理建设（10分钟）</p>
+<ul><li>告诉学员：50米是"可以完成的"</li><li>不要想着"终点"，专注于"下一划"</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>目标分解</td><td>10分钟</td></tr><tr><td>连续练习</td><td>30分钟</td></tr><tr><td>心理建设</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第19课：100米达标测试</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游进100米</div><div>技术动作综合评分</div><div>颁发【进阶入门证书】</div></div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第20课：翻转蹬壁原理</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解翻转蹬壁的动作原理</div><div>掌握前滚翻的基本技术</div><div>能在水中完成翻转</div></div></div><h3>20.1 翻转原理讲解（10分钟）</h3>
+<p>### 20.1 翻转原理讲解（10分钟）</p>
+<ul><li>翻转的核心是"前滚翻"</li><li>身体蜷缩，绕纵轴翻转</li><li>💡 <strong>感觉</strong>：像"虾"一样蜷起来翻过去</li></ul>
+<h3>20.2 陆地翻滚练习（15分钟）</h3>
+<p>### 20.2 陆地翻滚练习（15分钟）</p>
+<ul><li>在垫子上练习前滚翻</li><li>身体蜷缩，头部收紧</li><li>💡 <strong>感觉</strong>：像"球"一样滚过去</li></ul>
+<h3>20.3 水中翻滚练习（25分钟）</h3>
+<p>### 20.3 水中翻滚练习（25分钟）</p>
+<ul><li>扶池边翻转 → 水中翻转 → 蹬壁滑行</li><li>逐步消除对翻转的恐惧</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>陆地练习</td><td>15分钟</td></tr><tr><td>水中练习</td><td>25分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第21课：翻转技术强化</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>熟练掌握翻转动作</div><div>能做到翻转后身体舒展</div><div>为蹬壁滑行做准备</div></div></div><h3>21.1 翻转+伸展练习（25分钟）</h3>
+<p>### 21.1 翻转+伸展练习（25分钟）</p>
+<ul><li>翻转后立刻伸直身体</li><li>不要在蜷缩状态停留太久</li><li>💡 <strong>感觉</strong>：像"弹簧"，卷起来再弹开</li></ul>
+<h3>21.2 翻转+蹬壁衔接（15分钟）</h3>
+<p>### 21.2 翻转+蹬壁衔接（15分钟）</p>
+<ul><li>翻转后脚朝蹬壁方向</li><li>蹬壁滑行出去</li><li>💡 <strong>感觉</strong>：翻转是"蓄力"，蹬壁是"释放"</li></ul>
+<h3>21.3 连续翻转练习（10分钟）</h3>
+<p>### 21.3 连续翻转练习（10分钟）</p>
+<ul><li>游泳池长度约25米</li><li>游到头 → 翻转 → 蹬壁 → 继续游</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>翻转+伸展</td><td>25分钟</td></tr><tr><td>衔接练习</td><td>15分钟</td></tr><tr><td>连续练习</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第22课：水下滑行技术</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握蹬壁后的水下滑行</div><div>理解海豚腿在游进中的作用</div><div>能在水下有效游进</div></div></div><h3>22.1 蹬壁滑行（15分钟）</h3>
+<p>### 22.1 蹬壁滑行（15分钟）</p>
+<ul><li>蹬壁后身体伸展滑行</li><li>身体保持流线型</li><li>💡 <strong>感觉</strong>：像"子弹"一样射出，身体是"子弹头"</li></ul>
+<h3>22.2 水下海豚腿（20分钟）</h3>
+<p>### 22.2 水下海豚腿（20分钟）</p>
+<ul><li>蹬壁后先打海豚腿</li><li>保持身体贴近水面</li><li>约5-8秒后出水</li><li>⚠️ <strong>注意</strong>：海豚腿是"推进"，不是"挣扎"</li></ul>
+<h3>22.3 滑行+海豚腿+出水配合（15分钟）</h3>
+<p>### 22.3 滑行+海豚腿+出水配合（15分钟）</p>
+<ul><li>蹬壁 → 滑行 → 海豚腿 → 出水 → 划水</li><li>完整衔接，不停顿</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>蹬壁滑行</td><td>15分钟</td></tr><tr><td>海豚腿</td><td>20分钟</td></tr><tr><td>完整配合</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第23课：出发与转身综合练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>熟练掌握出发技术</div><div>能做到出发后不慌乱</div><div>转身与出发衔接流畅</div></div></div><h3>23.1 出发技术（20分钟）</h3>
+<p>### 23.1 出发技术（20分钟）</p>
+<ul><li>双手抓住池边</li><li>深吸一口气</li><li>脚蹬壁，身体滑行出去</li><li>💡 <strong>感觉</strong>：像"弹簧弹射"，蓄力后瞬间释放</li></ul>
+<h3>23.2 出发+划水衔接（15分钟）</h3>
+<p>### 23.2 出发+划水衔接（15分钟）</p>
+<ul><li>蹬壁滑行 → 海豚腿 → 出水 → 划水</li><li>过程中不要停顿</li><li>💡 <strong>感觉</strong>：像"接力赛"，每一棒都要接好</li></ul>
+<h3>23.3 转身+出发综合（15分钟）</h3>
+<p>### 23.3 转身+出发综合（15分钟）</p>
+<ul><li>游到头 → 翻转 → 蹬壁 → 出发</li><li>连续进行，不间断</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>出发技术</td><td>20分钟</td></tr><tr><td>衔接练习</td><td>15分钟</td></tr><tr><td>综合练习</td><td>15分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第24课：转身技术考核</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>转身技术综合评分</div><div>能做到连续转身不间断</div><div>为结业考核做准备</div></div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第25课：转身与耐力综合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>转身技术与耐力结合</div><div>能完成多次转身的连续游进</div><div>为100米以上距离做准备</div></div></div><h3>25.1 转身+连续游（25分钟）</h3>
+<p>### 25.1 转身+连续游（25分钟）</p>
+<ul><li>50米 + 转身 + 50米 + 转身 + 50米</li><li>每次转身都是新的起点</li><li>💡 <strong>感觉</strong>：转身是"加油站"，不是"终点"</li></ul>
+<h3>25.2 耐力练习（20分钟）</h3>
+<p>### 25.2 耐力练习（20分钟）</p>
+<ul><li>能连续游200米以上</li><li>保持稳定节奏，不因疲劳而乱</li></ul></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第26课：划频与划幅平衡</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解划频与划幅的概念</div><div>找到适合自己的划频</div><div>实现速度与耐力的平衡</div></div></div><h3>26.1 划频与划幅原理（15分钟）</h3>
+<p>### 26.1 划频与划幅原理（15分钟）</p>
+<ul><li>划频：每分钟划水的次数</li><li>划幅：每次划水前进的距离</li><li>速度 = 划频 × 划幅</li><li>💡 <strong>感觉</strong>：像踩单车，蹬得快+蹬得远才快</li></ul>
+<h3>26.2 划频练习（20分钟）</h3>
+<p>### 26.2 划频练习（20分钟）</p>
+<ul><li>快速划水，感受划频提升</li><li>不要因为快而牺牲划水质量</li><li>⚠️ <strong>注意</strong>：划频太快会导致动作变形</li></ul>
+<h3>26.3 划幅练习（15分钟）</h3>
+<p>### 26.3 划幅练习（15分钟）</p>
+<ul><li>慢速划水，感受长划水的力量</li><li>每次划水都要"推到底"</li><li>💡 <strong>感觉</strong>：每一划都要"有意义"</li></ul></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第27课：速度突破训练</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>通过间歇训练提升速度</div><div>能在短时间内达到最快速度</div><div>为结业测试做准备</div></div></div><h3>27.1 间歇训练原理（10分钟）</h3>
+<p>### 27.1 间歇训练原理（10分钟）</p>
+<ul><li>全力游25米 → 休息30秒 → 全力游25米 → 休息30秒</li><li>重复3-5组</li><li>💡 <strong>感觉</strong>：像"冲刺"，每一组都要拼尽全力</li></ul>
+<h3>27.2 速度练习（30分钟）</h3>
+<p>### 27.2 速度练习（30分钟）</p>
+<ul><li>25米全力游</li><li>50米快速游</li><li>100米匀速游</li></ul>
+<h3>27.3 速度与耐力平衡（10分钟）</h3>
+<p>### 27.3 速度与耐力平衡（10分钟）</p>
+<ul><li>找到"又快又远"的感觉</li><li>不要为了速度牺牲耐力</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>速度练习</td><td>30分钟</td></tr><tr><td>平衡练习</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第28课：结业技术考核</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>综合技术评分</div><div>转身技术考核</div><div>动作细节纠错</div></div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第29课：结业考核与证书颁发</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>200米达标测试</div><div>颁发【自由泳进阶证书】</div><div>总结学习成果，制定进阶计划</div></div></div></div>
+</div>
+</body>
+</html>
