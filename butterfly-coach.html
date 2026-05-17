@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦋 蝶泳入门教练版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --red-light: #FFE5E5; --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,var(--secondary) 0%,var(--primary) 60%,var(--accent) 100%); color: white; border-radius: 24px; padding: 48px 40px; text-align: center; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content:''; position: absolute; top:-50px; right:-50px; width:200px; height:200px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+  .hero::after { content:''; position: absolute; bottom:-30px; left:-30px; width:150px; height:150px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 6px 20px; font-size: 13px; margin-bottom: 16px; }
+  .hero h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
+  .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 16px 28px; min-width: 100px; }
+  .hero-stat .num { font-size: 28px; font-weight: 900; }
+  .hero-stat .label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .card-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-title .icon { font-size: 28px; }
+  .philosophy-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; }
+  .philosophy-item { background: linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius: 14px; padding: 18px; text-align: center; }
+  .philosophy-item .p-icon { font-size: 36px; margin-bottom: 8px; }
+  .philosophy-item .p-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--secondary); }
+  .philosophy-item .p-desc { font-size: 12px; color: var(--gray); }
+  .stage-header { border-radius: 16px; padding: 20px 24px; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 16px; }
+  .stage-header.green { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.blue { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.purple { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.red { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 40px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 22px; font-weight: 800; }
+  .stage-info p { font-size: 13px; opacity: 0.85; }
+  .stage-info .stage-lessons { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 22px 26px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); transition: box-shadow 0.2s; }
+  .lesson:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lesson.green { border-left-color: var(--green); }
+  .lesson.blue { border-left-color: var(--primary); }
+  .lesson.purple { border-left-color: var(--purple); }
+  .lesson.red { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .lesson-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: #E3F2FD; color: var(--primary); }
+  .badge-purple { background: #F3E5F5; color: var(--purple); }
+  .badge-red { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .lesson-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .lesson-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .lesson-table th:first-child { border-radius: 8px 0 0 0; }
+  .lesson-table th:last-child { border-radius: 0 8px 0 0; }
+  .lesson-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; vertical-align: top; }
+  .lesson-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .lesson-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .lesson-table tr:nth-child(even) { background: #FAFAFA; }
+  .lesson-table tr:hover { background: #F0F7FF; }
+  .checkpoint { display: flex; align-items: center; gap: 10px; background: var(--green-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 600; }
+  .checkpoint .icon { font-size: 20px; }
+  .tip-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; margin-top: 12px; }
+  .tip-item { background: var(--yellow-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; display: flex; gap: 8px; }
+  .tip-item .icon { font-size: 18px; flex-shrink: 0; }
+  .tip-item.blue { background: #E3F2FD; color: var(--primary); }
+  .tip-item.red { background: var(--red-light); color: var(--red); }
+  .error-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin-top: 12px; }
+  .error-item { background: var(--red-light); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .error-item .error-title { font-weight: 700; color: var(--red); margin-bottom: 4px; display: flex; gap: 6px; }
+  .error-item .error-fix { color: #333; }
+  .milestone-bar { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .milestone-item { flex: 1; min-width: 120px; text-align: center; padding: 16px 8px; position: relative; }
+  .milestone-item .m-icon { font-size: 36px; margin-bottom: 6px; }
+  .milestone-item .m-name { font-weight: 800; font-size: 14px; }
+  .milestone-item .m-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .milestone-connector { width: 40px; height: 3px; background: linear-gradient(90deg,var(--green),var(--primary),var(--purple),var(--secondary)); flex-shrink: 0; }
+  .flow-diagram { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 16px; background: #F8F9FA; border-radius: 12px; margin-top: 12px; font-size: 13px; }
+  .flow-step { background: var(--primary); color: white; padding: 6px 14px; border-radius: 50px; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--gray); font-size: 16px; }
+  .toc { background: #F8F9FA; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; }
+  .toc h3 { margin-bottom: 12px; font-size: 16px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; }
+  .toc-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 13px; transition: background 0.2s; }
+  .toc-item:hover { background: #E9ECEF; }
+  .toc-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .toc-item.green .toc-num { background: var(--green); }
+  .toc-item.blue .toc-num { background: var(--primary); }
+  .toc-item.purple .toc-num { background: var(--purple); }
+  .toc-item.red .toc-num { background: var(--secondary); }
+  .section-divider { text-align: center; padding: 32px 0 16px; color: var(--gray); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .footer { text-align: center; padding: 32px; color: var(--gray); font-size: 12px; }
+  .highlight-box { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 1px solid #FFE69C; border-radius: 12px; padding: 14px 18px; margin-top: 14px; font-size: 13px; }
+  .highlight-box .title { font-weight: 700; color: #856404; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .three-columns { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 12px; }
+  .three-columns .col { background: #F8F9FA; border-radius: 10px; padding: 12px; text-align: center; font-size: 12px; }
+  .three-columns .col .emoji { font-size: 28px; margin-bottom: 4px; display: block; }
+  .three-columns .col .label { font-weight: 700; color: var(--secondary); }
+  .three-columns .col .sub { color: var(--gray); font-size: 11px; margin-top: 2px; }
+  .coach-slogan { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 16px; padding: 28px; text-align: center; margin: 24px 0; }
+  .coach-slogan h3 { font-size: 18px; margin-bottom: 12px; }
+  .coach-slogan .slogans { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .coach-slogan .slogan-item { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px; } .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 16px; } .card { padding: 20px 18px; }
+    .lesson { padding: 16px 18px; } .lesson-table { font-size: 12px; }
+    .three-columns { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">🏊 新手教练必备工具</div>
+  <h1>🦋 蝶泳入门教练版</h1>
+  <p>8课时完整体系 · 教练版 · 图文详解</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">8</div><div class="label">标准课时</div></div>
+    <div class="hero-stat"><div class="num">2</div><div class="label">训练阶段</div></div>
+    <div class="hero-stat"><div class="num">26</div><div class="label">核心技能点</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">🎯</span>教学核心理念</div>
+  <div class="philosophy-grid">
+    <div class="philosophy-item"><div class="p-icon">💧</div><div class="p-title">水性优先</div><div class="p-desc">不着急教动作，先让学员"不怕水、享受水"</div></div>
+    <div class="philosophy-item"><div class="p-icon">👁️</div><div class="p-title">感觉驱动</div><div class="p-desc">强调"找感觉"，而不是机械模仿动作</div></div>
+    <div class="philosophy-item"><div class="p-icon">🔍</div><div class="p-title">分解细化</div><div class="p-desc">每个动作拆到不能再拆，循序渐进</div></div>
+    <div class="philosophy-item"><div class="p-icon">⚠️</div><div class="p-title">纠错前置</div><div class="p-desc">提前告诉学员"会犯什么错"，预判问题比纠正错误更重要</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第1课：学蝶泳需要达到哪些门槛？</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>评估学员是否满足学习蝶泳的前置条件</div><div>建立正确的学习预期和心理准备</div><div>确认学员具备足够的力量、柔韧和水性</div></div></div><h3>1.1 蝶泳的门槛要求（15分钟）</h3>
+<p>### 1.1 蝶泳的门槛要求（15分钟）</p>
+<blockquote>⚠️ <strong>重要</strong>：蝶泳不是游泳初学者第一个学的泳姿。学员必须先掌握至少一种泳姿（建议蛙泳或自由泳），并满足以下条件：</blockquote>
+<h4>体能门槛</h4>
+<p>#### 体能门槛</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>要求</th><th>测试方法</th></tr></thead><tbody><tr><td><strong>力量</strong></td><td>核心力量、上肢力量足够</td><td>能否连续做10个俯卧撑；平板支撑能否坚持30秒</td></tr><tr><td><strong>柔韧</strong></td><td>肩关节灵活、脊柱柔软</td><td>手臂能否轻松在水中画大圆；桥式能否做</td></tr><tr><td><strong>耐力</strong></td><td>能连续游200米不休息</td><td>蛙泳或自由泳200米连续游</td></tr></tbody></table>
+<h4>水性门槛</h4>
+<p>#### 水性门槛</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>要求</th><th>测试方法</th></tr></thead><tbody><tr><td><strong>漂浮</strong></td><td>仰漂和俯漂都能做</td><td>水中静止漂浮10秒</td></tr><tr><td><strong>踩水</strong></td><td>能踩水30秒以上</td><td>垂直踩水不沉</td></tr><tr><td><strong>换气</strong></td><td>熟练掌握水中呼吸</td><td>不紧张、不呛水、能边游边换气</td></tr></tbody></table>
+<h4>心理门槛</h4>
+<p>#### 心理门槛</p>
+<ul><li>不怕水、不怕闷在水里</li><li>愿意尝试有挑战性的动作</li><li>心理素质稳定，不容易慌张</li></ul>
+<h3>1.2 蝶泳的特点讲解（10分钟）</h3>
+<p>### 1.2 蝶泳的特点讲解（10分钟）</p>
+<ul><li>蝶泳是<strong>四种泳姿中难度最高</strong>的</li><li>蝶泳的节奏：<strong>划手一次 → 蝶泳腿两次（抱水一次、推水一次）</strong></li><li>蝶泳身体呈<strong>波浪形</strong>起伏，不是平板式的</li><li>双臂<strong>同步</strong>划水是蝶泳的标志性特征</li><li>换气随身体波动<strong>侧头</strong>，不必抬头</li></ul>
+<h3>1.3 蝶泳和其他泳姿的区别（10分钟）</h3>
+<p>### 1.3 蝶泳和其他泳姿的区别（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>泳姿</th><th>推进来源</th><th>节奏</th><th>难度</th></tr></thead><tbody><tr><td>蛙泳</td><td>腿部蹬夹为主</td><td>划手→收腿→蹬腿→漂</td><td>入门容易，精通难</td></tr><tr><td>自由泳</td><td>手臂划水为主</td><td>划手6次、打腿2次（或其他比例）</td><td>入门中等</td></tr><tr><td>仰泳</td><td>手臂划水为主</td><td>类似自由泳，仰面游</td><td>入门中等</td></tr><tr><td><strong>蝶泳</strong></td><td><strong>手臂+蝶泳腿协同</strong></td><td>划手1次→蝶泳腿2次</td><td><strong>最难</strong></td></tr></tbody></table>
+<h3>1.4 学习预期建立（10分钟）</h3>
+<p>### 1.4 学习预期建立（10分钟）</p>
+<ul><li>告诉学员：蝶泳入门预计需要<strong>8-12课时</strong>（因人而异）</li><li>蝶泳的学习曲线比蛙泳、自由泳更陡</li><li>强调：<strong>力量不够，先练力量；柔韧不够，先练柔韧；不要急于求成</strong></li><li>蝶泳一旦学会，进步会非常快——因为有了波浪的基础</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>门槛要求讲解</td><td>15分钟</td></tr><tr><td>蝶泳特点</td><td>10分钟</td></tr><tr><td>与其他泳姿对比</td><td>10分钟</td></tr><tr><td>学习预期与问答</td><td>10分钟</td></tr><tr><td>门槛测试（水池实操）</td><td>30分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>自测200米连续游（蛙泳或自由泳）</div><div class="tip-item"><span class="icon">🏠</span>每天做平板支撑和俯卧撑，增强核心和上肢力量</div><div class="tip-item"><span class="icon">🏠</span>拉伸肩关节和脊柱</div><div class="tip-item"><span class="icon">🏠</span>这一课是"门槛课"，不是"正式上课"——要严格评估，不满足门槛不要勉强教蝶泳</div><div class="tip-item"><span class="icon">🏠</span>如果学员不满足门槛，建议先学蛙泳/自由泳，或在陆上先练力量和柔韧</div><div class="tip-item"><span class="icon">🏠</span>如果学员满足门槛，恭喜他——可以开始蝶泳学习了！</div><div class="tip-item"><span class="icon">🏠</span>蝶泳适合<strong>有其他泳姿基础</strong>的学员，不适合零基础初学者</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课是"门槛课"，不是"正式上课"——要严格评估，不满足门槛不要勉强教蝶泳</div><div class="tip-item blue"><span class="icon">💡</span>如果学员不满足门槛，建议先学蛙泳/自由泳，或在陆上先练力量和柔韧</div><div class="tip-item blue"><span class="icon">💡</span>如果学员满足门槛，恭喜他——可以开始蝶泳学习了！</div><div class="tip-item blue"><span class="icon">💡</span>蝶泳适合<strong>有其他泳姿基础</strong>的学员，不适合零基础初学者</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第2课：腰腿基本动作和陆上练习——蝶泳腿：基本动作</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解蝶泳腿的力学原理：不是踢腿，是"摆腰"</div><div>掌握陆上蝶泳腿模仿动作</div><div>在水中体会蝶泳腿的感觉</div></div></div><h3>2.1 蝶泳腿 vs 普通踢腿（10分钟）</h3>
+<p>### 2.1 蝶泳腿 vs 普通踢腿（10分钟）</p>
+<p><strong>普通踢腿（自由泳腿/仰泳腿）</strong></p>
+<ul><li>双腿<strong>交替</strong>上下打</li><li>主要靠小腿发力</li><li>像是"剁肉"</li></ul>
+<p><strong>蝶泳腿（海豚腿）</strong></p>
+<ul><li>双腿<strong>同时</strong>上下摆动</li><li>发力从<strong>腰部</strong>开始，传递到大腿、小腿、脚踝</li><li>像是"甩鞭子"——鞭子的根在腰</li><li>主要靠<strong>腰腿力量</strong>而非小腿</li></ul>
+<blockquote>💡 <strong>核心要点</strong>：蝶泳腿的"根"在腰部，不在脚踝。脚踝只是鞭子的末端。</blockquote>
+<h3>2.2 陆上蝶泳腿模仿练习（20分钟）</h3>
+<p>### 2.2 陆上蝶泳腿模仿练习（20分钟）</p>
+<p><strong>练习一：跪姿摆腰（基础）</strong></p>
+<ul><li>跪在地上，双手撑地</li><li>腰部发力，让骨盆和臀部向前"送"</li><li>想象自己是海豚，身体从前往后摆成一个波浪</li><li>⚠️ <strong>常见错误</strong>：只动小腿不动腰——要感受腰先动</li></ul>
+<p><strong>练习二：俯卧踢腿模仿（进阶）</strong></p>
+<ul><li>俯卧在地上，双手放在身体两侧</li><li>腰部发力，双腿同时向上摆（就像在水里向下踢的反向动作）</li><li>感受从腰→大腿→小腿→脚踝的<strong>力量传递</strong></li><li>⚠️ <strong>常见错误</strong>：用小腿硬踢——要感受波浪传递</li></ul>
+<p><strong>练习三：坐姿摆腰（感知腰）</strong></p>
+<ul><li>坐在地上，双手撑在身后</li><li>腰部发力，让整个下身左右摆动</li><li>感受腰部是摆动的"根"</li><li>⚠️ <strong>常见错误</strong>：只动臀部——要整个下身参与</li></ul>
+<h3>2.3 水中蝶泳腿练习（30分钟）</h3>
+<p>### 2.3 水中蝶泳腿练习（30分钟）</p>
+<p><strong>练习一：扶边蝶泳腿（蹬壁漂浮+踢腿）</strong></p>
+<ul><li>蹬壁漂浮，身体俯卧</li><li>双腿同时向下踢，踢完并拢</li><li>踢腿幅度不需要太大，<strong>先感受同时性</strong></li><li>💡 <strong>感觉</strong>：想象自己是海豚，从腰部开始摆动</li><li>⚠️ <strong>常见错误</strong>：双腿一前一后（自由泳腿）——必须同时</li></ul>
+<p><strong>练习二：浮板辅助蝶泳腿（进阶）</strong></p>
+<ul><li>双手扶浮板，身体俯卧</li><li>只用蝶泳腿向前游</li><li>继续感受"摆腰"而不是"踢腿"</li><li>⚠️ <strong>常见错误</strong>：用小腿硬踢——把浮板压下去而不是推向前</li></ul>
+<p><strong>练习三：蝶泳腿+抬头（检验标准）</strong></p>
+<ul><li>蝶泳腿向前游，抬头换气</li><li>如果抬头就沉，说明蝶泳腿力量不够、腰部没发力</li><li>如果抬头还能游，说明腰腿力量到位了</li><li>💡 <strong>感觉</strong>：身体像一艘船，腰是螺旋桨，从腰部产生推进力</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>陆上蝶泳腿模仿</td><td>20分钟</td></tr><tr><td>水中蝶泳腿练习</td><td>45分钟</td></tr><tr><td>休息和纠错</td><td>20分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>每天陆上做跪姿摆腰练习，3组×20次</div><div class="tip-item"><span class="icon">🏠</span>每天做俯卧踢腿模仿练习，3组×20次</div><div class="tip-item"><span class="icon">🏠</span>水中练习蝶泳腿，每组25米，游5组</div><div class="tip-item"><span class="icon">🏠</span>蝶泳腿是蝶泳最难的部分，<strong>至少要练2-3节课才能基本掌握</strong></div><div class="tip-item"><span class="icon">🏠</span>不要急于求成，让学员多体会"摆腰"的感觉</div><div class="tip-item"><span class="icon">🏠</span>蝶泳腿的本质是<strong>波浪传递</strong>：腰动→大腿动→小腿动→脚踝动</div><div class="tip-item"><span class="icon">🏠</span>很多学员会把蝶泳腿做成自由泳腿（交替踢），要反复纠正</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>蝶泳腿是蝶泳最难的部分，<strong>至少要练2-3节课才能基本掌握</strong></div><div class="tip-item blue"><span class="icon">💡</span>不要急于求成，让学员多体会"摆腰"的感觉</div><div class="tip-item blue"><span class="icon">💡</span>蝶泳腿的本质是<strong>波浪传递</strong>：腰动→大腿动→小腿动→脚踝动</div><div class="tip-item blue"><span class="icon">💡</span>很多学员会把蝶泳腿做成自由泳腿（交替踢），要反复纠正</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第3课：鞭腿的动作到底该怎么做？——鞭腿的本质</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>深入理解鞭腿的力学本质：鞭子的传导机制</div><div>掌握"一波未平一波又起"的波浪节奏</div><div>在水中完成连续的、有节奏的蝶泳腿</div></div></div><h3>3.1 鞭腿的力学原理（15分钟）</h3>
+<p>### 3.1 鞭腿的力学原理（15分钟）</p>
+<p><strong>什么是鞭子效应？</strong></p>
+<ul><li>手持鞭子根，挥动鞭子——力量从手传到鞭梢</li><li>手没动，但鞭梢动得最快、最有力</li><li>蝶泳腿同理：<strong>腰部是手，脚踝是鞭梢</strong></li></ul>
+<p><strong>鞭腿的三个关键</strong></p>
+<p>1. <strong>腰部发力</strong>：不是脚踢，是腰"甩"</p>
+<p>2. <strong>力量传导</strong>：腰→大腿→小腿→脚踝，一个都不能断</p>
+<p>3. <strong>鞭梢加速</strong>：脚踝在最后获得最大速度，产生推进力</p>
+<blockquote>💡 <strong>比喻</strong>：想象你的身体是一根跳绳，腰是握把的那只手，脚踝是跳绳的另一端。发力时，手（腰）先动，整根绳子跟着甩出去。</blockquote>
+<h3>3.2 陆上鞭腿练习（15分钟）</h3>
+<p>### 3.2 陆上鞭腿练习（15分钟）</p>
+<p><strong>练习一：站立摆腰+甩腿</strong></p>
+<ul><li>站立，双手叉腰</li><li>腰部向左转，右腿顺势向左甩</li><li>腰部向右转，左腿顺势向右甩</li><li>感受腰是"发动机"，腿是"被带动的"</li><li>⚠️ <strong>常见错误</strong>：腿自己动而不是被腰带动——腿是附属于腰的</li></ul>
+<p><strong>练习二：坐姿波浪传递</strong></p>
+<ul><li>坐在地上，双手撑在身后</li><li>腰发力，让下身向左摆→回正→向右摆→回正</li><li>感受整个下身像一条蛇在水里游动</li><li>⚠️ <strong>常见错误</strong>：只动臀部——是整个下身参与</li></ul>
+<h3>3.3 水中连续蝶泳腿练习（40分钟）</h3>
+<p>### 3.3 水中连续蝶泳腿练习（40分钟）</p>
+<p><strong>练习一：连续鞭腿（不追求游进，先找节奏）</strong></p>
+<ul><li>扶边或蹬壁，身体俯卧</li><li>连续做蝶泳腿，不要求前进，只要求节奏对</li><li>节奏：1-2-3-4-5-6（每2拍踢一次）——但不是交替，是同时</li><li>💡 <strong>感觉</strong>：找到"一波未平一波又起"的节奏</li></ul>
+<p><strong>练习二：鞭腿+轻微前进</strong></p>
+<ul><li>连续蝶泳腿，试着让身体向前移动</li><li>不要急，先感受节奏，再追求前进</li><li>⚠️ <strong>常见错误</strong>：为了前进踢得太用力，反而打乱节奏——节奏第一</li></ul>
+<p><strong>练习三：蝶泳腿游进测试</strong></p>
+<ul><li>只用蝶泳腿，不用手，看能游多远</li><li>目标：蝶泳腿能独立推进身体前进</li><li>如果游不动或沉下去，说明腰腿力量还不够</li><li>💡 <strong>标准</strong>：蝶泳腿能让你从池边游到5米开外</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>鞭腿原理</td><td>15分钟</td></tr><tr><td>陆上练习</td><td>15分钟</td></tr><tr><td>水中练习</td><td>40分钟</td></tr><tr><td>休息和纠错</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>每天做陆上站立摆腰+甩腿练习，3组×30次</div><div class="tip-item"><span class="icon">🏠</span>每天做坐姿波浪传递，3组×20次</div><div class="tip-item"><span class="icon">🏠</span>水中蝶泳腿连续游，每组25米，游5组</div><div class="tip-item"><span class="icon">🏠</span>✅ 蝶泳腿节奏正确（双腿同时、波浪传递）</div><div class="tip-item"><span class="icon">🏠</span>✅ 不需要手臂帮助，只用蝶泳腿能前进5米以上</div><div class="tip-item"><span class="icon">🏠</span>✅ 身体呈波浪形起伏，不僵硬</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第4课：蝶泳手臂动作与换气配合教学</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握蝶泳手臂的基本动作（抱水→推水→移臂）</div><div>理解蝶泳划手和蝶泳腿的配合时机</div><div>学会侧头换气（不必抬头）</div></div></div><h3>4.1 蝶泳划手的四个阶段（15分钟）</h3>
+<p>### 4.1 蝶泳划手的四个阶段（15分钟）</p>
+<p><strong>第一阶段：入水</strong></p>
+<ul><li>双手同时入水，在肩膀前方</li><li>入水点不要太远，也不要太近</li><li>手掌向外，微微向下</li></ul>
+<p><strong>第二阶段：抱水</strong></p>
+<ul><li>手掌向后、向外抱水</li><li>肘部保持高于手，高肘抱水</li><li>抱水阶段<strong>蝶泳腿向上摆</strong>（第一次蝶泳腿）</li><li>💡 <strong>感觉</strong>：用手臂"抱"住水，而不是"划"水</li></ul>
+<p><strong>第三阶段：推水</strong></p>
+<ul><li>抱水到位后，手掌向后推水</li><li>推水阶段<strong>蝶泳腿向下摆</strong>（第二次蝶泳腿）</li><li>推水要用力，一直推到的大腿旁边</li><li>💡 <strong>感觉</strong>：推水是蝶泳主要的推进力来源</li></ul>
+<p><strong>第四阶段：移臂（出水面）</strong></p>
+<ul><li>推水结束后，手臂放松</li><li>手臂从水中移动到前方，准备下一次入水</li><li><strong>"轻松蝶"的关键</strong>：移臂时手要轻松，不要用力甩</li><li>💡 <strong>感觉</strong>：手臂像海鸥的翅膀，轻盈地划过空气</li></ul>
+<h3>4.2 陆上划手模仿练习（20分钟）</h3>
+<p>### 4.2 陆上划手模仿练习（20分钟）</p>
+<p><strong>练习一：站立划手模仿</strong></p>
+<ul><li>站立，原地模仿蝶泳划手动作</li><li>先练抱水（慢），再练推水（快），最后练移臂（轻松）</li><li>感受每个阶段的用力方式</li><li>⚠️ <strong>常见错误</strong>：移臂时甩手臂——要放松，用惯性</li></ul>
+<p><strong>练习二：俯卧划手模仿（进阶）</strong></p>
+<ul><li>俯卧在泳池边，上半身在水中</li><li>模仿划手动作，感受水的阻力</li><li>重点感受"抱水"和"推水"时的水的触感</li><li>⚠️ <strong>常见错误</strong>：划水时手转来转去——手掌要稳定</li></ul>
+<h3>4.3 蝶泳划手+换气配合练习（30分钟）</h3>
+<p>### 4.3 蝶泳划手+换气配合练习（30分钟）</p>
+<p><strong>换气时机</strong></p>
+<ul><li>换气在<strong>推水阶段</strong>进行</li><li>随着身体波动，下巴露出水面时，侧头吸气</li><li>⚠️ <strong>不要抬头换气</strong>：抬头会让下半身下沉</li><li>💡 <strong>感觉</strong>：身体把头"顶"出水面，头不要主动抬起</li></ul>
+<p><strong>练习一：划手+蝶泳腿+换气（分解练习）</strong></p>
+<ul><li>划一次手 + 打两次蝶泳腿 + 换一次气</li><li>分解动作：1划（抱水+推水）+ 1腿（向上）+ 1腿（向下）+ 换气</li><li>先在岸上或池边练习分解动作</li></ul>
+<p><strong>练习二：完整划手换气配合（进阶）</strong></p>
+<ul><li>在水中进行完整的划手+换气练习</li><li>划手1次 + 蝶泳腿2次 + 换气1次 = 一个完整周期</li><li>💡 <strong>感觉</strong>：手臂、腿部、换气三者的节奏是<strong>同步的</strong></li></ul>
+<p><strong>练习三：连续划手换气（熟练）</strong></p>
+<ul><li>连续做多个周期的划手+换气</li><li>先不追求距离，先追求节奏正确</li><li>目标：能连续做5个周期不乱</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>划手原理讲解</td><td>15分钟</td></tr><tr><td>陆上划手模仿</td><td>20分钟</td></tr><tr><td>水中划手换气练习</td><td>45分钟</td></tr><tr><td>休息和纠错</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>每天陆上站立划手模仿练习，3组×20次</div><div class="tip-item"><span class="icon">🏠</span>水中练习划手换气配合，每组10个周期，游5组</div><div class="tip-item"><span class="icon">🏠</span>蝶泳划手是"同时"的，不是"交替"的（不像自由泳一只手划完另一只手划）</div><div class="tip-item"><span class="icon">🏠</span>换气的关键是<strong>随波逐流</strong>——等身体把头顶出水面，而不是自己抬头</div><div class="tip-item"><span class="icon">🏠</span>"轻松蝶"的核心是<strong>移臂轻松</strong>——移臂不费力，靠惯性</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>蝶泳划手是"同时"的，不是"交替"的（不像自由泳一只手划完另一只手划）</div><div class="tip-item blue"><span class="icon">💡</span>换气的关键是<strong>随波逐流</strong>——等身体把头顶出水面，而不是自己抬头</div><div class="tip-item blue"><span class="icon">💡</span>"轻松蝶"的核心是<strong>移臂轻松</strong>——移臂不费力，靠惯性</div></div></div>
+<div class="stage-header green">
+  <div class="stage-num">1</div>
+  <div class="stage-info">
+    <h2>第5课</h2>
+    <p>轻松蝶</p>
+  </div>
+</div>
+<div class="stage-header blue">
+  <div class="stage-num">2</div>
+  <div class="stage-info">
+    <h2>第6课</h2>
+    <p>陆上划手模仿练习</p>
+  </div>
+</div>
+<div class="lesson blue"><div class="lesson-header">
+  <div class="lesson-title">第7课：划手和换气的配合</div>
+  <span class="lesson-badge badge-blue">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>巩固划手和换气的协调配合</div><div>掌握换气的时机和节奏</div><div>能连续游动，不间断</div></div></div><h3>7.1 换气的时机（15分钟）</h3>
+<p>### 7.1 换气的时机（15分钟）</p>
+<p><strong>最佳换气时机：推水阶段</strong></p>
+<ul><li>推水时，身体随着手臂向下压水，头部顺势抬起</li><li>此时下巴露出水面，是吸气的最佳时机</li><li>⚠️ <strong>不要在抱水阶段换气</strong>：抱水时身体向上抬，头还没出水面</li></ul>
+<p><strong>换气的节奏</strong></p>
+<ul><li><strong>划手1次 + 蝶泳腿2次 + 换气1次</strong> = 一个完整周期</li><li>第一次蝶泳腿在抱水阶段</li><li>第二次蝶泳腿在推水阶段</li><li>换气在推水阶段进行</li></ul>
+<h3>7.2 换气的技巧（15分钟）</h3>
+<p>### 7.2 换气的技巧（15分钟）</p>
+<p><strong>侧头换气，不是抬头</strong></p>
+<ul><li>头随着身体的波动自然抬起，不要主动抬头</li><li>嘴巴露出水面时，快速吸气</li><li>吸气后头回到水中，用鼻子（或嘴鼻一起）慢慢吐气</li></ul>
+<p><strong>换气深度</strong></p>
+<ul><li>吸气要深，不要只吸一口</li><li>用嘴巴吸气，不要用鼻子（容易呛水）</li></ul>
+<blockquote>💡 <strong>比喻</strong>：想象你是一艘潜艇，头部有一个"呼吸口"。当身体波动到最高点时，呼吸口露出水面，自动吸气。</blockquote>
+<h3>7.3 完整配合练习（45分钟）</h3>
+<p>### 7.3 完整配合练习（45分钟）</p>
+<p><strong>练习一：分解配合（划手+腿+换气）</strong></p>
+<ul><li>单次划手 + 2次蝶泳腿 + 1次换气</li><li>慢速练习，确保节奏对</li><li>可以用浮板辅助，只练上半身动作</li></ul>
+<p><strong>练习二：多次连续配合</strong></p>
+<ul><li>连续做5个周期的完整配合</li><li>不追求距离，先追求节奏稳定</li><li>目标：5个周期节奏不乱</li></ul>
+<p><strong>练习三：连续游动（目标25米）</strong></p>
+<ul><li>完整蝶泳，连续游25米</li><li>中间允许换气（但要保持节奏）</li><li>如果累了，可以减慢速度，但不要停</li><li>💡 <strong>感觉</strong>：找到自己的节奏，然后保持这个节奏</li></ul>
+<p><strong>练习四：多次游（强化耐力）</strong></p>
+<ul><li>连续游多个25米</li><li>目标：能连续游100米（4个25米）</li><li>⚠️ <strong>常见错误</strong>：游一个25米就累了——要多游，增强耐力</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>换气时机讲解</td><td>15分钟</td></tr><tr><td>换气技巧</td><td>15分钟</td></tr><tr><td>水中配合练习</td><td>45分钟</td></tr><tr><td>休息和纠错</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>每天陆上划手+呼吸配合练习，3组×20次</div><div class="tip-item"><span class="icon">🏠</span>水中连续蝶泳游进，每组25米，游5组</div><div class="tip-item"><span class="icon">🏠</span>目标：能连续游100米</div><div class="tip-item"><span class="icon">🏠</span>✅ 换气时机正确（推水阶段换气）</div><div class="tip-item"><span class="icon">🏠</span>✅ 侧头换气，不抬头</div><div class="tip-item"><span class="icon">🏠</span>✅ 能连续游100米以上</div></div></div>
+<div class="lesson blue"><div class="lesson-header">
+  <div class="lesson-title">第8课：蝶泳转身技巧，蛙泳也通用</div>
+  <span class="lesson-badge badge-blue">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握蝶泳转身的基本技术</div><div>掌握蝶泳腿出发（水下蝶泳腿）</div><div>蝶泳转身和蛙泳转身的异同</div><div>结业考核与证书颁发</div></div></div><h3>8.1 蝶泳转身的特点（10分钟）</h3>
+<p>### 8.1 蝶泳转身的特点（10分钟）</p>
+<p><strong>蝶泳转身 vs 蛙泳转身</strong></p>
+<ul><li>蝶泳转身和蛙泳转身的基本原理类似</li><li>主要区别：蝶泳转身多一个"水下蝶泳腿"阶段</li><li>蝶泳转身后的<strong>第一次蝶泳腿在水下进行</strong></li></ul>
+<p><strong>蝶泳转身流程</strong></p>
+<p>1. 触壁（双手同时触壁）</p>
+<p>2. 团身翻转（膝盖向胸口收）</p>
+<p>3. 蹬壁（水下蝶泳腿准备）</p>
+<p>4. 水下蝶泳腿（3-5米）</p>
+<p>5. 出水面</p>
+<p>6. 划手换气（正常蝶泳）</p>
+<h3>8.2 水下蝶泳腿（出发和转身必备）（20分钟）</h3>
+<p>### 8.2 水下蝶泳腿（出发和转身必备）（20分钟）</p>
+<p><strong>水下蝶泳腿的作用</strong></p>
+<ul><li>蝶泳腿在<strong>水下进行</strong>比在水面上更有力、更省力</li><li>出发后的滑行阶段，用蝶泳腿提供额外的推进力</li><li>转身后的滑行阶段，同样用蝶泳腿</li></ul>
+<p><strong>水下蝶泳腿练习</strong></p>
+<ul><li>蹬壁滑行后，身体俯卧在水下</li><li>做3-5次蝶泳腿</li><li>蝶泳腿幅度可以比水面大一些，因为水下没有空气阻力</li><li>💡 <strong>感觉</strong>：身体像一艘潜艇在水下潜行，腰腿产生推进力</li><li>⚠️ <strong>常见错误</strong>：蝶泳腿太快——要控制节奏，和正常蝶泳一样</li></ul>
+<p><strong>练习一：水下蝶泳腿单独练习</strong></p>
+<ul><li>蹬壁后，不划手，只用水下蝶泳腿</li><li>目标：靠水下蝶泳腿前进5-8米</li></ul>
+<p><strong>练习二：出发+水下蝶泳腿</strong></p>
+<ul><li>从出发台出发</li><li>入水后滑行，然后做水下蝶泳腿</li><li>蝶泳腿结束后出水面，开始正常划手换气</li></ul>
+<p><strong>练习三：转身+水下蝶泳腿</strong></p>
+<ul><li>游到池边，蝶泳转身</li><li>蹬壁后做水下蝶泳腿</li><li>蝶泳腿结束后出水面</li></ul>
+<h3>8.3 蝶泳转身练习（30分钟）</h3>
+<p>### 8.3 蝶泳转身练习（30分钟）</p>
+<p><strong>转身步骤分解</strong></p>
+<p>1. <strong>接近池边</strong>：正常蝶泳游向池边</p>
+<p>2. <strong>触壁</strong>：双手同时触壁（在肩膀前方）</p>
+<p>3. <strong>团身</strong>：膝盖向胸口收，身体翻转</p>
+<p>4. <strong>蹬壁</strong>：双脚用力蹬壁，身体呈流线型</p>
+<p>5. <strong>水下蝶泳腿</strong>：俯卧滑行+蝶泳腿（3-5米）</p>
+<p>6. <strong>出水面</strong>：身体上浮，开始正常蝶泳</p>
+<p><strong>练习一：转身分解练习（扶边）</strong></p>
+<ul><li>扶着池边，练习团身翻转</li><li>感受翻转时头部带动身体旋转的感觉</li><li>⚠️ <strong>常见错误</strong>：翻转时抬头——头要埋在臂弯里</li></ul>
+<p><strong>练习二：完整转身练习</strong></p>
+<ul><li>从泳池一端开始，正常蝶泳</li><li>到池边后做蝶泳转身</li><li>蹬壁后做水下蝶泳腿</li><li>出水面后继续游到对岸</li><li>⚠️ <strong>常见错误</strong>：转身后沉下去——要多练水下蝶泳腿</li></ul>
+<p><strong>练习三：连续转身练习</strong></p>
+<ul><li>游到一端，做转身，蹬壁，水下蝶泳腿，出水面，继续游</li><li>游到另一端，再做转身</li><li>目标：能连续做多个转身</li></ul>
+<h3>8.4 出发台蝶泳出发（10分钟）</h3>
+<p>### 8.4 出发台蝶泳出发（10分钟）</p>
+<p><strong>蝶泳出发（与自由泳/蛙泳类似）</strong></p>
+<ul><li>站在出发台上，双手握住出发台前沿</li><li>身体前倾，重心向前</li><li>入水后滑行，然后做水下蝶泳腿</li><li>水下蝶泳腿结束后出水面，开始正常蝶泳</li></ul>
+<p><strong>练习：出发台出发</strong></p>
+<ul><li>从出发台跳入水中</li><li>入水后滑行</li><li>做水下蝶泳腿</li><li>出水面，开始划手换气</li></ul>
+<h3>8.5 结业考核与证书颁发（20分钟）</h3>
+<p>### 8.5 结业考核与证书颁发（20分钟）</p></div>
+</div>
+</body>
+</html>
