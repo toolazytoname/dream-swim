@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛁 仰泳入门教练版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --red-light: #FFE5E5; --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,var(--secondary) 0%,var(--primary) 60%,var(--accent) 100%); color: white; border-radius: 24px; padding: 48px 40px; text-align: center; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content:''; position: absolute; top:-50px; right:-50px; width:200px; height:200px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+  .hero::after { content:''; position: absolute; bottom:-30px; left:-30px; width:150px; height:150px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 6px 20px; font-size: 13px; margin-bottom: 16px; }
+  .hero h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
+  .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 16px 28px; min-width: 100px; }
+  .hero-stat .num { font-size: 28px; font-weight: 900; }
+  .hero-stat .label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .card-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-title .icon { font-size: 28px; }
+  .philosophy-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; }
+  .philosophy-item { background: linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius: 14px; padding: 18px; text-align: center; }
+  .philosophy-item .p-icon { font-size: 36px; margin-bottom: 8px; }
+  .philosophy-item .p-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--secondary); }
+  .philosophy-item .p-desc { font-size: 12px; color: var(--gray); }
+  .stage-header { border-radius: 16px; padding: 20px 24px; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 16px; }
+  .stage-header.green { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.blue { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.purple { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.red { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 40px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 22px; font-weight: 800; }
+  .stage-info p { font-size: 13px; opacity: 0.85; }
+  .stage-info .stage-lessons { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 22px 26px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); transition: box-shadow 0.2s; }
+  .lesson:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lesson.green { border-left-color: var(--green); }
+  .lesson.blue { border-left-color: var(--primary); }
+  .lesson.purple { border-left-color: var(--purple); }
+  .lesson.red { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .lesson-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: #E3F2FD; color: var(--primary); }
+  .badge-purple { background: #F3E5F5; color: var(--purple); }
+  .badge-red { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .lesson-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .lesson-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .lesson-table th:first-child { border-radius: 8px 0 0 0; }
+  .lesson-table th:last-child { border-radius: 0 8px 0 0; }
+  .lesson-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; vertical-align: top; }
+  .lesson-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .lesson-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .lesson-table tr:nth-child(even) { background: #FAFAFA; }
+  .lesson-table tr:hover { background: #F0F7FF; }
+  .checkpoint { display: flex; align-items: center; gap: 10px; background: var(--green-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 600; }
+  .checkpoint .icon { font-size: 20px; }
+  .tip-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; margin-top: 12px; }
+  .tip-item { background: var(--yellow-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; display: flex; gap: 8px; }
+  .tip-item .icon { font-size: 18px; flex-shrink: 0; }
+  .tip-item.blue { background: #E3F2FD; color: var(--primary); }
+  .tip-item.red { background: var(--red-light); color: var(--red); }
+  .error-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin-top: 12px; }
+  .error-item { background: var(--red-light); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .error-item .error-title { font-weight: 700; color: var(--red); margin-bottom: 4px; display: flex; gap: 6px; }
+  .error-item .error-fix { color: #333; }
+  .milestone-bar { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .milestone-item { flex: 1; min-width: 120px; text-align: center; padding: 16px 8px; position: relative; }
+  .milestone-item .m-icon { font-size: 36px; margin-bottom: 6px; }
+  .milestone-item .m-name { font-weight: 800; font-size: 14px; }
+  .milestone-item .m-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .milestone-connector { width: 40px; height: 3px; background: linear-gradient(90deg,var(--green),var(--primary),var(--purple),var(--secondary)); flex-shrink: 0; }
+  .flow-diagram { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 16px; background: #F8F9FA; border-radius: 12px; margin-top: 12px; font-size: 13px; }
+  .flow-step { background: var(--primary); color: white; padding: 6px 14px; border-radius: 50px; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--gray); font-size: 16px; }
+  .toc { background: #F8F9FA; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; }
+  .toc h3 { margin-bottom: 12px; font-size: 16px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; }
+  .toc-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 13px; transition: background 0.2s; }
+  .toc-item:hover { background: #E9ECEF; }
+  .toc-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .toc-item.green .toc-num { background: var(--green); }
+  .toc-item.blue .toc-num { background: var(--primary); }
+  .toc-item.purple .toc-num { background: var(--purple); }
+  .toc-item.red .toc-num { background: var(--secondary); }
+  .section-divider { text-align: center; padding: 32px 0 16px; color: var(--gray); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .footer { text-align: center; padding: 32px; color: var(--gray); font-size: 12px; }
+  .highlight-box { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 1px solid #FFE69C; border-radius: 12px; padding: 14px 18px; margin-top: 14px; font-size: 13px; }
+  .highlight-box .title { font-weight: 700; color: #856404; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .three-columns { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 12px; }
+  .three-columns .col { background: #F8F9FA; border-radius: 10px; padding: 12px; text-align: center; font-size: 12px; }
+  .three-columns .col .emoji { font-size: 28px; margin-bottom: 4px; display: block; }
+  .three-columns .col .label { font-weight: 700; color: var(--secondary); }
+  .three-columns .col .sub { color: var(--gray); font-size: 11px; margin-top: 2px; }
+  .coach-slogan { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 16px; padding: 28px; text-align: center; margin: 24px 0; }
+  .coach-slogan h3 { font-size: 18px; margin-bottom: 12px; }
+  .coach-slogan .slogans { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .coach-slogan .slogan-item { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px; } .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 16px; } .card { padding: 20px 18px; }
+    .lesson { padding: 16px 18px; } .lesson-table { font-size: 12px; }
+    .three-columns { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">🏊 新手教练必备工具</div>
+  <h1>🏊 仰泳入门教练版</h1>
+  <p>7课时完整体系 · 教练版 · 图文详解</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">7</div><div class="label">标准课时</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">训练阶段</div></div>
+    <div class="hero-stat"><div class="num">26</div><div class="label">核心技能点</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">🎯</span>教学核心理念</div>
+  <div class="philosophy-grid">
+    <div class="philosophy-item"><div class="p-icon">💧</div><div class="p-title">水性优先</div><div class="p-desc">不着急教动作，先让学员"不怕水、享受水"</div></div>
+    <div class="philosophy-item"><div class="p-icon">👁️</div><div class="p-title">感觉驱动</div><div class="p-desc">强调"找感觉"，而不是机械模仿动作</div></div>
+    <div class="philosophy-item"><div class="p-icon">🔍</div><div class="p-title">分解细化</div><div class="p-desc">每个动作拆到不能再拆，循序渐进</div></div>
+    <div class="philosophy-item"><div class="p-icon">⚠️</div><div class="p-title">纠错前置</div><div class="p-desc">提前告诉学员"会犯什么错"，预判问题比纠正错误更重要</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第1课：仰泳的门槛</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解仰泳与其他泳姿的根本区别（脸朝上 vs 脸朝下）</div><div>建立正确的仰泳学习预期</div><div>知道仰泳最大的难点在哪里</div></div></div><h3>1.1 仰泳的特点（10分钟）</h3>
+<p>### 1.1 仰泳的特点（10分钟）</p>
+<ul><li>仰泳是<strong>唯一脸朝上的泳姿</strong>——不闷气、不呛水、可以"休息着游"</li><li>仰泳的节奏：打腿→划手→换气，循环往复</li><li>每个周期中身体有"仰漂休息"的窗口期</li></ul>
+<h3>1.2 为什么仰泳比蛙泳难？（15分钟）</h3>
+<p>### 1.2 为什么仰泳比蛙泳难？（15分钟）</p>
+<ul><li><strong>仰漂是门槛</strong>——初学者不敢仰漂，怕后脑勺磕池底、怕呛水、怕翻过去</li><li><strong>换气是难点</strong>——吸气在头上方，容易"喝空气"而不是喝水，但本质问题是怕水</li><li><strong>身体容易歪</strong>——仰卧时没有视觉参照，容易绕圈游</li></ul>
+<h3>1.3 学习预期建立（10分钟）</h3>
+<p>### 1.3 学习预期建立（10分钟）</p>
+<ul><li>告诉学员：仰泳入门预计需要<strong>6-10课时</strong>（因人而异）</li><li>仰泳比蛙泳"看起来简单"，但基本功要求更高</li><li>心理建设：<strong>仰漂是学仰泳的第一步，能漂才能游</strong></li></ul>
+<h3>1.4 仰漂体验（10分钟）</h3>
+<p>### 1.4 仰漂体验（10分钟）</p>
+<ul><li>在浅水区，让学员<strong>扶着池边，慢慢往后仰漂</strong></li><li>关键：后脑勺要能露出水面——如果后脑勺在水下，说明气没吐完</li><li>💡 <strong>感觉</strong>：像躺在一张床上，水托着背，非常舒服</li><li>⚠️ <strong>重点</strong>：必须<strong>吐气</strong>，不能憋气仰漂——憋气会让脚沉下去</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>仰泳特点讲解</td><td>10分钟</td></tr><tr><td>为什么仰泳难</td><td>15分钟</td></tr><tr><td>学习预期建立</td><td>10分钟</td></tr><tr><td>仰漂体验</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：躺在床上练习"全身放松、后脑勺贴着床"的仰漂感受</div><div class="tip-item"><span class="icon">🏠</span>心理建设：想象自己仰面漂在水面上的轻松感</div><div class="tip-item"><span class="icon">🏠</span>这一课看似"没教东西"，但仰漂心理建设是仰泳教学的基础</div><div class="tip-item"><span class="icon">🏠</span>如果学员不敢仰漂，这一课可以延长到2课时，不要赶进度</div><div class="tip-item"><span class="icon">🏠</span>教练要一直在学员旁边，让学员知道"有人会保护我"</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课看似"没教东西"，但仰漂心理建设是仰泳教学的基础</div><div class="tip-item blue"><span class="icon">💡</span>如果学员不敢仰漂，这一课可以延长到2课时，不要赶进度</div><div class="tip-item blue"><span class="icon">💡</span>教练要一直在学员旁边，让学员知道"有人会保护我"</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第2课：仰泳的基本换气练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握仰泳换气的正确节奏（吸气+憋气+呼气）</div><div>能在仰卧状态下稳定换气，不呛水</div><div>理解"换气不怕水"的核心——气往下走，不是被水堵住</div></div></div><h3>2.1 仰卧换气原理（5分钟）</h3>
+<p>### 2.1 仰卧换气原理（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>仰泳时</td><td>嘴巴在水面以上，鼻子在水下</td></tr><tr><td>换气节奏</td><td><strong>吸气 → 憋1-2秒 → 呼气</strong>（鼻子慢慢吐泡泡）</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像闻花香一样吸气，像吹蜡烛一样呼气</td></tr></tbody></table>
+<h3>2.2 陆上仰卧换气练习（10分钟）</h3>
+<p>### 2.2 陆上仰卧换气练习（10分钟）</p>
+<ul><li>躺在池边或长凳上，头部模拟水中仰卧姿势</li><li>练习：吸气 → 转头侧边 → 呼气（感受节奏）</li><li>教练喊口令：\"吸——憋——呼——\"</li><li>⚠️ <strong>绝对不能用鼻子吸气</strong>，否则必呛水</li></ul>
+<h3>2.3 浅水区仰卧换气（20分钟）</h3>
+<p>### 2.3 浅水区仰卧换气（20分钟）</p>
+<ul><li><strong>练习一</strong>：扶池边，仰卧在水面上，嘴巴露出水面，鼻子在水下</li><li>嘴巴张开吸气 → 鼻子慢慢呼气</li><li>连续10次，组间休息10秒，做3组</li><li><strong>练习二</strong>：仰卧在浅水区，双手自然放在身体两侧</li><li>感受水在脸上的压力——其实并不可怕</li><li>💡 <strong>感觉</strong>：水只是在脸上流过，不会进入嘴巴（因为嘴在水面之上）</li><li><strong>练习三</strong>：离开池边，原地踩水同时仰卧换气</li><li>保持嘴巴一直在水面上方</li></ul>
+<h3>2.4 仰漂换气进阶（15分钟）</h3>
+<p>### 2.4 仰漂换气进阶（15分钟）</p>
+<ul><li>抱膝仰漂 → 双手放开 → 仰卧漂浮</li><li>嘴巴吸气 → 鼻子呼气 → 身体保持稳定</li><li>💡 <strong>感觉</strong>：脸在水面上方，空气从嘴巴进来，从鼻子出去</li><li>⚠️ <strong>关键</strong>：呼气要"轻而长"，不能"噗"地一下把气喷出来——那样会让自己紧张</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>仰卧换气原理</td><td>5分钟</td></tr><tr><td>陆上练习</td><td>10分钟</td></tr><tr><td>浅水区仰卧</td><td>20分钟</td></tr><tr><td>仰漂换气</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：对着镜子练仰卧姿势，感受头部位置</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能在仰漂中稳定换气10次以上</div><div class="tip-item"><span class="icon">🏠</span>仰泳换气比蛙泳简单——嘴在水面上，不需要抬头</div><div class="tip-item"><span class="icon">🏠</span>但初学者往往"不敢张嘴"——要强调"嘴永远在水面上，水进不去"</div><div class="tip-item"><span class="icon">🏠</span>这一课要把换气练到"不用想就会"的程度，呼吸不顺畅后续动作都会乱</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>仰泳换气比蛙泳简单——嘴在水面上，不需要抬头</div><div class="tip-item blue"><span class="icon">💡</span>但初学者往往"不敢张嘴"——要强调"嘴永远在水面上，水进不去"</div><div class="tip-item blue"><span class="icon">💡</span>这一课要把换气练到"不用想就会"的程度，呼吸不顺畅后续动作都会乱</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第3课：仰泳的腿部动作</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握仰泳腿"鞭状打水"的核心要领</div><div>理解"大腿带动小腿"的发力方式</div><div>能在仰漂状态下稳定打腿</div></div></div><h3>3.1 仰泳打腿原理（10分钟）</h3>
+<p>### 3.1 仰泳打腿原理（10分钟）</p>
+<ul><li>仰泳腿和自由泳腿类似，都是<strong>鞭状打水</strong></li><li>关键：<strong>大腿发力</strong> → 膝盖放松 → 小腿和脚自然鞭打</li><li>口诀：<strong>上踢直，下打弯，腿打水像鱼尾巴</strong></li><li>上踢：腿向上踢时，脚踝伸直，踢出水面</li><li>下打：腿向下打时，膝盖微弯，用脚背推水</li></ul>
+<h3>3.2 陆上仰泳打腿模仿（10分钟）</h3>
+<p>### 3.2 陆上仰泳打腿模仿（10分钟）</p>
+<ul><li>仰卧在池边，两手撑身体</li><li>练习打腿动作：慢上快下，感受鞭状</li><li>💡 <strong>感觉</strong>：像用鞭子抽水——鞭子头（脚）是最后动的</li><li>⚠️ <strong>常见错误</strong>：膝盖打得太大（像蛙泳腿）、脚踝不放松</li></ul>
+<h3>3.3 扶池边打腿练习（15分钟）</h3>
+<p>### 3.3 扶池边打腿练习（15分钟）</p>
+<ul><li>双手扶池边，身体仰卧在水面</li><li><strong>练习一</strong>：轻轻打腿，保持身体稳定</li><li><strong>练习二</strong>：打腿时感受"打上来的水花"——有力但不猛</li><li><strong>练习三</strong>：连续打腿30秒，休息10秒，重复3组</li><li>💡 <strong>感觉</strong>：脚踝像绑着带子一样甩动，力量从大腿传到脚踝</li></ul>
+<h3>3.4 仰漂打腿（15分钟）</h3>
+<p>### 3.4 仰漂打腿（15分钟）</p>
+<ul><li>蹬边滑行 → 进入仰漂 → 开始打腿</li><li>目标：打腿时身体保持水平，不歪斜</li><li>⚠️ <strong>重点</strong>：</li><li>头保持正中，眼睛看天花板——不要转头</li><li>肩膀不要用力，放松</li><li>脚踝放松，像鱼尾一样鞭打</li><li>💡 <strong>感觉</strong>：身体像一根木棍在水中旋转，腿在下面打水</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>打腿原理</td><td>10分钟</td></tr><tr><td>陆上模仿</td><td>10分钟</td></tr><tr><td>扶池边打腿</td><td>15分钟</td></tr><tr><td>仰漂打腿</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：躺在床上练习"打腿动作"——想象脚在水下打水的动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能仰漂打腿维持10秒以上，身体保持水平</div><div class="tip-item"><span class="icon">🏠</span>仰泳腿是最重要的推进力——不像蛙泳靠手臂，仰泳靠腿打水推进</div><div class="tip-item"><span class="icon">🏠</span>鞭状打水的核心是"放松脚踝"，脚踝僵硬的学员要让他多练习踝关节灵活性</div><div class="tip-item"><span class="icon">🏠</span>打腿练习很枯燥，但必须反复练——这是仰泳的基础</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>仰泳腿是最重要的推进力——不像蛙泳靠手臂，仰泳靠腿打水推进</div><div class="tip-item blue"><span class="icon">💡</span>鞭状打水的核心是"放松脚踝"，脚踝僵硬的学员要让他多练习踝关节灵活性</div><div class="tip-item blue"><span class="icon">💡</span>打腿练习很枯燥，但必须反复练——这是仰泳的基础</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第4课：仰泳腿和换气的配合练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握仰泳打腿和换气的节奏配合</div><div>能在仰漂打腿中稳定换气，不呛水</div><div>建立"打腿时吸气、憋气时换气"的节奏</div></div></div><h3>4.1 配合节奏讲解（5分钟）</h3>
+<p>### 4.1 配合节奏讲解（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>仰泳换气节奏</td><td><strong>打水2-3下 → 吸气1次 → 憋气1-2秒</strong></td></tr><tr><td>关键</td><td>换气时不能停打腿——边打边吸，一气呵成</td></tr><tr><td>口诀</td><td><strong>轻打水，慢吸气，头别抬，嘴张大</strong></td></tr></tbody></table>
+<h3>4.2 仰漂打腿+换气练习（25分钟）</h3>
+<p>### 4.2 仰漂打腿+换气练习（25分钟）</p>
+<ul><li><strong>练习一</strong>：仰漂打腿，每3秒换一口气</li><li>打3下腿 → 嘴张开吸气 → 继续打腿</li><li>连续20次，组间休息10秒</li><li><strong>练习二</strong>：仰漂打腿，吸气后"憋一下"再呼气</li><li>吸一口气 → 默数3 → 鼻子慢慢呼气</li><li>💡 <strong>感觉</strong>：换气时身体不要起伏，像一块木板在水上漂</li><li><strong>练习三</strong>：连续游动——仰漂打腿+换气配合</li><li>打腿保持稳定，吸气保持节奏</li><li>目标：能连续游10米以上</li></ul>
+<h3>4.3 常见问题处理（10分钟）</h3>
+<p>### 4.3 常见问题处理（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>⚠️ <strong>换气时身体下沉</strong></td><td>说明吸气太浅，或打腿没力</td></tr><tr><td>⚠️ <strong>换气时呛水</strong></td><td>说明抬头太高，或时机不对</td></tr><tr><td>⚠️ <strong>打腿节奏乱</strong></td><td>先练单一动作（只打腿或只换气），再合并</td></tr></tbody></table>
+<h3>4.4 仰泳完整动作体验（5分钟）</h3>
+<p>### 4.4 仰泳完整动作体验（5分钟）</p>
+<ul><li>让学员尝试：<strong>打腿 + 划手 + 换气</strong>的完整配合</li><li>不用要求动作标准——先体验"仰泳的感觉"</li><li>💡 <strong>感觉</strong>：像骑自行车——一开始会摇晃，但慢慢就会稳</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>配合节奏讲解</td><td>5分钟</td></tr><tr><td>仰漂打腿+换气</td><td>25分钟</td></tr><tr><td>常见问题处理</td><td>10分钟</td></tr><tr><td>完整动作体验</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：练习"仰卧+打腿+呼吸"的协调动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续仰泳游动5米以上</div><div class="tip-item"><span class="icon">🏠</span>这是从"基本功"到"完整动作"的关键过渡课</div><div class="tip-item"><span class="icon">🏠</span>教练要喊口令帮助学员找到节奏："打——打——吸——打——打——呼——"</div><div class="tip-item"><span class="icon">🏠</span>如果学员打腿和换气合不起来，先分开练（只打腿、只换气），再合并</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这是从"基本功"到"完整动作"的关键过渡课</div><div class="tip-item blue"><span class="icon">💡</span>教练要喊口令帮助学员找到节奏："打——打——吸——打——打——呼——"</div><div class="tip-item blue"><span class="icon">💡</span>如果学员打腿和换气合不起来，先分开练（只打腿、只换气），再合并</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第5课：仰泳转体和换气的配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解仰泳转体的作用（换气+复位）</div><div>掌握"打腿时转体吸气"的动作时机</div><div>能在转体状态下保持身体水平</div></div></div><h3>5.1 转体原理（10分钟）</h3>
+<p>### 5.1 转体原理（10分钟）</p>
+<ul><li>仰泳时每划一次手，身体会自然转向一侧</li><li>转体的作用：</li><li><strong>换气</strong>：转头侧边，嘴巴露出水面吸气</li><li><strong>复位</strong>：让身体回到正中位置</li><li>口诀：<strong>划手转体，头随之动，嘴露出水，吸气不停</strong></li></ul>
+<h3>5.2 转体换气练习（20分钟）</h3>
+<p>### 5.2 转体换气练习（20分钟）</p>
+<ul><li><strong>练习一</strong>：仰漂打腿，单手扶池边</li><li>另一只手划手，身体转向一侧</li><li>转头，嘴巴露出水面，吸气</li><li>继续打腿，身体回到仰卧</li><li><strong>练习二</strong>：自由转体（不扶池边）</li><li>打腿 → 划手 → 转体 → 吸气 → 复位</li><li>连续练习10次，休息10秒</li><li><strong>练习三</strong>：转体+换气+打腿完整配合</li><li>每划一次手，换一次气</li><li>划左臂转左侧吸气，划右臂转右侧吸气</li><li>💡 <strong>感觉</strong>：转体时像"拧毛巾"——身体拧过去再拧回来</li></ul>
+<h3>5.3 转体打腿配合（15分钟）</h3>
+<p>### 5.3 转体打腿配合（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>核心</td><td>转体时<strong>打腿不能停</strong></td></tr><tr><td>练习</td><td>左转体时右腿继续打，右转体时左腿继续打</td></tr><tr><td>⚠️ <strong>常见错误</strong></td><td>转体时停打腿，身体下沉</td></tr><tr><td>💡 <strong>感觉</strong></td><td>身体在转动，但腿像螺旋桨一样一直打</td></tr></tbody></table>
+<h3>5.4 连续游动练习（10分钟）</h3>
+<p>### 5.4 连续游动练习（10分钟）</p>
+<ul><li>目标：能连续游动15米以上</li><li>节奏：<strong>打腿 → 划手 → 转体 → 吸气 → 打腿</strong></li><li>不追求动作标准，追求"能游起来"——先有感觉，再优化动作</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>转体原理</td><td>10分钟</td></tr><tr><td>转体换气练习</td><td>20分钟</td></tr><tr><td>转体打腿配合</td><td>15分钟</td></tr><tr><td>连续游动</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：练习"转体+呼吸"的陆地模仿动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游动15米以上，换气5次以上</div><div class="tip-item"><span class="icon">🏠</span>转体是仰泳最难的部分——需要身体协调性</div><div class="tip-item"><span class="icon">🏠</span>如果学员转体协调性差，可以先练"单边划手换气"，再练双边</div><div class="tip-item"><span class="icon">🏠</span>教练要喊口令帮助学员："划——转——吸——回——划——转——吸——回"</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>转体是仰泳最难的部分——需要身体协调性</div><div class="tip-item blue"><span class="icon">💡</span>如果学员转体协调性差，可以先练"单边划手换气"，再练双边</div><div class="tip-item blue"><span class="icon">💡</span>教练要喊口令帮助学员："划——转——吸——回——划——转——吸——回"</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第6课：仰泳划手</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握仰泳划手的正确动作（入水→抱水→推水→出水）</div><div>理解划手是仰泳的辅助推进力（主要靠打腿）</div><div>能在仰漂打腿状态下正确划手</div></div></div><h3>6.1 仰泳划手动作分解（15分钟）</h3>
+<p>### 6.1 仰泳划手动作分解（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>入水</strong></td><td>手尖先入水，手臂伸直，角度约45度</td></tr><tr><td><strong>抱水</strong></td><td>手臂向外展开，掌心向后，感受水的阻力</td></tr><tr><td><strong>推水</strong></td><td>手臂向后推，从肩旁推到臀部旁</td></tr><tr><td><strong>出水</strong></td><td>手臂提出水面，手腕先出，顺势移臂</td></tr><tr><td>口诀</td><td><strong>尖先入，外展开，向后推，腕先出</strong></td></tr></tbody></table>
+<h3>6.2 单边划手练习（15分钟）</h3>
+<p>### 6.2 单边划手练习（15分钟）</p>
+<ul><li>仰漂打腿，左手划手（右手继续打腿）</li><li>练习：入水→抱水→推水→出水</li><li>连续10次，换边练习</li><li>💡 <strong>感觉</strong>：手像勺子一样"舀水"往后推</li></ul>
+<h3>6.3 双边划手练习（15分钟）</h3>
+<p>### 6.3 双边划手练习（15分钟）</p>
+<ul><li>左手划完右手划，右手划完左手划</li><li>打腿不停，划手不停</li><li>练习节奏：划左→划右→划左→划右</li><li>⚠️ <strong>重点</strong>：划手时身体会自然转动，这是正常的</li></ul>
+<h3>6.4 完整仰泳动作（10分钟）</h3>
+<p>### 6.4 完整仰泳动作（10分钟）</p>
+<ul><li>打腿 + 划手 + 换气，全部串起来</li><li>目标：能连续游25米以上</li><li>💡 <strong>感觉</strong>：像骑自行车——一开始会摇晃，但慢慢就会稳</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>划手动作分解</td><td>15分钟</td></tr><tr><td>单边划手练习</td><td>15分钟</td></tr><tr><td>双边划手练习</td><td>15分钟</td></tr><tr><td>完整动作</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：练习划手动作——想象手在水下划圈的动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游25米以上，动作协调</div><div class="tip-item"><span class="icon">🏠</span>仰泳划手不像自由泳那么重要（自由泳靠手，仰泳靠腿）</div><div class="tip-item"><span class="icon">🏠</span>但正确的划手能帮助身体保持平衡和节奏</div><div class="tip-item"><span class="icon">🏠</span>这一课要强调"打腿第一"——不要因为划手而打断打腿节奏</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>仰泳划手不像自由泳那么重要（自由泳靠手，仰泳靠腿）</div><div class="tip-item blue"><span class="icon">💡</span>但正确的划手能帮助身体保持平衡和节奏</div><div class="tip-item blue"><span class="icon">💡</span>这一课要强调"打腿第一"——不要因为划手而打断打腿节奏</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第7课：仰泳和自由泳的前滚翻转身</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解仰泳前滚翻转身的原理</div><div>掌握"触壁→转身→蹬壁"的标准流程</div><div>能在泳池中完成前滚翻转身</div></div></div><h3>7.1 转身原理（10分钟）</h3>
+<p>### 7.1 转身原理（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>前滚翻转身</td><td>将仰卧姿态变成俯卧姿态，再变成仰卧姿态</td></tr><tr><td>目的</td><td>在泳池尽头改变方向继续游</td></tr><tr><td>关键</td><td><strong>触壁 → 收腹 → 翻过去 → 蹬壁</strong></td></tr></tbody></table>
+<h3>7.2 陆上转身模仿（10分钟）</h3>
+<p>### 7.2 陆上转身模仿（10分钟）</p>
+<ul><li>仰卧在地上，模拟翻滚动作</li><li>练习：收腹→低头→翻过去→屈膝→站起</li><li>💡 <strong>感觉</strong>：像球一样滚过去，身体要蜷缩</li></ul>
+<h3>7.3 浅水区转身练习（20分钟）</h3>
+<p>### 7.3 浅水区转身练习（20分钟）</p>
+<ul><li><strong>练习一</strong>：扶池边翻转</li><li>双手扶池边，身体仰卧 → 收腹 → 翻过去</li><li>身体从仰卧变成俯卧，再变回仰卧</li><li><strong>练习二</strong>：水中翻转（不触壁）</li><li>仰漂 → 收腹 → 低头 → 翻过去</li><li>身体滚一圈，回到仰卧姿态</li><li><strong>练习三</strong>：完整前滚翻转身</li><li>游到池边 → 触壁 → 收腹 → 翻过去 → 屈膝 → 蹬壁</li></ul>
+<h3>7.4 蹬壁滑行（5分钟）</h3>
+<p>### 7.4 蹬壁滑行（5分钟）</p>
+<ul><li>转身完成后，身体蜷缩在池壁旁</li><li>双脚踩池壁，用力蹬出去</li><li>进入仰漂滑行，继续游</li></ul>
+<p>⚠️ <strong>安全提示</strong>：前滚翻时头部可能磕到池壁，教练要提前告知学员</p><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>转身原理</td><td>10分钟</td></tr><tr><td>陆上模仿</td><td>10分钟</td></tr><tr><td>浅水区练习</td><td>20分钟</td></tr><tr><td>蹬壁滑行</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：练习"翻滚"动作——在地上打滚练习</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能在浅水区完成前滚翻转身</div><div class="tip-item"><span class="icon">🏠</span>前滚翻转身是仰泳中最难的技巧之一</div><div class="tip-item"><span class="icon">🏠</span>如果学员协调性差，可以先练"半滚翻"（只滚一半）</div><div class="tip-item"><span class="icon">🏠</span>教练要在旁边保护，防止学员头部磕到池壁</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>前滚翻转身是仰泳中最难的技巧之一</div><div class="tip-item blue"><span class="icon">💡</span>如果学员协调性差，可以先练"半滚翻"（只滚一半）</div><div class="tip-item blue"><span class="icon">💡</span>教练要在旁边保护，防止学员头部磕到池壁</div></div></div>
+</div>
+</body>
+</html>
