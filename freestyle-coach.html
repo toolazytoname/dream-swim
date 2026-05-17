@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏊 自由泳入门教练版</title>
+<style>
+
+  :root {
+    --primary: #0077B6; --primary-light: #90E0EF; --secondary: #023E8A;
+    --accent: #00B4D8; --green: #2D6A4F; --green-light: #D8F3DC;
+    --yellow: #FFB703; --yellow-light: #FFF3CD; --red: #C1121F;
+    --red-light: #FFE5E5; --purple: #7B2CBF; --gray: #6C757D;
+    --bg: #F8F9FA; --card-bg: #FFFFFF; --text: #212529; --border: #DEE2E6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system,'PingFang SC','Microsoft YaHei',sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+  .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  .hero { background: linear-gradient(135deg,var(--secondary) 0%,var(--primary) 60%,var(--accent) 100%); color: white; border-radius: 24px; padding: 48px 40px; text-align: center; margin-bottom: 32px; position: relative; overflow: hidden; }
+  .hero::before { content:''; position: absolute; top:-50px; right:-50px; width:200px; height:200px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+  .hero::after { content:''; position: absolute; bottom:-30px; left:-30px; width:150px; height:150px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+  .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 6px 20px; font-size: 13px; margin-bottom: 16px; }
+  .hero h1 { font-size: 38px; font-weight: 900; margin-bottom: 10px; letter-spacing: 2px; }
+  .hero p { font-size: 16px; opacity: 0.9; margin-bottom: 24px; }
+  .hero-stats { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .hero-stat { text-align: center; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 16px 28px; min-width: 100px; }
+  .hero-stat .num { font-size: 28px; font-weight: 900; }
+  .hero-stat .label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .card { background: var(--card-bg); border-radius: 16px; padding: 28px 32px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+  .card-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+  .card-title .icon { font-size: 28px; }
+  .philosophy-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap: 16px; }
+  .philosophy-item { background: linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius: 14px; padding: 18px; text-align: center; }
+  .philosophy-item .p-icon { font-size: 36px; margin-bottom: 8px; }
+  .philosophy-item .p-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; color: var(--secondary); }
+  .philosophy-item .p-desc { font-size: 12px; color: var(--gray); }
+  .stage-header { border-radius: 16px; padding: 20px 24px; margin-bottom: 16px; color: white; display: flex; align-items: center; gap: 16px; }
+  .stage-header.green { background: linear-gradient(135deg,var(--green),#40916C); }
+  .stage-header.blue { background: linear-gradient(135deg,var(--primary),var(--accent)); }
+  .stage-header.purple { background: linear-gradient(135deg,#5A189A,var(--purple)); }
+  .stage-header.red { background: linear-gradient(135deg,var(--secondary),var(--primary)); }
+  .stage-num { font-size: 40px; font-weight: 900; opacity: 0.9; }
+  .stage-info h2 { font-size: 22px; font-weight: 800; }
+  .stage-info p { font-size: 13px; opacity: 0.85; }
+  .stage-info .stage-lessons { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+  .lesson { background: var(--card-bg); border-radius: 14px; padding: 22px 26px; margin-bottom: 14px; border: 1px solid var(--border); border-left: 5px solid var(--primary); transition: box-shadow 0.2s; }
+  .lesson:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lesson.green { border-left-color: var(--green); }
+  .lesson.blue { border-left-color: var(--primary); }
+  .lesson.purple { border-left-color: var(--purple); }
+  .lesson.red { border-left-color: var(--secondary); }
+  .lesson.exam { border-left-color: var(--yellow); background: #FFFBF0; }
+  .lesson-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+  .lesson-title { font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .lesson-badge { font-size: 11px; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: #E3F2FD; color: var(--primary); }
+  .badge-purple { background: #F3E5F5; color: var(--purple); }
+  .badge-red { background: #E8EAF6; color: var(--secondary); }
+  .badge-exam { background: var(--yellow-light); color: #856404; }
+  .lesson-goal { background: #F0F8FF; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; }
+  .lesson-goal .emoji { font-size: 18px; flex-shrink: 0; }
+  .lesson-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .lesson-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; font-weight: 700; }
+  .lesson-table th:first-child { border-radius: 8px 0 0 0; }
+  .lesson-table th:last-child { border-radius: 0 8px 0 0; }
+  .lesson-table td { padding: 8px 12px; border-bottom: 1px solid #F0F0F0; vertical-align: top; }
+  .lesson-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .lesson-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+  .lesson-table tr:nth-child(even) { background: #FAFAFA; }
+  .lesson-table tr:hover { background: #F0F7FF; }
+  .checkpoint { display: flex; align-items: center; gap: 10px; background: var(--green-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--green); font-weight: 600; }
+  .checkpoint .icon { font-size: 20px; }
+  .tip-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 10px; margin-top: 12px; }
+  .tip-item { background: var(--yellow-light); border-radius: 10px; padding: 10px 14px; font-size: 13px; display: flex; gap: 8px; }
+  .tip-item .icon { font-size: 18px; flex-shrink: 0; }
+  .tip-item.blue { background: #E3F2FD; color: var(--primary); }
+  .tip-item.red { background: var(--red-light); color: var(--red); }
+  .error-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 12px; margin-top: 12px; }
+  .error-item { background: var(--red-light); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
+  .error-item .error-title { font-weight: 700; color: var(--red); margin-bottom: 4px; display: flex; gap: 6px; }
+  .error-item .error-fix { color: #333; }
+  .milestone-bar { display: flex; align-items: center; gap: 0; margin: 24px 0; flex-wrap: wrap; }
+  .milestone-item { flex: 1; min-width: 120px; text-align: center; padding: 16px 8px; position: relative; }
+  .milestone-item .m-icon { font-size: 36px; margin-bottom: 6px; }
+  .milestone-item .m-name { font-weight: 800; font-size: 14px; }
+  .milestone-item .m-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .milestone-connector { width: 40px; height: 3px; background: linear-gradient(90deg,var(--green),var(--primary),var(--purple),var(--secondary)); flex-shrink: 0; }
+  .flow-diagram { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; justify-content: center; padding: 16px; background: #F8F9FA; border-radius: 12px; margin-top: 12px; font-size: 13px; }
+  .flow-step { background: var(--primary); color: white; padding: 6px 14px; border-radius: 50px; font-weight: 600; white-space: nowrap; }
+  .flow-arrow { color: var(--gray); font-size: 16px; }
+  .toc { background: #F8F9FA; border-radius: 14px; padding: 20px 24px; margin-bottom: 24px; }
+  .toc h3 { margin-bottom: 12px; font-size: 16px; }
+  .toc-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 8px; }
+  .toc-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 8px; text-decoration: none; color: var(--text); font-size: 13px; transition: background 0.2s; }
+  .toc-item:hover { background: #E9ECEF; }
+  .toc-num { width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .toc-item.green .toc-num { background: var(--green); }
+  .toc-item.blue .toc-num { background: var(--primary); }
+  .toc-item.purple .toc-num { background: var(--purple); }
+  .toc-item.red .toc-num { background: var(--secondary); }
+  .section-divider { text-align: center; padding: 32px 0 16px; color: var(--gray); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .section-divider::before,.section-divider::after { content:''; flex: 1; height: 1px; background: var(--border); }
+  .footer { text-align: center; padding: 32px; color: var(--gray); font-size: 12px; }
+  .highlight-box { background: linear-gradient(135deg,#FFF9E6,#FFF3CD); border: 1px solid #FFE69C; border-radius: 12px; padding: 14px 18px; margin-top: 14px; font-size: 13px; }
+  .highlight-box .title { font-weight: 700; color: #856404; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+  .three-columns { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 12px; }
+  .three-columns .col { background: #F8F9FA; border-radius: 10px; padding: 12px; text-align: center; font-size: 12px; }
+  .three-columns .col .emoji { font-size: 28px; margin-bottom: 4px; display: block; }
+  .three-columns .col .label { font-weight: 700; color: var(--secondary); }
+  .three-columns .col .sub { color: var(--gray); font-size: 11px; margin-top: 2px; }
+  .coach-slogan { background: linear-gradient(135deg,var(--secondary),var(--primary)); color: white; border-radius: 16px; padding: 28px; text-align: center; margin: 24px 0; }
+  .coach-slogan h3 { font-size: 18px; margin-bottom: 12px; }
+  .coach-slogan .slogans { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .coach-slogan .slogan-item { background: rgba(255,255,255,0.15); border-radius: 12px; padding: 12px 20px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 600px) {
+    .hero { padding: 32px 20px; } .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 16px; } .card { padding: 20px 18px; }
+    .lesson { padding: 16px 18px; } .lesson-table { font-size: 12px; }
+    .three-columns { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+<div class="container">
+<div class="hero">
+  <div class="hero-badge">🏊 新手教练必备工具</div>
+  <h1>🏊 自由泳入门教练版</h1>
+  <p>43课时完整体系 · 教练版 · 图文详解</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">43</div><div class="label">标准课时</div></div>
+    <div class="hero-stat"><div class="num">4</div><div class="label">训练阶段</div></div>
+    <div class="hero-stat"><div class="num">26</div><div class="label">核心技能点</div></div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-title"><span class="icon">🎯</span>教学核心理念</div>
+  <div class="philosophy-grid">
+    <div class="philosophy-item"><div class="p-icon">💧</div><div class="p-title">水性优先</div><div class="p-desc">不着急教动作，先让学员"不怕水、享受水"</div></div>
+    <div class="philosophy-item"><div class="p-icon">👁️</div><div class="p-title">感觉驱动</div><div class="p-desc">强调"找感觉"，而不是机械模仿动作</div></div>
+    <div class="philosophy-item"><div class="p-icon">🔍</div><div class="p-title">分解细化</div><div class="p-desc">每个动作拆到不能再拆，循序渐进</div></div>
+    <div class="philosophy-item"><div class="p-icon">⚠️</div><div class="p-title">纠错前置</div><div class="p-desc">提前告诉学员"会犯什么错"，预判问题比纠正错误更重要</div></div>
+  </div>
+</div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第1课：关于自由泳对游泳初学者的作用</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解自由泳的特点和适用场景</div><div>建立正确的学习预期和心理准备</div><div>了解自由泳"速度最快、用途广泛"的优势</div></div></div><h3>1.1 自由泳的特点（10分钟）</h3>
+<p>### 1.1 自由泳的特点（10分钟）</p>
+<ul><li>自由泳是<strong>四种泳姿中速度最快</strong>的泳姿</li><li>自由泳的节奏：<strong>划手 → 打腿 → 换气 → 划手</strong>（两边交替或单边）</li><li>自由泳可以"中途换气"，呼吸相对灵活</li><li>自由泳腿部动作（打腿）是推进力的一部分</li></ul>
+<h3>1.2 为什么初学者学自由泳有优势？（15分钟）</h3>
+<p>### 1.2 为什么初学者学自由泳有优势？（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>速度最快</strong></td><td>学会后可用于竞速、长距离、救生</td></tr><tr><td><strong>动作直观</strong></td><td>相比蛙泳和蝶泳，动作相对简单</td></tr><tr><td><strong>锻炼价值高</strong></td><td>全身都能锻炼到</td></tr><tr><td>⚠️ <strong>难点提醒</strong></td><td>自由泳换气是最大挑战，比蛙泳难很多</td></tr></tbody></table>
+<h3>1.3 学习预期建立（10分钟）</h3>
+<p>### 1.3 学习预期建立（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>自由泳入门预计需要<strong>15-20课时</strong>（因人而异）</td></tr><tr><td>强调</td><td>每个人的进度不一样，不要和别人比</td></tr><tr><td>心理建设</td><td><strong>学会游泳需要时间，但每节课都会有进步</strong></td></tr><tr><td>⚠️ <strong>提前预警</strong></td><td>换气会很难，呛水是正常的，不要放弃</td></tr></tbody></table>
+<h3>1.4 装备介绍（5分钟）</h3>
+<p>### 1.4 装备介绍（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>泳帽</td><td>必须戴，防止头发遮挡视线</td></tr><tr><td>泳镜</td><td>必须戴，近视可选带度数的</td></tr><tr><td>浮板</td><td>前期辅助工具</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>自由泳特点讲解</td><td>10分钟</td></tr><tr><td>为什么学自由泳</td><td>15分钟</td></tr><tr><td>学习预期建立</td><td>10分钟</td></tr><tr><td>装备介绍</td><td>5分钟</td></tr><tr><td>问答互动</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>回家练习：在洗脸盆里憋气，鼻子慢慢吐泡泡</div><div class="tip-item"><span class="icon">🏠</span>心理建设：想象自己在水中自由游动的美好画面</div><div class="tip-item"><span class="icon">🏠</span>这一课看似"没教东西"，但心理建设非常重要</div><div class="tip-item"><span class="icon">🏠</span>让学员知道自由泳不难，但换气需要时间；让他们期待而不是畏惧</div><div class="tip-item"><span class="icon">🏠</span>如果是成人学员，可以讲讲自由泳的历史和奥运趣闻</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课看似"没教东西"，但心理建设非常重要</div><div class="tip-item blue"><span class="icon">💡</span>让学员知道自由泳不难，但换气需要时间；让他们期待而不是畏惧</div><div class="tip-item blue"><span class="icon">💡</span>如果是成人学员，可以讲讲自由泳的历史和奥运趣闻</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第2课：超级怕水怎么办？</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>消除或缓解对水的恐惧</div><div>建立在水中的安全感</div><div>找到"不怕水"的开关</div></div></div><h3>2.1 水中行走（15分钟）</h3>
+<p>### 2.1 水中行走（15分钟）</p>
+<ul><li>水深到胸口，慢慢走</li><li>向前走→向后走→侧向走→转圈圈</li><li>💡 <strong>感觉</strong>：感受水的阻力，脚步要踏实</li><li>⚠️ <strong>重点</strong>：不要急，一步一步来，水会托着你</li></ul>
+<h3>2.2 憋气练习（20分钟）</h3>
+<p>### 2.2 憋气练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>盆水憋气——用冷水，效果更好</td></tr><tr><td><strong>第二步</strong></td><td>水龙头下憋气——感受水流刺激</td></tr><tr><td><strong>第三步</strong></td><td>水中憋气——捏住鼻子，嘴巴张开发"啊"声</td></tr><tr><td>💡 <strong>感觉</strong></td><td>水不会伤害你，放松，放松</td></tr></tbody></table>
+<h3>2.3 心理建设（10分钟）</h3>
+<p>### 2.3 心理建设（10分钟）</p>
+<ul><li>"水不会伤害你"——这是核心理念</li><li>"放松身体，水会托着你"——信任水的浮力</li><li>教练或同伴在旁边：<strong>"有人会保护你"</strong>——安全感建立</li><li>告诉学员：<strong>如果不舒服，随时可以站起来</strong></li></ul>
+<h3>2.4 小朋友特别建议（5分钟）</h3>
+<p>### 2.4 小朋友特别建议（5分钟）</p>
+<ul><li>用游戏的方式：吹泡泡、吐口水、水枪战</li><li>不要强迫，尊重节奏</li><li>每次进步一点点，不要急于求成</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>水中行走</td><td>15分钟</td></tr><tr><td>憋气练习</td><td>20分钟</td></tr><tr><td>心理建设</td><td>10分钟</td></tr><tr><td>小朋友特别建议</td><td>5分钟（如果有小朋友）</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家：洗脸盆憋气练习，每天3次，每次5组（憋气10秒+休息5秒）</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能在水中憋气15秒以上</div><div class="tip-item"><span class="icon">🏠</span>这一课可能需要1-2次课才能完成，不要赶进度</div><div class="tip-item"><span class="icon">🏠</span>学员怕的不是水，是"不知道会发生什么"——所以要提前告知每个步骤</div><div class="tip-item"><span class="icon">🏠</span>多用"我们试试"，少用"你必须"</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课可能需要1-2次课才能完成，不要赶进度</div><div class="tip-item blue"><span class="icon">💡</span>学员怕的不是水，是"不知道会发生什么"——所以要提前告知每个步骤</div><div class="tip-item blue"><span class="icon">💡</span>多用"我们试试"，少用"你必须"</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第3课：换气——基本练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>建立正确的呼吸节奏：吸→憋→呼</div><div>掌握"嘴巴吸气、鼻子呼气"的基本模式</div><div>为后续水中换气打下基础</div></div></div><h3>3.1 呼吸节奏建立（陆上练习，15分钟）</h3>
+<p>### 3.1 呼吸节奏建立（陆上练习，15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>节奏练习</strong></td><td>吸3秒→憋5秒→呼5秒</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像闻花香一样吸气，像吹蜡烛一样呼气</td></tr><tr><td>教练喊口令</td><td>"吸——憋——呼——"</td></tr></tbody></table>
+<h3>3.2 嘴巴吸气、鼻子呼气（10分钟）</h3>
+<p>### 3.2 嘴巴吸气、鼻子呼气（10分钟）</p>
+<ul><li>⚠️ <strong>绝对不能用鼻子吸气</strong>，否则必呛水</li><li>练习：嘴巴张开吸气 → 捏住鼻子 → 鼻子慢慢吐气</li><li>💡 <strong>感觉</strong>：吐气的时候像"喝汤"，气体从鼻子后面出来</li></ul>
+<h3>3.3 水中憋气进阶（20分钟）</h3>
+<p>### 3.3 水中憋气进阶（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>第一步</strong></td><td>捏住鼻子，嘴巴张开发"啊"——感受气体从嘴里冒出来</td></tr><tr><td><strong>第二步</strong></td><td>不捏鼻子，嘴巴张开，头浸入水中，鼻子慢慢吐气</td></tr><tr><td><strong>第三步</strong></td><td>逐渐增加浸水深度，从下巴到嘴巴到鼻子</td></tr><tr><td>💡 <strong>感觉</strong></td><td>气泡从鼻子出来，像小鱼在吐泡泡</td></tr></tbody></table>
+<h3>3.4 "水不会伤害你"再次强化（5分钟）</h3>
+<p>### 3.4 "水不会伤害你"再次强化（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>水中的感觉是正常的，不要怕</td></tr><tr><td>鼓励</td><td>做得很好，继续</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>呼吸节奏建立</td><td>15分钟</td></tr><tr><td>嘴巴吸气鼻子呼气</td><td>10分钟</td></tr><tr><td>水中憋气进阶</td><td>20分钟</td></tr><tr><td>心理建设</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着镜子练"嘴巴吸气、鼻子呼气"</div><div class="tip-item"><span class="icon">🏠</span>目标：能自然做到"口吸鼻呼"，不混淆</div><div class="tip-item"><span class="icon">🏠</span>换气是一切的基础，这一课再怎么强调都不为过</div><div class="tip-item"><span class="icon">🏠</span>很多学员学游泳多年还在呛水，根源就是这一课没学好</div><div class="tip-item"><span class="icon">🏠</span>要让学员建立"呼吸通道"的正确概念：上面是嘴，下面是鼻子，不能串</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>换气是一切的基础，这一课再怎么强调都不为过</div><div class="tip-item blue"><span class="icon">💡</span>很多学员学游泳多年还在呛水，根源就是这一课没学好</div><div class="tip-item blue"><span class="icon">💡</span>要让学员建立"呼吸通道"的正确概念：上面是嘴，下面是鼻子，不能串</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第4课：换气——浅水区扶池边练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>在浅水区实际体验水中换气</div><div>掌握"抬头张嘴吸气、低头鼻子呼气"的节奏</div><div>建立水中换气的信心</div></div></div><h3>4.1 浅水区行走 + 适应（10分钟）</h3>
+<p>### 4.1 浅水区行走 + 适应（10分钟）</p>
+<ul><li>继续第一课的水中行走练习</li><li>双手扶池边，水深到胸口，慢慢走</li><li>感受浮力：身体变轻了</li></ul>
+<h3>4.2 扶池边换气练习（20分钟）</h3>
+<p>### 4.2 扶池边换气练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>预备姿势</strong></td><td>双手扶池边，身体浸入水中，下巴在水面下</td></tr><tr><td><strong>练习一</strong></td><td>抬头张嘴吸气 → 低头鼻子呼气</td></tr><tr><td><strong>练习二</strong></td><td>连续练习：吸一口气→低头吐泡泡→抬头吸气→低头吐泡泡</td></tr><tr><td><strong>练习三</strong></td><td>每组10次，休息10秒，重复3组</td></tr><tr><td>💡 <strong>感觉</strong></td><td>抬头的时候嘴巴像"张开的鱼"，低头的时候鼻子像"洒水壶"</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>吸气必须抬头，不能在水下用嘴吸气</td></tr></tbody></table>
+<h3>4.3 计时憋气换气（15分钟）</h3>
+<p>### 4.3 计时憋气换气（15分钟）</p>
+<ul><li>吸一口气，憋住，低头入水，鼻子慢慢吐气</li><li>计时：15秒→20秒→25秒</li><li>💡 <strong>感觉</strong>：时间够了再抬头，不要着急</li></ul>
+<h3>4.4 安全确认（5分钟）</h3>
+<p>### 4.4 安全确认（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>再次强调</td><td>不舒服就立刻抬头</td></tr><tr><td>告诉学员</td><td><strong>池边永远在你手边</strong>，随时可以扶</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>浅水区适应</td><td>10分钟</td></tr><tr><td>扶池边换气</td><td>20分钟</td></tr><tr><td>计时憋气</td><td>15分钟</td></tr><tr><td>安全确认</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练"抬头吸气、低头呼气"30次</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续完成10次完整的换气循环</div><div class="tip-item"><span class="icon">🏠</span>这是从"不怕水"到"会呼吸"的关键一步</div><div class="tip-item"><span class="icon">🏠</span>教练要一直在旁边，让学员知道"有人看着我，很安全"</div><div class="tip-item"><span class="icon">🏠</span>可以让学员互相看着练习，形成轻松的氛围</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这是从"不怕水"到"会呼吸"的关键一步</div><div class="tip-item blue"><span class="icon">💡</span>教练要一直在旁边，让学员知道"有人看着我，很安全"</div><div class="tip-item blue"><span class="icon">💡</span>可以让学员互相看着练习，形成轻松的氛围</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第5课：连续换气练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握连续换气的节奏</div><div>能连续做"抬头吸气、低头呼气"至少10次以上</div><div>为后续"踩水"和"漂浮"打下呼吸基础</div></div></div><h3>5.1 连续换气节奏练习（浅水区，20分钟）</h3>
+<p>### 5.1 连续换气节奏练习（浅水区，20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>吸一口气→低头吐泡泡（数3秒）→抬头吸气（嘴巴张开）→低头吐泡泡</td></tr><tr><td><strong>练习二</strong></td><td>连续10次，组间休息10秒，做3组</td></tr><tr><td><strong>练习三</strong></td><td>逐渐加快节奏，但保持质量</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像"小鸭子在水面"，一上一下，自然流畅</td></tr><tr><td>⚠️ <strong>关键</strong></td><td>每个动作都要完整——吸气要吸饱，呼气要呼尽</td></tr></tbody></table>
+<h3>5.2 换气与行走结合（15分钟）</h3>
+<p>### 5.2 换气与行走结合（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>扶池边练习</td><td>行走的同时做换气</td></tr><tr><td>向前走</td><td>低头时走一步，抬头时走一步</td></tr><tr><td>侧向走</td><td>体验不同方向的换气</td></tr><tr><td>💡 <strong>感觉</strong></td><td>换气时身体不要前倾，保持直立</td></tr></tbody></table>
+<h3>5.3 脱离池边的连续换气（15分钟）</h3>
+<p>### 5.3 脱离池边的连续换气（15分钟）</p>
+<ul><li>手离开池边，在浅水区站立</li><li>做连续换气，同时轻轻原地踏步</li><li>💡 <strong>感觉</strong>：脚踩池底，身体直立，嘴巴一直在水面上</li></ul>
+<h3>5.4 建立信心（5分钟）</h3>
+<p>### 5.4 建立信心（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>告诉学员</td><td>"你已经掌握了水中呼吸的基础"</td></tr><tr><td>鼓励</td><td>"接下来我们要学漂浮，这是游泳最重要的技能"</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>连续换气节奏</td><td>20分钟</td></tr><tr><td>换气与行走</td><td>15分钟</td></tr><tr><td>脱离池边练习</td><td>15分钟</td></tr><tr><td>信心建立</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆连续做20次换气，体会节奏</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续换气15次以上不停顿</div><div class="tip-item"><span class="icon">🏠</span>这一课要把换气练到"不用想就会"的程度</div><div class="tip-item"><span class="icon">🏠</span>呼吸是游泳的根基，呼吸不顺畅，后续所有动作都会乱</div><div class="tip-item"><span class="icon">🏠</span>达到"连续换气15次"才算合格，才能进入下一课</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>这一课要把换气练到"不用想就会"的程度</div><div class="tip-item blue"><span class="icon">💡</span>呼吸是游泳的根基，呼吸不顺畅，后续所有动作都会乱</div><div class="tip-item blue"><span class="icon">💡</span>达到"连续换气15次"才算合格，才能进入下一课</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第6课：漂浮和漂浮站立</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握抱膝漂浮（团身漂浮）的动作</div><div>能在水中漂浮10秒以上</div><div>掌握从漂浮到站立的正确顺序</div></div></div><h3>6.1 抱膝漂浮讲解（5分钟）</h3>
+<p>### 6.1 抱膝漂浮讲解（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>目的</td><td>让身体像"气球"一样飘起来</td></tr><tr><td>口诀</td><td><strong>低头、抱膝、团成一团、像球一样</strong></td></tr><tr><td>关键点</td><td>头往下扎，屁股往上翘，整个人蜷起来</td></tr></tbody></table>
+<h3>6.2 陆上模仿练习（10分钟）</h3>
+<p>### 6.2 陆上模仿练习（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>岸上趴着练</td><td>像青蛙一样蜷缩</td></tr><tr><td>练习</td><td>低头看膝盖，膝盖往胸口收</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像虾一样弓着背</td></tr></tbody></table>
+<h3>6.3 水中抱膝漂浮练习（20分钟）</h3>
+<p>### 6.3 水中抱膝漂浮练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>扶池边，低头入水，感受浮力</td></tr><tr><td><strong>练习二</strong></td><td>手松开，慢慢蜷起来，感受"漂"的感觉</td></tr><tr><td><strong>练习三</strong></td><td>自己尝试漂，教练在旁边保护</td></tr><tr><td>💡 <strong>感觉</strong></td><td>水从身体两侧流过，身体很轻，像气球飘在空中</td></tr><tr><td>⚠️ <strong>常见错误</strong></td><td>身体不团、头不低、屁股不翘</td></tr></tbody></table>
+<h3>6.4 漂浮站立（15分钟）</h3>
+<p>### 6.4 漂浮站立（15分钟）</p>
+<ul><li>⚠️ <strong>这是本课最关键的技能</strong></li><li>口诀：<strong>先收手——再收腿——脚踩地——站起来</strong></li><li><strong>错误示范</strong>：先收腿，容易乱，容易呛水</li><li>分解动作：</li></ul>
+<p>1. 漂浮状态</p>
+<p>2. 双手从两侧收回来，抱住膝盖（手先动）</p>
+<p>3. 膝盖往胸口收，身体变短（腿后动）</p>
+<p>4. 脚踩池底（或者往下踩）</p>
+<p>5. 站稳，站起来</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>💡 <strong>感觉</strong></td><td>像蜗牛缩进壳里，再伸出来</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>抱膝漂浮讲解</td><td>5分钟</td></tr><tr><td>陆上模仿</td><td>10分钟</td></tr><tr><td>水中漂浮练习</td><td>20分钟</td></tr><tr><td>漂浮站立</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习"蜷缩——展开"的循环</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能独立完成漂浮+站立，不靠池边</div><div class="tip-item"><span class="icon">🏠</span>漂浮是游泳的"灵魂技能"，学会了漂浮就等于学会了50%的游泳</div><div class="tip-item"><span class="icon">🏠</span>这一课要让学员体验"被水托着"的感觉，建立对水的信任</div><div class="tip-item"><span class="icon">🏠</span>漂浮站立比漂浮更难，要多练"手先动"的口令</div><div class="tip-item"><span class="icon">🏠</span>安全第一：教练要站在学员旁边，随时准备扶</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>漂浮是游泳的"灵魂技能"，学会了漂浮就等于学会了50%的游泳</div><div class="tip-item blue"><span class="icon">💡</span>这一课要让学员体验"被水托着"的感觉，建立对水的信任</div><div class="tip-item blue"><span class="icon">💡</span>漂浮站立比漂浮更难，要多练"手先动"的口令</div><div class="tip-item blue"><span class="icon">💡</span>安全第一：教练要站在学员旁边，随时准备扶</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第7课：抬头换气</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"抬头换气"的方法</div><div>能做到"低头呼气、抬头吸气"</div><div>为自由泳打腿+呼吸配合做准备</div></div></div><h3>7.1 抬头换气原理（5分钟）</h3>
+<p>### 7.1 抬头换气原理（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>目的</td><td>在自由泳中，打腿时身体在水下，需要抬头吸气</td></tr><tr><td>关键</td><td><strong>嘴巴在水面上，鼻子在水下</strong></td></tr><tr><td>⚠️ 重要</td><td>自由泳换气是"侧身换气"，不是"抬头换气"——但先从抬头换气开始</td></tr></tbody></table>
+<h3>7.2 水中站立抬头换气（15分钟）</h3>
+<p>### 7.2 水中站立抬头换气（15分钟）</p>
+<ul><li>站在浅水区，水到胸口</li><li><strong>练习一</strong>：深吸一口气，低头，鼻子慢慢吐泡泡 → 抬头，嘴巴张开吸气</li><li><strong>练习二</strong>：连续10次，节奏：吸3秒→憋1秒→呼3秒→抬头吸</li><li><strong>练习三</strong>：每组15次，休息10秒，做3组</li><li>💡 <strong>感觉</strong>：抬头的时候嘴巴像"张开的碗"，等着接空气</li></ul>
+<h3>7.3 扶池边抬头换气（15分钟）</h3>
+<p>### 7.3 扶池边抬头换气（15分钟）</p>
+<ul><li>双手扶池边，身体浸入水中</li><li>低头吐泡泡 → 抬头张嘴吸气 → 低头吐泡泡</li><li>⚠️ <strong>关键</strong>：抬头的时候不要呼气，要吸气；低头的时候才呼气</li></ul>
+<h3>7.4 蹬边滑行+抬头换气（10分钟）</h3>
+<p>### 7.4 蹬边滑行+抬头换气（10分钟）</p>
+<ul><li>蹬边滑行出去，滑到一半时：</li><li>抬头张嘴吸气 → 低头继续滑行</li><li>练习5-8次</li><li>💡 <strong>感觉</strong>：滑行的时候身体很流线，抬头的时候像"露出水面的小恐龙"</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>抬头换气原理</td><td>5分钟</td></tr><tr><td>水中站立练习</td><td>15分钟</td></tr><tr><td>扶池边练习</td><td>15分钟</td></tr><tr><td>蹬边+抬头</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练抬头换气，每组20次，每天3组</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：蹬边滑行+抬头换气能完成5次以上</div><div class="tip-item"><span class="icon">🏠</span>抬头换气是自由泳的基础技能，但真正的自由泳换气是侧身换气</div><div class="tip-item"><span class="icon">🏠</span>这一课要为下一课的"侧身漂浮+换气"做铺垫</div><div class="tip-item"><span class="icon">🏠</span>告诉学员：抬头换气是"不得已"的技能，侧身换气才是标准</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>抬头换气是自由泳的基础技能，但真正的自由泳换气是侧身换气</div><div class="tip-item blue"><span class="icon">💡</span>这一课要为下一课的"侧身漂浮+换气"做铺垫</div><div class="tip-item blue"><span class="icon">💡</span>告诉学员：抬头换气是"不得已"的技能，侧身换气才是标准</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第8课：如何在漂浮中控制身体重心</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解"身体重心"的概念</div><div>能在漂浮中控制身体保持水平</div><div>解决"脚往下沉"的问题</div></div></div><h3>8.1 重心概念讲解（5分钟）</h3>
+<p>### 8.1 重心概念讲解（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>陆上讲解</td><td>人的重心在肚脐附近</td></tr><tr><td>在水中</td><td>如果重心在水面以上，脚就会沉下去</td></tr><tr><td>目标</td><td><strong>让重心保持在水面以下，身体才能水平</strong></td></tr></tbody></table>
+<h3>8.2 脚往下沉的原理（10分钟）</h3>
+<p>### 8.2 脚往下沉的原理（10分钟）</p>
+<ul><li>为什么脚会沉？因为肺部有气，重心在上半身</li><li>💡 <strong>感觉</strong>：像秤一样，重的一头会沉下去</li><li>解决方案：<strong>吐气——把肺部的气吐掉一部分</strong></li></ul>
+<h3>8.3 吐气让身体水平（15分钟）</h3>
+<p>### 8.3 吐气让身体水平（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>深吸一口气漂浮 → 慢慢把气吐出来 → 观察身体变化</td></tr><tr><td><strong>练习二</strong></td><td>漂浮后，鼻子缓缓吐气 → 脚会慢慢浮上来</td></tr><tr><td><strong>练习三</strong></td><td>每次漂浮前先吐一口气，保持"气往下走"的感觉</td></tr><tr><td>💡 <strong>感觉</strong></td><td>气从肚子里往下走，像水流到脚那边</td></tr></tbody></table>
+<h3>8.4 重心调整练习（15分钟）</h3>
+<p>### 8.4 重心调整练习（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>双手往下压水——借力让脚浮起来</td></tr><tr><td><strong>练习二</strong></td><td>头往上抬——脚会往下沉（反向验证）</td></tr><tr><td><strong>练习三</strong></td><td>身体成一字形时，双手轻轻往下压水，控制平衡</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像天平一样，一边压下去，另一边就浮上来</td></tr></tbody></table>
+<h3>8.5 连续漂浮+重心控制（10分钟）</h3>
+<p>### 8.5 连续漂浮+重心控制（10分钟）</p>
+<ul><li>蹬边滑行出去 → 漂浮 → 控制身体水平 → 站立</li><li>目标：能滑出5米以上，身体保持水平</li><li>⚠️ <strong>常见错误</strong>：憋太多气、身体蜷缩、头抬太高</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>重心概念</td><td>5分钟</td></tr><tr><td>脚沉原理</td><td>10分钟</td></tr><tr><td>吐气练习</td><td>15分钟</td></tr><tr><td>重心调整</td><td>15分钟</td></tr><tr><td>连续练习</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习漂浮，体会身体水平的感觉</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能蹬边滑行5米以上，身体保持水平</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第9课：侧身漂浮与侧身换气</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握侧身漂浮的姿势</div><div>理解自由泳换气的正确姿态</div><div>为打腿+换气配合打基础</div></div></div><h3>9.1 侧身漂浮原理（10分钟）</h3>
+<p>### 9.1 侧身漂浮原理（10分钟）</p>
+<ul><li>自由泳换气是"侧身换气"，不是抬头换气</li><li>侧身姿势：身体侧卧水面，一只手在水下，一只手在空中</li><li>💡 <strong>感觉</strong>：像美人鱼一样侧身漂浮</li></ul>
+<h3>9.2 扶池边侧身漂浮（15分钟）</h3>
+<p>### 9.2 扶池边侧身漂浮（15分钟）</p>
+<ul><li>双手扶池边，身体侧卧</li><li>先练右侧卧：水到肩膀，头在水上</li><li>再练左侧卧：同样的姿势</li><li>💡 <strong>感觉</strong>：身体像木板一样侧着漂</li></ul>
+<h3>9.3 侧身换气练习（20分钟）</h3>
+<p>### 9.3 侧身换气练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>侧身姿势</td><td>嘴巴在水面上</td></tr><tr><td>吸气</td><td>嘴巴张开吸气</td></tr><tr><td>呼气</td><td>鼻子在水下慢慢吐气</td></tr><tr><td><strong>练习一</strong></td><td>右侧卧，嘴巴张开吸气 → 鼻子水下呼气</td></tr><tr><td><strong>练习二</strong></td><td>左侧卧，同样的练习</td></tr><tr><td><strong>练习三</strong></td><td>两侧交替练习</td></tr><tr><td>💡 <strong>感觉</strong></td><td>嘴巴像"张开的鱼"，气泡从鼻子冒出来</td></tr></tbody></table>
+<h3>9.4 脱板侧身换气（10分钟）</h3>
+<p>### 9.4 脱板侧身换气（10分钟）</p>
+<ul><li>手离开池边，在浅水区站立</li><li>做侧身换气练习</li><li>目标：能持续侧身，嘴巴一直在水面上</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>侧身漂浮原理</td><td>10分钟</td></tr><tr><td>扶池边侧身</td><td>15分钟</td></tr><tr><td>侧身换气练习</td><td>20分钟</td></tr><tr><td>脱板练习</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习侧身漂浮</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能两侧各完成5次侧身换气</div><div class="tip-item"><span class="icon">🏠</span>侧身换气是自由泳的核心，这一课非常重要</div><div class="tip-item"><span class="icon">🏠</span>多练两侧，不要只练一边——两边都要会</div><div class="tip-item"><span class="icon">🏠</span>告诉学员：这是自由泳最难的部分，学会了就成功了一半</div></div><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>侧身换气是自由泳的核心，这一课非常重要</div><div class="tip-item blue"><span class="icon">💡</span>多练两侧，不要只练一边——两边都要会</div><div class="tip-item blue"><span class="icon">💡</span>告诉学员：这是自由泳最难的部分，学会了就成功了一半</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第10课：自由泳打腿原理</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解自由泳打腿的原理</div><div>掌握"髋驱动"打腿的概念</div><div>学会正确的打腿姿势</div></div></div><h3>10.1 打腿原理讲解（10分钟）</h3>
+<p>### 10.1 打腿原理讲解（10分钟）</p>
+<ul><li>自由泳打腿：<strong>髋关节发力</strong>，不是膝盖发力</li><li>打腿像"甩鞭子"——从髋开始，力量传递到脚</li><li>💡 <strong>感觉</strong>：髋是发动机，腿是鞭子</li><li>⚠️ <strong>错误</strong>：用膝盖打水，像拨浪鼓一样</li></ul>
+<h3>10.2 陆上模仿练习（15分钟）</h3>
+<p>### 10.2 陆上模仿练习（15分钟）</p>
+<ul><li>趴在地上，模仿打腿动作</li><li><strong>练习一</strong>：只动髋关节，腿不要动</li><li><strong>练习二</strong>：感受鞭状打腿，从髋传递到脚</li><li><strong>练习三</strong>：慢动作，体会发力顺序</li><li>💡 <strong>感觉</strong>：像赶苍蝇一样，髋带动腿</li></ul>
+<h3>10.3 扶池边打腿（20分钟）</h3>
+<p>### 10.3 扶池边打腿（20分钟）</p>
+<ul><li>双手扶池边，身体浸入水中</li><li><strong>练习一</strong>：直腿打水——感受水的阻力</li><li><strong>练习二</strong>：屈腿打水——膝盖微屈，从髋发力</li><li><strong>练习三</strong>：慢速打水，体会髋驱动</li><li>💡 <strong>感觉</strong>：脚像鱼尾巴，节奏稳定</li></ul>
+<h3>10.4 常见错误纠正（10分钟）</h3>
+<p>### 10.4 常见错误纠正（10分钟）</p>
+<ul><li>❌ 膝盖弯曲太大——变成"蹬自行车"</li><li>❌ 只用小腿——力量不够，容易累</li><li>❌ 脚踝僵硬——要用脚踝带动水</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>打腿原理</td><td>10分钟</td></tr><tr><td>陆上模仿</td><td>15分钟</td></tr><tr><td>水中扶边练习</td><td>20分钟</td></tr><tr><td>错误纠正</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：趴在地上模仿打腿动作，体会髋驱动</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能在水中扶边打腿30秒以上</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第11课：扶板打腿</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握扶板打腿的姿势</div><div>能连续打腿30秒以上</div><div>学会用浮板保持平衡</div></div></div><h3>11.1 浮板使用方法（10分钟）</h3>
+<p>### 11.1 浮板使用方法（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>浮板的作用</td><td>让上半身浮起来，专注练打腿</td></tr><tr><td>握法</td><td>双手握住浮板前端，手臂伸直</td></tr><tr><td>💡 <strong>感觉</strong></td><td>浮板像桌子，双手撑着</td></tr></tbody></table>
+<h3>11.2 扶板打腿姿势（15分钟）</h3>
+<p>### 11.2 扶板打腿姿势（15分钟）</p>
+<ul><li>身体俯卧水面，头在水上</li><li>髋关节在水面下，肩膀在水面附近</li><li>手臂伸直，握住浮板</li><li>💡 <strong>感觉</strong>：像趴在气垫上</li></ul>
+<h3>11.3 扶板打腿练习（20分钟）</h3>
+<p>### 11.3 扶板打腿练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>打腿10秒，休息10秒，重复5组</td></tr><tr><td><strong>练习二</strong></td><td>打腿20秒，休息10秒，重复5组</td></tr><tr><td><strong>练习三</strong></td><td>打腿30秒，休息10秒，重复3组</td></tr><tr><td>💡 <strong>感觉</strong></td><td>节奏稳定，力量从髋传递到脚</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>打腿的时候头不要埋进水里</td></tr></tbody></table>
+<h3>11.4 扶板打腿+换气（10分钟）</h3>
+<p>### 11.4 扶板打腿+换气（10分钟）</p>
+<ul><li>打腿的时候，每3-5秒换气一次</li><li>右侧换气：头轻轻转向右侧，嘴巴出水</li><li>💡 <strong>感觉</strong>：换气只是"透口气"，不要影响打腿节奏</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>浮板用法</td><td>10分钟</td></tr><tr><td>扶板姿势</td><td>15分钟</td></tr><tr><td>打腿练习</td><td>20分钟</td></tr><tr><td>打腿+换气</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习打腿节奏</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能扶板打腿25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第12课：扶板打腿提升</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续扶板打腿25米以上</div><div>改善打腿技术，减少阻力</div><div>建立打腿耐力基础</div></div></div><h3>12.1 打腿技术细节（15分钟）</h3>
+<p>### 12.1 打腿技术细节（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>踢腿深度</td><td>脚踝在水下20-30厘米</td></tr><tr><td>踢腿幅度</td><td>不要太大，小而快更好</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像螺旋桨，细水快踢</td></tr></tbody></table>
+<h3>12.2 扶板打腿25米（20分钟）</h3>
+<p>### 12.2 扶板打腿25米（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>打腿到池子另一端（约25米）</td></tr><tr><td><strong>练习二</strong></td><td>如果累了可以停下来休息，但不要站起来</td></tr><tr><td><strong>练习三</strong></td><td>尝试连续打腿不休息</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>保持节奏，不要因为累就乱</td></tr></tbody></table>
+<h3>12.3 打腿耐力练习（15分钟）</h3>
+<p>### 12.3 打腿耐力练习（15分钟）</p>
+<ul><li>连续打腿50米（可以分段）</li><li>每组之间休息30秒</li><li>💡 <strong>感觉</strong>：累是正常的，但坚持住</li></ul>
+<h3>12.4 打腿与呼吸节奏（5分钟）</h3>
+<p>### 12.4 打腿与呼吸节奏（5分钟）</p>
+<ul><li>每打3次腿换气一次</li><li>或者每打5次腿换气一次</li><li>💡 <strong>感觉</strong>：换气不要打断打腿节奏</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>技术细节</td><td>15分钟</td></tr><tr><td>25米打腿</td><td>20分钟</td></tr><tr><td>耐力练习</td><td>15分钟</td></tr><tr><td>呼吸节奏</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：干打腿练习，体会髋驱动</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续扶板打腿50米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第13课：脱板打腿</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>学会不依赖浮板打腿</div><div>掌握脱板后的身体姿势</div><div>能打腿+换气配合</div></div></div><h3>13.1 脱板打腿原理（10分钟）</h3>
+<p>### 13.1 脱板打腿原理（10分钟）</p>
+<ul><li>脱板后：手臂在前面，身体更水平</li><li>需要更多的核心力量保持姿势</li><li>💡 <strong>感觉</strong>：身体像箭一样流线</li></ul>
+<h3>13.2 脱板打腿姿势（15分钟）</h3>
+<p>### 13.2 脱板打腿姿势（15分钟）</p>
+<ul><li>身体俯卧，头在水上</li><li>双臂伸直向前，或者一只手在前一只手在后</li><li>打腿的时候身体会略微摇晃，这是正常的</li><li>💡 <strong>感觉</strong>：核心收紧，身体稳定</li></ul>
+<h3>13.3 脱板打腿练习（20分钟）</h3>
+<p>### 13.3 脱板打腿练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>脱板打腿10米，休息，重复5组</td></tr><tr><td><strong>练习二</strong></td><td>脱板打腿25米</td></tr><tr><td><strong>练习三</strong></td><td>脱板打腿+单边换气</td></tr><tr><td>⚠️ <strong>重点</strong></td><td>打腿的时候手臂不要动，保持伸直</td></tr></tbody></table>
+<h3>13.4 脱板打腿+换气（10分钟）</h3>
+<p>### 13.4 脱板打腿+换气（10分钟）</p>
+<ul><li>每打3次腿，向右侧换气</li><li>再每打3次腿，向左侧换气</li><li>💡 <strong>感觉</strong>：换气时身体不要歪</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>脱板原理</td><td>10分钟</td></tr><tr><td>脱板姿势</td><td>15分钟</td></tr><tr><td>脱板打腿</td><td>20分钟</td></tr><tr><td>打腿+换气</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：干打腿练习，核心收紧</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能脱板打腿25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第14课：打腿与侧身换气配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握打腿时侧身换气的方法</div><div>能做到"打腿+换气"协调配合</div><div>为划手+换气打下基础</div></div></div><h3>14.1 侧身换气原理（10分钟）</h3>
+<p>### 14.1 侧身换气原理（10分钟）</p>
+<ul><li>打腿时换气：身体侧转，嘴巴出水</li><li>转头幅度：只需要转一点点，嘴巴出水即可</li><li>⚠️ <strong>不要抬头</strong>，只需要微微转脸</li></ul>
+<h3>14.2 扶板侧身换气（15分钟）</h3>
+<p>### 14.2 扶板侧身换气（15分钟）</p>
+<ul><li>扶板打腿，向右转头换气</li><li>右肩略微出水，嘴巴在水面上</li><li>鼻子在水下慢慢吐气</li><li>💡 <strong>感觉</strong>：转一点点就够了，不要抬头</li></ul>
+<h3>14.3 扶板双边换气（15分钟）</h3>
+<p>### 14.3 扶板双边换气（15分钟）</p>
+<ul><li>每打3次腿，向右换气</li><li>再每打3次腿，向左换气</li><li>两边都要练习，不要只练一边</li><li>💡 <strong>感觉</strong>：两边均衡，像天平一样</li></ul>
+<h3>14.4 脱板打腿+侧身换气（15分钟）</h3>
+<p>### 14.4 脱板打腿+侧身换气（15分钟）</p>
+<ul><li>脱板打腿，每3次腿换气一次</li><li>先练右侧，熟练后再练左侧</li><li>最后练双边换气</li><li>💡 <strong>感觉</strong>：身体侧转时，打腿不要停</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>侧身换气原理</td><td>10分钟</td></tr><tr><td>扶板侧身换气</td><td>15分钟</td></tr><tr><td>双边换气</td><td>15分钟</td></tr><tr><td>脱板+换气</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练侧头换气</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：脱板打腿+双边换气能完成25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第15课：打腿耐力与节奏</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>建立稳定的打腿节奏</div><div>提升打腿耐力</div><div>能连续打腿100米以上</div></div></div><h3>15.1 打腿节奏训练（15分钟）</h3>
+<p>### 15.1 打腿节奏训练（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>节奏要点</td><td>小而快，频率稳定</td></tr><tr><td>理想频率</td><td>每分钟50-60次踢腿</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像节拍器一样稳定</td></tr></tbody></table>
+<h3>15.2 打腿耐力训练（25分钟）</h3>
+<p>### 15.2 打腿耐力训练（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>连续打腿100米（可分段）</td></tr><tr><td><strong>练习二</strong></td><td>打腿50米，休息30秒，打腿50米</td></tr><tr><td><strong>练习三</strong></td><td>每组100米，休息1分钟，做3组</td></tr><tr><td>💡 <strong>感觉</strong></td><td>累了也要保持节奏，不要乱</td></tr></tbody></table>
+<h3>15.3 打腿+换气节奏（10分钟）</h3>
+<p>### 15.3 打腿+换气节奏（10分钟）</p>
+<ul><li>每打5次腿换气一次</li><li>或者每打3次腿换气一次</li><li>根据体力选择合适的节奏</li><li>💡 <strong>感觉</strong>：换气是休息，不是打断</li></ul>
+<h3>15.4 教练观察与纠错（5分钟）</h3>
+<p>### 15.4 教练观察与纠错（5分钟）</p>
+<ul><li>观察每个学员的打腿姿势</li><li>及时纠错，重复正确动作</li><li>记录每个学员的进步</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>节奏训练</td><td>15分钟</td></tr><tr><td>耐力训练</td><td>25分钟</td></tr><tr><td>换气节奏</td><td>10分钟</td></tr><tr><td>观察纠错</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：干打腿练习，增加耐力</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续打腿100米以上</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第16课：打腿阶段考核</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>检验打腿技术的掌握程度</div><div>找出薄弱环节，针对性改进</div><div>明确下一阶段学习目标</div></div></div><h3>16.1 考核项目（20分钟）</h3>
+<p>### 16.1 考核项目（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>项目一</strong></td><td>扶板打腿50米——检验耐力</td></tr><tr><td><strong>项目二</strong></td><td>脱板打腿25米——检验技术</td></tr><tr><td><strong>项目三</strong></td><td>脱板打腿+双边换气25米——检验协调</td></tr><tr><td>计时</td><td>不要求速度，只要求完成</td></tr></tbody></table>
+<h3>16.2 考核标准</h3>
+<p>### 16.2 考核标准</p>
+<table class="lesson-table"><thead><tr><th>等级</th><th>标准</th></tr></thead><tbody><tr><td>优秀</td><td>能轻松完成所有项目，动作标准</td></tr><tr><td>合格</td><td>能完成所有项目，但动作有待改进</td></tr><tr><td>待提高</td><td>不能完成所有项目，需要继续练习打腿</td></tr></tbody></table>
+<h3>16.3 反馈与改进（10分钟）</h3>
+<p>### 16.3 反馈与改进（10分钟）</p>
+<ul><li>指出每个学员的优点</li><li>指出需要改进的地方</li><li>制定下一阶段学习计划</li></ul>
+<h3>16.4 休息与调整（5分钟）</h3>
+<p>### 16.4 休息与调整（5分钟）</p>
+<ul><li>打腿是基础中的基础</li><li>不要着急进入下一阶段</li><li>确保打腿技术过关后再学划手</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>考核</td><td>20分钟</td></tr><tr><td>标准说明</td><td>5分钟</td></tr><tr><td>反馈改进</td><td>10分钟</td></tr><tr><td>总结休息</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>考核不是考试，是检验学习效果</div><div class="tip-item blue"><span class="icon">💡</span>每个学员进度不一样，不要比较</div><div class="tip-item blue"><span class="icon">💡</span>打腿不过关，划手再好也没用</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第17课：自由泳划手原理</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解自由泳划手的原理</div><div>掌握"高肘划水"的概念</div><div>学会划手的正确姿势</div></div></div><h3>17.1 划手原理讲解（10分钟）</h3>
+<p>### 17.1 划手原理讲解（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>自由泳划手</td><td>手入水→抱水→划水→出水→空中移臂</td></tr><tr><td><strong>高肘划水</strong></td><td>肘部高于手，掌心向后</td></tr><tr><td>💡 <strong>感觉</strong></td><td>手像勺子一样舀水</td></tr></tbody></table>
+<h3>17.2 划手动作分解（15分钟）</h3>
+<p>### 17.2 划手动作分解（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>入水</strong></td><td>手指先入水，手臂伸直</td></tr><tr><td><strong>抱水</strong></td><td>肘部抬高，手臂弯曲，手掌朝向身体</td></tr><tr><td><strong>划水</strong></td><td>手往后划，力量从手臂传递到手掌</td></tr><tr><td><strong>出水</strong></td><td>划到大腿附近，手掌出水</td></tr><tr><td><strong>移臂</strong></td><td>手臂放松，从空中移回前方</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像画一个问号</td></tr></tbody></table>
+<h3>17.3 陆上模仿练习（15分钟）</h3>
+<p>### 17.3 陆上模仿练习（15分钟）</p>
+<ul><li>趴在地上，模仿划手动作</li><li>重点练习"抱水"和"划水"</li><li>💡 <strong>感觉</strong>：用肩膀和背部的力量，不是只用手臂</li></ul>
+<h3>17.4 水中划手练习（15分钟）</h3>
+<p>### 17.4 水中划手练习（15分钟）</p>
+<ul><li>扶池边，单手划水练习</li><li>先练右手，再练左手</li><li>💡 <strong>感觉</strong>：水有阻力，手要用力推水</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>动作分解</td><td>15分钟</td></tr><tr><td>陆上练习</td><td>15分钟</td></tr><tr><td>水中练习</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练习划手动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能正确完成单手划水10次</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第18课：划手与打腿配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>学会划手与打腿的配合</div><div>掌握"边打边划"的节奏</div><div>为完整配合打基础</div></div></div><h3>18.1 配合原理（10分钟）</h3>
+<p>### 18.1 配合原理（10分钟）</p>
+<ul><li>打腿提供身体水平的基础</li><li>划手提供主要的推进力</li><li>两边交替：右手划水→左手划水→右手划水</li><li>💡 <strong>感觉</strong>：像两只翅膀交替扇动</li></ul>
+<h3>18.2 单边划手+打腿（15分钟）</h3>
+<p>### 18.2 单边划手+打腿（15分钟）</p>
+<ul><li>右手划水，左手伸直在前</li><li>打腿配合</li><li>划3-5次换气一次</li><li>先练右侧，再练左侧</li><li>💡 <strong>感觉</strong>：划手的时候身体会转，要用打腿稳定</li></ul>
+<h3>18.3 双边划手+打腿（20分钟）</h3>
+<p>### 18.3 双边划手+打腿（20分钟）</p>
+<ul><li>两手交替划水</li><li>右手划完，左手划</li><li>中间没有停顿</li><li>💡 <strong>感觉</strong>：像风车一样转</li></ul>
+<h3>18.4 划手+打腿+换气（10分钟）</h3>
+<p>### 18.4 划手+打腿+换气（10分钟）</p>
+<ul><li>每划2次换气一次</li><li>右侧换气：右手入水时转头</li><li>💡 <strong>感觉</strong>：换气的时候划手不要停</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>配合原理</td><td>10分钟</td></tr><tr><td>单边练习</td><td>15分钟</td></tr><tr><td>双边练习</td><td>20分钟</td></tr><tr><td>换气配合</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：干练习划手动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能边打腿边划手25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第19课：划手与换气深度练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握单边换气的节奏</div><div>学会"划手换气"的时间配合</div><div>能做到边游边换气不呛水</div></div></div><h3>19.1 单边换气时机（10分钟）</h3>
+<p>### 19.1 单边换气时机（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>换气时机</td><td>右手入水时，头轻轻右转</td></tr><tr><td>嘴巴出水时间</td><td>只有一瞬间</td></tr><tr><td>💡 <strong>感觉</strong></td><td>转一点点就够了，不要整个脸转过来</td></tr></tbody></table>
+<h3>19.2 单边换气练习（25分钟）</h3>
+<p>### 19.2 单边换气练习（25分钟）</p>
+<ul><li>右手划水，头右转，嘴巴出水吸气</li><li>右臂移臂时，头转回水中</li><li><strong>练习一</strong>：每划2次换气1次（右侧）</li><li><strong>练习二</strong>：每划4次换气1次</li><li><strong>练习三</strong>：连续游，边游边换气</li><li>💡 <strong>感觉</strong>：换气是"偷一口气"，不要吸太饱</li></ul>
+<h3>19.3 双边换气练习（15分钟）</h3>
+<p>### 19.3 双边换气练习（15分钟）</p>
+<ul><li>每划3次换气一次，左右交替</li><li>左手划水时头左转，右手划水时头右转</li><li>💡 <strong>感觉</strong>：像跷跷板一样平衡</li></ul>
+<h3>19.4 换气常见错误（5分钟）</h3>
+<p>### 19.4 换气常见错误（5分钟）</p>
+<ul><li>❌ 转头太大——整个脸都转出水面</li><li>❌ 吸气太急——吸到水</li><li>❌ 换气时下沉——髋没有挺起来</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>换气时机</td><td>10分钟</td></tr><tr><td>单边练习</td><td>25分钟</td></tr><tr><td>双边练习</td><td>15分钟</td></tr><tr><td>错误讲解</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练转头换气</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能边游边换气25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第20课：完整配合入门</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握"打腿+划手+换气"的完整配合</div><div>能完成25米以上的完整自由泳</div><div>建立正确的自由泳节奏</div></div></div><h3>20.1 完整配合原理（10分钟）</h3>
+<p>### 20.1 完整配合原理（10分钟）</p>
+<ul><li>自由泳节奏：</li><li>右手入水→左手划水→右手出水→左手入水</li><li>打腿一直进行</li><li>换气在右手入水时进行（右侧）</li><li>💡 <strong>感觉</strong>：像音乐一样有节奏</li></ul>
+<h3>20.2 完整配合练习（25分钟）</h3>
+<p>### 20.2 完整配合练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>划手6次（3+3）→换气1次</td></tr><tr><td><strong>练习二</strong></td><td>划手10次→换气1次</td></tr><tr><td><strong>练习三</strong></td><td>连续游，尽量不换气，到累了再换气</td></tr><tr><td>💡 <strong>感觉</strong></td><td>手脚配合，身体稳定</td></tr></tbody></table>
+<h3>20.3 25米连续游（15分钟）</h3>
+<p>### 20.3 25米连续游（15分钟）</p>
+<ul><li>目标：能连续游25米不停顿</li><li>可以停下来换气，但不要站起来</li><li>💡 <strong>感觉</strong>：累了也要坚持，游泳需要耐力</li></ul>
+<h3>20.4 节奏练习（5分钟）</h3>
+<p>### 20.4 节奏练习（5分钟）</p>
+<ul><li>找到自己的节奏，不要跟别人比</li><li>游泳是长跑，不是冲刺</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>配合原理</td><td>10分钟</td></tr><tr><td>配合练习</td><td>25分钟</td></tr><tr><td>25米连续游</td><td>15分钟</td></tr><tr><td>节奏练习</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：想象游泳的动作节奏</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第21课：完整配合提升</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游50米以上</div><div>改善划手效率</div><div>建立稳定的游泳节奏</div></div></div><h3>21.1 划手效率练习（15分钟）</h3>
+<p>### 21.1 划手效率练习（15分钟）</p>
+<ul><li>不要划太快，划完整才有力量</li><li>抱水要充分，划水要有力</li><li>💡 <strong>感觉</strong>：每一划都要有推进力</li></ul>
+<h3>21.2 50米连续游（25分钟）</h3>
+<p>### 21.2 50米连续游（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游50米，休息30秒，重复3组</td></tr><tr><td><strong>练习二</strong></td><td>游50米，尝试中途只换气2次</td></tr><tr><td><strong>练习三</strong></td><td>连续游50米，尽量不停顿</td></tr><tr><td>💡 <strong>感觉</strong></td><td>换气是节奏的一部分，不是打断</td></tr></tbody></table>
+<h3>21.3 耐力练习（10分钟）</h3>
+<p>### 21.3 耐力练习（10分钟）</p>
+<ul><li>逐渐增加游距</li><li>从50米到100米</li><li>💡 <strong>感觉</strong>：游泳需要耐力，耐力需要练习</li></ul>
+<h3>21.4 自我观察（5分钟）</h3>
+<p>### 21.4 自我观察（5分钟）</p>
+<ul><li>观察自己的动作</li><li>哪里不舒服？哪里累？</li><li>记录下来，下次改进</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>效率练习</td><td>15分钟</td></tr><tr><td>50米练习</td><td>25分钟</td></tr><tr><td>耐力练习</td><td>10分钟</td></tr><tr><td>自我观察</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：干练习想象游泳动作</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游100米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第22课：换气难点突破</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>解决换气困难的问题</div><div>能做到双边换气和单边换气自如切换</div><div>学会"半张嘴换气"技巧</div></div></div><h3>22.1 换气常见问题分析（10分钟）</h3>
+<p>### 22.1 换气常见问题分析（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>问题一</td><td>转头换气时身体歪</td></tr><tr><td>问题二</td><td>换气吸到水</td></tr><tr><td>问题三</td><td>换气时腿下沉</td></tr><tr><td>问题四</td><td>换气节奏乱</td></tr></tbody></table>
+<h3>22.2 转头技巧（15分钟）</h3>
+<p>### 22.2 转头技巧（15分钟）</p>
+<ul><li>半张嘴换气：嘴巴只张开一半</li><li>下巴贴近肩膀</li><li>💡 <strong>感觉</strong>：像偷看后面一样转头</li></ul>
+<h3>22.3 髋稳定练习（15分钟）</h3>
+<p>### 22.3 髋稳定练习（15分钟）</p>
+<ul><li>换气时髋要往上挺</li><li>头转了，髋不能转</li><li><strong>练习</strong>：侧卧打腿+换气</li><li>💡 <strong>感觉</strong>：髋像轴，头像轮子</li></ul>
+<h3>22.4 双边换气练习（15分钟）</h3>
+<p>### 22.4 双边换气练习（15分钟）</p>
+<ul><li>每划3次换气一次</li><li>左右交替</li><li>熟练后可以每划5次换气一次</li><li>💡 <strong>感觉</strong>：像天平一样平衡</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>问题分析</td><td>10分钟</td></tr><tr><td>转头技巧</td><td>15分钟</td></tr><tr><td>髋稳定</td><td>15分钟</td></tr><tr><td>双边练习</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着镜子练半张嘴换气</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：双边换气能完成25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第23课：划手技术细节——高肘抱水</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握高肘抱水的正确姿势</div><div>理解"抱水"的重要性</div><div>能做到正确的高肘抱水</div></div></div><h3>23.1 高肘抱水原理（10分钟）</h3>
+<p>### 23.1 高肘抱水原理（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>高肘</td><td>肘关节高于手腕</td></tr><tr><td>抱水</td><td>手掌像勺子一样舀水</td></tr><tr><td>💡 <strong>感觉</strong></td><td>手在水里抱一个球</td></tr></tbody></table>
+<h3>23.2 高肘练习方法（20分钟）</h3>
+<p>### 23.2 高肘练习方法（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>扶池边，单手高肘抱水</td></tr><tr><td><strong>练习二</strong></td><td>水中站立，单手抱水练习</td></tr><tr><td><strong>练习三</strong></td><td>扶板打腿+高肘划水</td></tr><tr><td>💡 <strong>感觉</strong></td><td>肘比手高，手掌朝后</td></tr></tbody></table>
+<h3>23.3 常见错误（10分钟）</h3>
+<p>### 23.3 常见错误（10分钟）</p>
+<ul><li>❌ 肘低于手——变成"拖肘"</li><li>❌ 抱水不充分——划水无力</li><li>❌ 手掌朝下——推水方向错</li></ul>
+<h3>23.4 实战练习（15分钟）</h3>
+<p>### 23.4 实战练习（15分钟）</p>
+<ul><li>慢速游，专注每一划的高肘动作</li><li>计数：每一臂划水都要做到高肘</li><li>💡 <strong>感觉</strong>：每一划都像在抱水</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>练习方法</td><td>20分钟</td></tr><tr><td>错误讲解</td><td>10分钟</td></tr><tr><td>实战练习</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：对着水盆练高肘抱水</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能正确完成高肘划水</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第24课：划手技术细节——后段划水</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握后段划水的技巧</div><div>理解"推水"的重要性</div><div>能做到完整的后半段划水</div></div></div><h3>24.1 后段划水原理（10分钟）</h3>
+<p>### 24.1 后段划水原理（10分钟）</p>
+<ul><li>划水分为前段（抱水）和后段（推水）</li><li>后段推水提供70%的推进力</li><li>手掌从腰部一直划到大腿</li><li>💡 <strong>感觉</strong>：从前往后推，像铲子一样</li></ul>
+<h3>24.2 推水练习（20分钟）</h3>
+<p>### 24.2 推水练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>慢速划水，感受推水</td></tr><tr><td><strong>练习二</strong></td><td>每划一次，停留感受推水的感觉</td></tr><tr><td><strong>练习三</strong></td><td>想象手掌推开一个球</td></tr><tr><td>💡 <strong>感觉</strong></td><td>手掌从髋部推到膝盖</td></tr></tbody></table>
+<h3>24.3 划水节奏（15分钟）</h3>
+<p>### 24.3 划水节奏（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>入水</td><td>轻松入水，不要砸水</td></tr><tr><td>抱水</td><td>慢，充分抱水</td></tr><tr><td>划水</td><td>中速，有力</td></tr><tr><td>推水</td><td>快，用力</td></tr><tr><td>出水</td><td>轻松，不要用力甩</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像音乐一样有快有慢</td></tr></tbody></table>
+<h3>24.4 完整划手练习（10分钟）</h3>
+<p>### 24.4 完整划手练习（10分钟）</p>
+<ul><li>慢慢游，专注每一划的完整动作</li><li>不要着急，感受每一段的感觉</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>推水练习</td><td>20分钟</td></tr><tr><td>节奏练习</td><td>15分钟</td></tr><tr><td>完整练习</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：想象每一划的后半段</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能完整划水25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第25课：移臂技术</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握正确的移臂动作</div><div>学会"放松移臂"的技巧</div><div>减少移臂时的能量消耗</div></div></div><h3>25.1 移臂原理（10分钟）</h3>
+<p>### 25.1 移臂原理（10分钟）</p>
+<ul><li>移臂是手臂在空中移动</li><li>要放松，不要用力</li><li>从肩关节带动，不是手臂用力</li><li>💡 <strong>感觉</strong>：像吊着的绳子，肩膀拉着动</li></ul>
+<h3>25.2 移臂练习（20分钟）</h3>
+<p>### 25.2 移臂练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>陆上模仿移臂动作</td></tr><tr><td><strong>练习二</strong></td><td>扶板打腿+单手移臂</td></tr><tr><td><strong>练习三</strong></td><td>慢速游，专注移臂</td></tr><tr><td>💡 <strong>感觉</strong></td><td>手臂是放松的，像钟摆一样</td></tr></tbody></table>
+<h3>25.3 移臂常见错误（10分钟）</h3>
+<p>### 25.3 移臂常见错误（10分钟）</p>
+<ul><li>❌ 手臂伸太直——肩膀会累</li><li>❌ 移臂时耸肩——肩膀会紧</li><li>❌ 手掌拍水——太用力</li></ul>
+<h3>25.4 肩部放松练习（15分钟）</h3>
+<p>### 25.4 肩部放松练习（15分钟）</p>
+<ul><li>耸肩练习：耸起肩膀，放松，重复</li><li>感受肩膀是放松的</li><li>💡 <strong>感觉</strong>：肩膀像翅膀，可以打开</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>移臂练习</td><td>20分钟</td></tr><tr><td>错误讲解</td><td>10分钟</td></tr><tr><td>放松练习</td><td>15分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：耸肩放松练习</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能放松移臂25米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第26课：划手节奏与体能</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>建立稳定的划手节奏</div><div>提升划手时的体能</div><div>能连续游100米以上</div></div></div><h3>26.1 划手节奏练习（15分钟）</h3>
+<p>### 26.1 划手节奏练习（15分钟）</p>
+<ul><li>划手频率：每分钟30-40次划水</li><li>不要太快，保持效率</li><li>💡 <strong>感觉</strong>：像稳定的节拍器</li></ul>
+<h3>26.2 100米连续游（25分钟）</h3>
+<p>### 26.2 100米连续游（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游100米，休息1分钟，重复3组</td></tr><tr><td><strong>练习二</strong></td><td>游100米，尝试中途只换气4次</td></tr><tr><td><strong>练习三</strong></td><td>连续游100米，尽量不停顿</td></tr><tr><td>💡 <strong>感觉</strong></td><td>需要体能，也需要节奏</td></tr></tbody></table>
+<h3>26.3 体能训练（15分钟）</h3>
+<p>### 26.3 体能训练（15分钟）</p>
+<ul><li>间歇训练：游50米，休息30秒</li><li>逐渐增加游泳时间</li><li>💡 <strong>感觉</strong>：累是正常的，但可以坚持</li></ul>
+<h3>26.4 自我调整（5分钟）</h3>
+<p>### 26.4 自我调整（5分钟）</p>
+<ul><li>游累了怎么办？</li><li>减慢划手频率，保持呼吸</li><li>不要停，继续游</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>节奏练习</td><td>15分钟</td></tr><tr><td>100米练习</td><td>25分钟</td></tr><tr><td>体能训练</td><td>15分钟</td></tr><tr><td>自我调整</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：深呼吸调整练习</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游150米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第27课：双边换气与三划一换</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握三划一换的节奏</div><div>能灵活运用单边和双边换气</div><div>提高游泳效率</div></div></div><h3>27.1 三划一换原理（10分钟）</h3>
+<p>### 27.1 三划一换原理（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>三划</td><td>每边手臂划三次</td></tr><tr><td>一换</td><td>换气一次</td></tr><tr><td>右侧换气</td><td>右手入水时转头</td></tr><tr><td>💡 <strong>感觉</strong></td><td>划三下，换一口气</td></tr></tbody></table>
+<h3>27.2 三划一换练习（25分钟）</h3>
+<p>### 27.2 三划一换练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>划手3次→换气1次（右侧）</td></tr><tr><td><strong>练习二</strong></td><td>划手3次→换气1次（左侧）</td></tr><tr><td><strong>练习三</strong></td><td>连续三划一换练习</td></tr><tr><td>💡 <strong>感觉</strong></td><td>节奏稳定，换气自然</td></tr></tbody></table>
+<h3>27.3 双边换气练习（15分钟）</h3>
+<p>### 27.3 双边换气练习（15分钟）</p>
+<ul><li>每划3次换气一次，左右交替</li><li>适用于长距离游泳</li><li>💡 <strong>感觉</strong>：像天平一样平衡</li></ul>
+<h3>27.4 换气策略（5分钟）</h3>
+<p>### 27.4 换气策略（5分钟）</p>
+<ul><li>短距离：可以用两划一换</li><li>长距离：用三划一换或五划一换</li><li>根据体力选择合适的策略</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>三划一换练习</td><td>25分钟</td></tr><tr><td>双边练习</td><td>15分钟</td></tr><tr><td>策略讲解</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：想象三划一换的节奏</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能用三划一换游100米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第28课：耐力提升——200米连续游</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游200米</div><div>建立游泳耐力基础</div><div>找到自己的舒适节奏</div></div></div><h3>28.1 热身练习（10分钟）</h3>
+<p>### 28.1 热身练习（10分钟）</p>
+<ul><li>慢速游100米</li><li>活动肩关节</li><li>感受水温</li></ul>
+<h3>28.2 200米连续游（30分钟）</h3>
+<p>### 28.2 200米连续游（30分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游200米，休息2分钟，重复2组</td></tr><tr><td><strong>练习二</strong></td><td>游200米，尝试不间断</td></tr><tr><td><strong>练习三</strong></td><td>找到自己的节奏，保持</td></tr><tr><td>💡 <strong>感觉</strong></td><td>累但可以坚持</td></tr></tbody></table>
+<h3>28.3 体能分配（10分钟）</h3>
+<p>### 28.3 体能分配（10分钟）</p>
+<ul><li>开始不要太快</li><li>中间保持节奏</li><li>结尾可以稍微加速</li><li>💡 <strong>感觉</strong>：像跑马拉松，不是百米冲刺</li></ul>
+<h3>28.4 自我鼓励（5分钟）</h3>
+<p>### 28.4 自我鼓励（5分钟）</p>
+<ul><li>200米是游泳的第一个里程碑</li><li>学会了200米，就学会了游泳</li><li>告诉自己：我可以</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>热身</td><td>10分钟</td></tr><tr><td>200米练习</td><td>30分钟</td></tr><tr><td>体能分配</td><td>10分钟</td></tr><tr><td>自我鼓励</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>在家练习：想象200米的过程</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游300米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第29课：耐力提升——300米连续游</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游300米</div><div>巩固耐力基础</div><div>能保持稳定的游泳节奏</div></div></div><h3>29.1 热身（10分钟）</h3>
+<p>### 29.1 热身（10分钟）</p>
+<ul><li>慢速游100米</li><li>活动全身关节</li></ul>
+<h3>29.2 300米连续游（30分钟）</h3>
+<p>### 29.2 300米连续游（30分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游300米，休息2分钟，重复2组</td></tr><tr><td><strong>练习二</strong></td><td>游300米，尽量不间断</td></tr><tr><td><strong>练习三</strong></td><td>挑战：连续游300米</td></tr><tr><td>💡 <strong>感觉</strong></td><td>需要坚持，需要耐力</td></tr></tbody></table>
+<h3>29.3 游泳节奏调整（10分钟）</h3>
+<p>### 29.3 游泳节奏调整（10分钟）</p>
+<ul><li>如果累了，減慢划手频率</li><li>不要停，继续游</li><li>深呼吸，保持节奏</li><li>💡 <strong>感觉</strong>：节奏比速度重要</li></ul>
+<h3>29.4 进步记录（5分钟）</h3>
+<p>### 29.4 进步记录（5分钟）</p>
+<ul><li>记录每次游的距离和时间</li><li>看到自己的进步</li><li>设定下一个目标</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>热身</td><td>10分钟</td></tr><tr><td>300米练习</td><td>30分钟</td></tr><tr><td>节奏调整</td><td>10分钟</td></tr><tr><td>进步记录</td><td>5分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item"><span class="icon">🏠</span>记录自己的游泳距离</div><div class="tip-item"><span class="icon">🏠</span>下次课目标：能连续游400米</div></div></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第30课：阶段考核——完整配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>检验完整配合的掌握程度</div><div>评估耐力水平</div><div>明确下一阶段学习目标</div></div></div><h3>30.1 考核项目（25分钟）</h3>
+<p>### 30.1 考核项目（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>项目一</strong></td><td>300米连续游——检验耐力</td></tr><tr><td><strong>项目二</strong></td><td>100米计时游——检验速度</td></tr><tr><td><strong>项目三</strong></td><td>技术评分——检验动作</td></tr><tr><td>打腿</td><td>稳定、节奏好</td></tr><tr><td>划手</td><td>高肘、抱水充分</td></tr><tr><td>换气</td><td>转头自然、不呛水</td></tr><tr><td>配合</td><td>手脚协调、节奏稳定</td></tr></tbody></table>
+<h3>30.2 考核标准</h3>
+<p>### 30.2 考核标准</p>
+<table class="lesson-table"><thead><tr><th>等级</th><th>标准</th></tr></thead><tbody><tr><td>优秀</td><td>300米轻松完成，动作标准，节奏稳定</td></tr><tr><td>良好</td><td>300米能完成，动作基本标准</td></tr><tr><td>及格</td><td>100米能完成，但300米有困难</td></tr><tr><td>待提高</td><td>100米完成困难，需要继续练习</td></tr></tbody></table>
+<h3>30.3 反馈与改进（10分钟）</h3>
+<p>### 30.3 反馈与改进（10分钟）</p>
+<ul><li>指出每个学员的优点</li><li>指出需要改进的地方</li><li>制定下一阶段学习计划</li></ul>
+<h3>30.4 休息与调整（10分钟）</h3>
+<p>### 30.4 休息与调整（10分钟）</p>
+<ul><li>游泳需要时间，不要着急</li><li>每个人的进度不一样</li><li>坚持练习，一定能学会</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>考核</td><td>25分钟</td></tr><tr><td>标准说明</td><td>5分钟</td></tr><tr><td>反馈改进</td><td>10分钟</td></tr><tr><td>总结休息</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第31课：常见错误与纠正——换气篇</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>识别常见的换气错误</div><div>掌握正确的换气方法</div><div>能自我检查和纠正换气问题</div></div></div><h3>31.1 换气常见错误（15分钟）</h3>
+<p>### 31.1 换气常见错误（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>错误一</strong></td><td>抬头换气——身体会下沉</td></tr><tr><td><strong>错误二</strong></td><td>转头过大——身体会歪</td></tr><tr><td><strong>错误三</strong></td><td>吸气太急——会呛水</td></tr><tr><td><strong>错误四</strong></td><td>换气时不吐气——气吐不干净</td></tr></tbody></table>
+<h3>31.2 正确换气示范（15分钟）</h3>
+<p>### 31.2 正确换气示范（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>转头角度</td><td>30-45度</td></tr><tr><td>嘴巴张开大小</td><td>适度</td></tr><tr><td>吸气时间</td><td>一瞬间</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像偷看后面一样</td></tr></tbody></table>
+<h3>31.3 换气纠错练习（20分钟）</h3>
+<p>### 31.3 换气纠错练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>练习一</td><td>扶板打腿+正确转头换气</td></tr><tr><td>练习二</td><td>慢速游+专注换气</td></tr><tr><td>练习三</td><td>对着镜子练习转头</td></tr><tr><td>💡 <strong>感觉</strong></td><td>换气是自然的事，不要刻意</td></tr></tbody></table>
+<h3>31.4 换气小贴士（5分钟）</h3>
+<p>### 31.4 换气小贴士（5分钟）</p>
+<ul><li>始终保持身体水平</li><li>换气时髋不要转</li><li>吸气用嘴，不要用鼻子</li><li>吐气要彻底，吸气才充分</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>错误讲解</td><td>15分钟</td></tr><tr><td>正确示范</td><td>15分钟</td></tr><tr><td>纠错练习</td><td>20分钟</td></tr><tr><td>小贴士</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第32课：常见错误与纠正——划手篇</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>识别常见的划手错误</div><div>掌握正确的划手方法</div><div>能自我检查和纠正划手问题</div></div></div><h3>32.1 划手常见错误（15分钟）</h3>
+<p>### 32.1 划手常见错误（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>错误一</strong></td><td>入水砸水——浪费能量</td></tr><tr><td><strong>错误二</strong></td><td>拖肘——划水无力</td></tr><tr><td><strong>错误三</strong></td><td>划水不到底——推进力不够</td></tr><tr><td><strong>错误四</strong></td><td>移臂耸肩——肩膀会累</td></tr></tbody></table>
+<h3>32.2 正确划手示范（15分钟）</h3>
+<p>### 32.2 正确划手示范（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>入水</td><td>轻柔，像切豆腐</td></tr><tr><td>抱水</td><td>高肘，掌心朝后</td></tr><tr><td>划水</td><td>用力，从髋划到膝</td></tr><tr><td>移臂</td><td>放松，像钟摆</td></tr></tbody></table>
+<h3>32.3 划手纠错练习（20分钟）</h3>
+<p>### 32.3 划手纠错练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>练习一</td><td>慢速划水，专注每一段</td></tr><tr><td>练习二</td><td>单手划水，感受高肘</td></tr><tr><td>练习三</td><td>移臂练习，肩膀放松</td></tr><tr><td>💡 <strong>感觉</strong></td><td>每一划都要有目的</td></tr></tbody></table>
+<h3>32.4 划手效率检查（5分钟）</h3>
+<p>### 32.4 划手效率检查（5分钟）</p>
+<ul><li>每一划能推进多少？</li><li>划水时是否用力？</li><li>抱水是否充分？</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>错误讲解</td><td>15分钟</td></tr><tr><td>正确示范</td><td>15分钟</td></tr><tr><td>纠错练习</td><td>20分钟</td></tr><tr><td>效率检查</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第33课：常见错误与纠正——打腿篇</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>识别常见的打腿错误</div><div>掌握正确的打腿方法</div><div>能自我检查和纠正打腿问题</div></div></div><h3>33.1 打腿常见错误（15分钟）</h3>
+<p>### 33.1 打腿常见错误（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>错误一</strong></td><td>用膝盖打水——膝盖会累</td></tr><tr><td><strong>错误二</strong></td><td>脚踝僵硬——踢水无力</td></tr><tr><td><strong>错误三</strong></td><td>打水幅度太大——浪费能量</td></tr><tr><td><strong>错误四</strong></td><td>打水频率不稳——节奏乱</td></tr></tbody></table>
+<h3>33.2 正确打腿示范（15分钟）</h3>
+<p>### 33.2 正确打腿示范（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>发力点</td><td>髋关节</td></tr><tr><td>动作</td><td>鞭状，从髋传到脚</td></tr><tr><td>频率</td><td>稳定，不要太快</td></tr><tr><td>脚踝</td><td>放松，像鱼尾巴</td></tr></tbody></table>
+<h3>33.3 打腿纠错练习（20分钟）</h3>
+<p>### 33.3 打腿纠错练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>练习一</td><td>扶板打腿，专注髋驱动</td></tr><tr><td>练习二</td><td>转脚踝练习，放松脚踝</td></tr><tr><td>练习三</td><td>慢速打腿，感受鞭状</td></tr><tr><td>💡 <strong>感觉</strong></td><td>腿是鞭子，不是棍子</td></tr></tbody></table>
+<h3>33.4 打腿效率检查（5分钟）</h3>
+<p>### 33.4 打腿效率检查（5分钟）</p>
+<ul><li>打水时脚是否出水？</li><li>频率是否稳定？</li><li>髋是否发力？</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>错误讲解</td><td>15分钟</td></tr><tr><td>正确示范</td><td>15分钟</td></tr><tr><td>纠错练习</td><td>20分钟</td></tr><tr><td>效率检查</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第34课：核心力量与身体控制</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解核心力量的重要性</div><div>学会用核心控制身体</div><div>提升游泳时的稳定性</div></div></div><h3>34.1 核心力量原理（10分钟）</h3>
+<p>### 34.1 核心力量原理（10分钟）</p>
+<ul><li>核心：腰腹部的肌肉</li><li>核心力量：保持身体稳定</li><li>游泳时核心收紧，身体不会乱晃</li><li>💡 <strong>感觉</strong>：像穿紧身衣一样</li></ul>
+<h3>34.2 核心训练方法（20分钟）</h3>
+<p>### 34.2 核心训练方法（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>水中侧卧打腿——练核心</td></tr><tr><td><strong>练习二</strong></td><td>双手前伸打腿——练身体水平</td></tr><tr><td><strong>练习三</strong></td><td>闭眼游——练平衡</td></tr><tr><td>💡 <strong>感觉</strong></td><td>核心收紧，身体稳定</td></tr></tbody></table>
+<h3>34.3 核心与游泳配合（15分钟）</h3>
+<p>### 34.3 核心与游泳配合（15分钟）</p>
+<ul><li>划手时核心发力传递力量</li><li>转身时核心带动身体转动</li><li>打腿时核心保持身体水平</li><li>💡 <strong>感觉</strong>：核心是连接上下身的桥梁</li></ul>
+<h3>34.4 核心放松（5分钟）</h3>
+<p>### 34.4 核心放松（5分钟）</p>
+<ul><li>训练后要放松</li><li>肩膀、腰背、髋部都要放松</li><li>按摩或拉伸</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>训练方法</td><td>20分钟</td></tr><tr><td>配合练习</td><td>15分钟</td></tr><tr><td>放松</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第35课：高肘划水深化练习</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>深化高肘划水的理解</div><div>能在实际游泳中运用高肘</div><div>提升划水效率</div></div></div><h3>35.1 高肘原理深化（10分钟）</h3>
+<p>### 35.1 高肘原理深化（10分钟）</p>
+<ul><li>高肘抱水时手掌朝后</li><li>抱水面积越大，推进力越大</li><li>💡 <strong>感觉</strong>：抱一个大球</li></ul>
+<h3>35.2 高肘练习（25分钟）</h3>
+<p>### 35.2 高肘练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>单手划水，专注高肘</td></tr><tr><td><strong>练习二</strong></td><td>慢速游，专注每一划</td></tr><tr><td><strong>练习三</strong></td><td>每划10次检查一次肘的高度</td></tr><tr><td>💡 <strong>感觉</strong></td><td>肘永远比手高</td></tr></tbody></table>
+<h3>35.3 高肘与推水（15分钟）</h3>
+<p>### 35.3 高肘与推水（15分钟）</p>
+<ul><li>前半段：高肘抱水</li><li>后半段：从高处往低处推</li><li>手掌从髋部推到膝部</li><li>💡 <strong>感觉</strong>：像铲子一样推水</li></ul>
+<h3>35.4 实战应用（5分钟）</h3>
+<p>### 35.4 实战应用（5分钟）</p>
+<ul><li>逐渐把高肘技术用到实际游泳中</li><li>不要着急，慢慢来</li><li>💡 <strong>感觉</strong>：每一划都在进步</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理深化</td><td>10分钟</td></tr><tr><td>高肘练习</td><td>25分钟</td></tr><tr><td>推水练习</td><td>15分钟</td></tr><tr><td>实战应用</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第36课：身体滚动与转髋</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解身体滚动的作用</div><div>学会正确的转髋技术</div><div>提升游泳效率和速度</div></div></div><h3>36.1 身体滚动原理（10分钟）</h3>
+<p>### 36.1 身体滚动原理（10分钟）</p>
+<ul><li>自由泳是"滚动式"前进</li><li>髋关节是转动的轴心</li><li>每划一次，身体滚动一次</li><li>💡 <strong>感觉</strong>：像木头一样滚过去</li></ul>
+<h3>36.2 转髋练习（20分钟）</h3>
+<p>### 36.2 转髋练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>侧卧打腿，感受髋转动</td></tr><tr><td><strong>练习二</strong></td><td>单手划水+身体滚动</td></tr><tr><td><strong>练习三</strong></td><td>慢速游，专注转髋</td></tr><tr><td>💡 <strong>感觉</strong></td><td>髋带动身体，不是肩膀带动</td></tr></tbody></table>
+<h3>36.3 转髋与划手配合（15分钟）</h3>
+<p>### 36.3 转髋与划手配合（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>转髋时划手</td><td>力量更大</td></tr><tr><td>转髋时换气</td><td>更轻松</td></tr><tr><td>转髋角度</td><td>30-40度</td></tr><tr><td>💡 <strong>感觉</strong></td><td>滚动让游泳更轻松</td></tr></tbody></table>
+<h3>36.4 转髋注意事项（5分钟）</h3>
+<p>### 36.4 转髋注意事项（5分钟）</p>
+<ul><li>不要转太多，会失去平衡</li><li>髋是轴，肩膀在轴上转</li><li>转髋帮助换气，但不等于换气</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>转髋练习</td><td>20分钟</td></tr><tr><td>配合练习</td><td>15分钟</td></tr><tr><td>注意事项</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第37课：换气与身体滚动的配合</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>掌握换气时身体滚动的关系</div><div>能做到滚动式换气</div><div>提升换气的轻松程度</div></div></div><h3>37.1 滚动换气原理（10分钟）</h3>
+<p>### 37.1 滚动换气原理（10分钟）</p>
+<ul><li>身体滚动时，嘴巴更容易出水</li><li>利用滚动换气，而不是抬头换气</li><li>💡 <strong>感觉</strong>：身体滚动，嘴巴自然出水</li></ul>
+<h3>37.2 滚动换气练习（25分钟）</h3>
+<p>### 37.2 滚动换气练习（25分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>侧卧打腿+换气（右侧）</td></tr><tr><td><strong>练习二</strong></td><td>侧卧打腿+换气（左侧）</td></tr><tr><td><strong>练习三</strong></td><td>单手划水+滚动换气</td></tr><tr><td>💡 <strong>感觉</strong></td><td>滚动让换气更轻松</td></tr></tbody></table>
+<h3>37.3 完整滚动换气（15分钟）</h3>
+<p>### 37.3 完整滚动换气（15分钟）</p>
+<ul><li>划手时髋转体</li><li>转髋时头轻转</li><li>嘴巴出水吸气</li><li>💡 <strong>感觉</strong>：像旋转门一样自然</li></ul>
+<h3>37.4 滚动换气常见问题（5分钟）</h3>
+<p>### 37.4 滚动换气常见问题（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>问题一</td><td>转髋太多失去平衡</td></tr><tr><td>问题二</td><td>转头换气而不是滚动换气</td></tr><tr><td>问题三</td><td>换气时身体歪</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>滚动换气练习</td><td>25分钟</td></tr><tr><td>完整练习</td><td>15分钟</td></tr><tr><td>常见问题</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第38课：技术整合——完整自由泳</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>整合所有技术要素</div><div>能做到完整、流畅的自由泳</div><div>找到自己的游泳节奏</div></div></div><h3>38.1 技术整合原理（10分钟）</h3>
+<p>### 38.1 技术整合原理（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>打腿</td><td>提供基础和稳定</td></tr><tr><td>划手</td><td>提供主要推进力</td></tr><tr><td>换气</td><td>提供氧气</td></tr><tr><td>滚动</td><td>让一切更轻松</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像一个团队合作</td></tr></tbody></table>
+<h3>38.2 技术整合练习（30分钟）</h3>
+<p>### 38.2 技术整合练习（30分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>慢速游，专注每个技术点</td></tr><tr><td><strong>练习二</strong></td><td>每划50次检查一次技术</td></tr><tr><td><strong>练习三</strong></td><td>逐渐加快，保持技术</td></tr><tr><td>💡 <strong>感觉</strong></td><td>技术稳定后，速度自然提升</td></tr></tbody></table>
+<h3>38.3 自我观察（10分钟）</h3>
+<p>### 38.3 自我观察（10分钟）</p>
+<ul><li>观察自己的完整动作</li><li>哪里有问题？哪里好？</li><li>记录下来，下次改进</li></ul>
+<h3>38.4 设定目标（5分钟）</h3>
+<p>### 38.4 设定目标（5分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>短期目标</td><td>能连续游400米</td></tr><tr><td>中期目标</td><td>能连续游800米</td></tr><tr><td>长期目标</td><td>动作标准，速度提升</td></tr></tbody></table><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>原理讲解</td><td>10分钟</td></tr><tr><td>整合练习</td><td>30分钟</td></tr><tr><td>自我观察</td><td>10分钟</td></tr><tr><td>设定目标</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第39课：耐力提升——400米连续游</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游400米</div><div>建立稳定的耐力基础</div><div>学会体能分配</div></div></div><h3>39.1 热身（10分钟）</h3>
+<p>### 39.1 热身（10分钟）</p>
+<ul><li>慢速游200米</li><li>活动肩关节、髋关节</li><li>感受水温</li></ul>
+<h3>39.2 400米连续游（30分钟）</h3>
+<p>### 39.2 400米连续游（30分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游400米，休息2分钟，重复2组</td></tr><tr><td><strong>练习二</strong></td><td>游400米，尝试不间断</td></tr><tr><td><strong>练习三</strong></td><td>挑战：连续游400米</td></tr><tr><td>💡 <strong>感觉</strong></td><td>需要坚持，需要耐力</td></tr></tbody></table>
+<h3>39.3 体能分配策略（10分钟）</h3>
+<p>### 39.3 体能分配策略（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>开始</td><td>保持舒适节奏</td></tr><tr><td>中间</td><td>不要因为累就乱</td></tr><tr><td>结尾</td><td>可以稍微加速</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像跑马拉松</td></tr></tbody></table>
+<h3>39.4 心理建设（5分钟）</h3>
+<p>### 39.4 心理建设（5分钟）</p>
+<ul><li>400米是游泳的里程碑</li><li>你能行的</li><li>每一次划水都在进步</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>热身</td><td>10分钟</td></tr><tr><td>400米练习</td><td>30分钟</td></tr><tr><td>体能分配</td><td>10分钟</td></tr><tr><td>心理建设</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第40课：耐力提升——500米连续游</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>能连续游500米</div><div>巩固耐力基础</div><div>为长距离游泳打基础</div></div></div><h3>40.1 热身（10分钟）</h3>
+<p>### 40.1 热身（10分钟）</p>
+<ul><li>慢速游200米</li><li>活动全身关节</li></ul>
+<h3>40.2 500米连续游（30分钟）</h3>
+<p>### 40.2 500米连续游（30分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>游500米，休息3分钟，重复2组</td></tr><tr><td><strong>练习二</strong></td><td>游500米，尝试不间断</td></tr><tr><td><strong>练习三</strong></td><td>挑战：连续游500米</td></tr><tr><td>💡 <strong>感觉</strong></td><td>累但可以坚持</td></tr></tbody></table>
+<h3>40.3 长距离游泳策略（10分钟）</h3>
+<p>### 40.3 长距离游泳策略（10分钟）</p>
+<ul><li>节奏稳定</li><li>呼吸均匀</li><li>不要和别人比</li><li>💡 <strong>感觉</strong>：这是你自己的节奏</li></ul>
+<h3>40.4 自我鼓励（5分钟）</h3>
+<p>### 40.4 自我鼓励（5分钟）</p>
+<ul><li>500米是很大的进步</li><li>继续努力</li><li>你正在成为真正的游泳者</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>热身</td><td>10分钟</td></tr><tr><td>500米练习</td><td>30分钟</td></tr><tr><td>策略讲解</td><td>10分钟</td></tr><tr><td>自我鼓励</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第41课：技术精进——减少阻力</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解减少阻力的重要性</div><div>学会"流线型"游泳</div><div>提升游泳效率</div></div></div><h3>41.1 阻力原理（10分钟）</h3>
+<p>### 41.1 阻力原理（10分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>游泳中的阻力</td><td>水对手的阻碍</td></tr><tr><td>减少阻力</td><td>让身体更流线</td></tr><tr><td>流线型身体</td><td>头、髋、脚成一线</td></tr><tr><td>💡 <strong>感觉</strong></td><td>像箭一样刺穿水</td></tr></tbody></table>
+<h3>41.2 流线型练习（20分钟）</h3>
+<p>### 41.2 流线型练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>练习一</strong></td><td>蹬边滑行，看谁滑得远</td></tr><tr><td><strong>练习二</strong></td><td>潜泳，体会流线型</td></tr><tr><td><strong>练习三</strong></td><td>打腿时身体成一直线</td></tr><tr><td>💡 <strong>感觉</strong></td><td>身体像铅笔</td></tr></tbody></table>
+<h3>41.3 减少阻力技巧（15分钟）</h3>
+<p>### 41.3 减少阻力技巧（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>手指并拢</td><td>减少手部阻力</td></tr><tr><td>身体水平</td><td>减少正面阻力</td></tr><tr><td>动作平滑</td><td>减少水花</td></tr><tr><td>💡 <strong>感觉</strong></td><td>滑过水，不是砍水</td></tr></tbody></table>
+<h3>41.4 实战应用（10分钟）</h3>
+<p>### 41.4 实战应用（10分钟）</p>
+<ul><li>在实际游泳中应用流线型</li><li>每一划都要想着减少阻力</li><li>💡 <strong>感觉</strong>：游得更轻松更快</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>阻力原理</td><td>10分钟</td></tr><tr><td>流线型练习</td><td>20分钟</td></tr><tr><td>技巧讲解</td><td>15分钟</td></tr><tr><td>实战应用</td><td>10分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第42课：技术精进——提升效率</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>理解划水效率的概念</div><div>学会"每一划都有意义"</div><div>提升游泳的经济性</div></div></div><h3>42.1 效率原理（10分钟）</h3>
+<p>### 42.1 效率原理（10分钟）</p>
+<ul><li>划水效率：每一划推进的距离</li><li>高效率：用最少的力游最远的距离</li><li>划水频率×划水距离=效率</li><li>💡 <strong>感觉</strong>：每一划都在推进</li></ul>
+<h3>42.2 提升效率方法（20分钟）</h3>
+<p>### 42.2 提升效率方法（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>方法一</strong></td><td>划水到位——不要划一半</td></tr><tr><td><strong>方法二</strong></td><td>减少无用动作——移臂要放松</td></tr><tr><td><strong>方法三</strong></td><td>保持身体水平——不要浪费能量</td></tr><tr><td>💡 <strong>感觉</strong></td><td>每一划都有价值</td></tr></tbody></table>
+<h3>42.3 效率练习（20分钟）</h3>
+<p>### 42.3 效率练习（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>练习一</td><td>划距测试——看每一划能游多远</td></tr><tr><td>练习二</td><td>慢速游——每一划都要完整</td></tr><tr><td>练习三</td><td>计数——游25米需要多少划</td></tr><tr><td>💡 <strong>感觉</strong></td><td>划数越少，效率越高</td></tr></tbody></table>
+<h3>42.4 效率与速度（5分钟）</h3>
+<p>### 42.4 效率与速度（5分钟）</p>
+<ul><li>效率提升后，速度自然提升</li><li>不要只追求速度，要追求效率</li><li>💡 <strong>感觉</strong>：轻松游得更快</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>效率原理</td><td>10分钟</td></tr><tr><td>提升方法</td><td>20分钟</td></tr><tr><td>效率练习</td><td>20分钟</td></tr><tr><td>效率与速度</td><td>5分钟</td></tr></tbody></table></div>
+<div class="lesson green"><div class="lesson-header">
+  <div class="lesson-title">第43课：自由泳入门总结与展望</div>
+  <span class="lesson-badge badge-green">核心课</span>
+</div><div class="lesson-goal"><span class="emoji">🎯</span><div><div>总结43课的学习内容</div><div>评估学习成果</div><div>展望未来的游泳之路</div></div></div><h3>43.1 学习内容总结（15分钟）</h3>
+<p>### 43.1 学习内容总结（15分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>第一阶段</td><td>水性建立 ✓</td></tr><tr><td>第二阶段</td><td>打腿专练 ✓</td></tr><tr><td>第三阶段</td><td>划手换气 ✓</td></tr><tr><td>第四阶段</td><td>完整配合 ✓</td></tr><tr><td>第五阶段</td><td>技术精进 ✓</td></tr><tr><td>第六阶段</td><td>耐力提升 ✓</td></tr></tbody></table>
+<h3>43.2 最终考核（20分钟）</h3>
+<p>### 43.2 最终考核（20分钟）</p>
+<table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td><strong>项目一</strong></td><td>500米连续游</td></tr><tr><td><strong>项目二</strong></td><td>技术评分</td></tr><tr><td>打腿</td><td>稳定、节奏好</td></tr><tr><td>划手</td><td>高肘、完整、有力</td></tr><tr><td>换气</td><td>滚动、自然、不呛水</td></tr><tr><td>配合</td><td>手脚协调、节奏稳定</td></tr><tr><td>整体</td><td>流线型、效率高</td></tr></tbody></table>
+<h3>43.3 考核标准</h3>
+<p>### 43.3 考核标准</p>
+<table class="lesson-table"><thead><tr><th>等级</th><th>标准</th></tr></thead><tbody><tr><td>优秀</td><td>500米轻松完成，动作标准，效率高</td></tr><tr><td>良好</td><td>500米能完成，动作基本标准</td></tr><tr><td>及格</td><td>300米能完成，但500米有困难</td></tr><tr><td>待提高</td><td>300米完成困难，需要继续练习</td></tr></tbody></table>
+<h3>43.4 未来展望（10分钟）</h3>
+<p>### 43.4 未来展望（10分钟）</p>
+<ul><li>学会自由泳后可以做什麼？</li><li>长距离游泳</li><li>参加比赛</li><li>救生技能</li><li>健康锻炼</li><li>接下来可以学什么？</li><li>仰泳</li><li>蝶泳</li><li>蛙泳</li><li>各种泳姿的提升</li><li>鼓励：游泳是一辈子的技能，继续练习</li></ul><table class="lesson-table"><thead><tr><th>项目</th><th>时间</th></tr></thead><tbody><tr><td>内容总结</td><td>15分钟</td></tr><tr><td>最终考核</td><td>20分钟</td></tr><tr><td>考核标准</td><td>5分钟</td></tr><tr><td>未来展望</td><td>10分钟</td></tr></tbody></table><div class="tip-grid"><div class="tip-item blue"><span class="icon">💡</span>43课不是结束，而是开始</div><div class="tip-item blue"><span class="icon">💡</span>游泳需要不断练习和改进</div><div class="tip-item blue"><span class="icon">💡</span>鼓励学员继续游泳，享受游泳</div><div class="tip-item blue"><span class="icon">💡</span>告诉学员：你们已经学会了自由泳！</div></div></div>
+</div>
+</body>
+</html>
